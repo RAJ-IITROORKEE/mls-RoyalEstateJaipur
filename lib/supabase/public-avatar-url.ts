@@ -1,0 +1,5 @@
+export function getPublicAvatarUrl(path: string | null | undefined) {
+  const baseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!baseUrl || !path) return null;
+  return `${baseUrl.replace(/\/$/, "")}/storage/v1/object/public/profile-avatars/${path.split("/").map(encodeURIComponent).join("/")}`;
+}

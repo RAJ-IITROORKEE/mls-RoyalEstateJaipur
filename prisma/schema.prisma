@@ -1,0 +1,408 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum ProfileRole {
+  USER
+  REVIEWER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum ProfileStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum PropertyIntent {
+  SELL
+  RENT
+  LEASE
+}
+
+enum PropertyCategory {
+  PLOT
+  RESIDENTIAL
+  COMMERCIAL
+  INDUSTRIAL
+  AGRICULTURAL
+  OTHER
+}
+
+enum SubmissionStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  NEEDS_CHANGES
+  RESUBMITTED
+  APPROVED
+  REJECTED
+  WITHDRAWN
+  ARCHIVED
+}
+
+enum PropertyStatus {
+  DRAFT
+  PUBLISHED
+  PAUSED
+  SOLD
+  RENTED
+  LEASED
+  ARCHIVED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+enum EnquiryType {
+  GENERAL
+  CALLBACK
+  SITE_VISIT
+  PROPERTY
+}
+
+enum EnquiryStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  SITE_VISIT_SCHEDULED
+  NEGOTIATING
+  CLOSED_WON
+  CLOSED_LOST
+  SPAM
+}
+
+enum BlogStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Profile {
+  id                  String               @id @db.Uuid
+  email               String               @db.VarChar(320)
+  displayName         String?              @db.VarChar(120)
+  phone               String?              @db.VarChar(30)
+  avatarPath          String?
+  role                ProfileRole          @default(USER)
+  status              ProfileStatus        @default(ACTIVE)
+  lastLoginAt         DateTime?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  submissions         PropertySubmission[] @relation("SubmissionOwner")
+  reviewedSubmissions PropertySubmission[] @relation("SubmissionReviewer")
+  properties          Property[]           @relation("PropertyOwner")
+  assignedEnquiries   Enquiry[]            @relation("EnquiryAssignee")
+  auditLogs           AuditLog[]           @relation("AuditActor")
+  archivedAuditLogs   AuditLogArchive[]    @relation("AuditArchiveActor")
+  notifications       Notification[]       @relation("NotificationRecipient")
+  enquiryActivities   EnquiryActivity[]    @relation("EnquiryActivityActor")
+  blogPosts           BlogPost[]           @relation("BlogAuthor")
+  blogAssets          BlogAsset[]          @relation("BlogAssetUploader")
+
+  @@index([role, status])
+  @@index([email])
+}
+
+model PropertySubmission {
+  id                 String                    @id @default(uuid()) @db.Uuid
+  ownerId            String                    @db.Uuid
+  referenceNumber    String                    @unique @db.VarChar(32)
+  intent             PropertyIntent
+  category           PropertyCategory
+  status             SubmissionStatus          @default(DRAFT)
+  payload            Json
+  assignedReviewerId String?                   @db.Uuid
+  submittedAt        DateTime?
+  reviewedAt         DateTime?
+  reason             String?
+  internalNotes      String?
+  version            Int                       @default(1)
+  createdAt          DateTime                  @default(now())
+  updatedAt          DateTime                  @updatedAt
+  owner              Profile                   @relation("SubmissionOwner", fields: [ownerId], references: [id])
+  assignedReviewer   Profile?                  @relation("SubmissionReviewer", fields: [assignedReviewerId], references: [id])
+  property           Property?
+  documents          PropertyDocument[]
+  media              PropertySubmissionMedia[]
+
+  @@index([ownerId, status, updatedAt])
+  @@index([status, submittedAt])
+  @@index([assignedReviewerId, status])
+}
+
+model Property {
+  id                 String              @id @default(uuid()) @db.Uuid
+  sourceSubmissionId String?             @unique @db.Uuid
+  ownerId            String              @db.Uuid
+  localityId         String?             @db.Uuid
+  slug               String              @unique @db.VarChar(180)
+  referenceNumber    String              @unique @db.VarChar(32)
+  title              String              @db.VarChar(180)
+  description        String
+  intent             PropertyIntent
+  category           PropertyCategory
+  status             PropertyStatus      @default(DRAFT)
+  isModerated        Boolean             @default(false)
+  isVerified         Boolean             @default(false)
+  priceMinor         BigInt?
+  priceOnRequest     Boolean             @default(false)
+  isNegotiable       Boolean             @default(false)
+  areaValue          Decimal?            @db.Decimal(14, 2)
+  areaUnit           String?             @db.VarChar(20)
+  areaSqm            Decimal?            @db.Decimal(14, 2)
+  addressLine        String?
+  localityName       String              @db.VarChar(120)
+  city               String              @db.VarChar(80)
+  state              String              @db.VarChar(80)
+  postalCode         String?             @db.VarChar(12)
+  latitude           Decimal?            @db.Decimal(10, 7)
+  longitude          Decimal?            @db.Decimal(10, 7)
+  bedrooms           Int?
+  bathrooms          Int?
+  floors             Int?
+  furnishing         String?             @db.VarChar(40)
+  possession         String?             @db.VarChar(120)
+  amenities          String[]
+  highlights         String[]
+  otherPropertyType  String?
+  isFeatured         Boolean             @default(false)
+  featuredRank       Int?
+  publishedAt        DateTime?
+  seoTitle           String?
+  seoDescription     String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  sourceSubmission   PropertySubmission? @relation(fields: [sourceSubmissionId], references: [id])
+  owner              Profile             @relation("PropertyOwner", fields: [ownerId], references: [id])
+  locality           Locality?           @relation(fields: [localityId], references: [id])
+  media              PropertyMedia[]
+  enquiries          Enquiry[]
+
+  @@index([status, publishedAt])
+  @@index([intent, category, status])
+  @@index([city, localityName, status])
+  @@index([isFeatured, featuredRank])
+}
+
+model PropertySubmissionMedia {
+  id           String             @id @default(uuid()) @db.Uuid
+  submissionId String             @db.Uuid
+  storagePath  String             @unique
+  fileName     String             @db.VarChar(180)
+  mimeType     String             @db.VarChar(100)
+  sizeBytes    Int
+  altText      String             @db.VarChar(180)
+  sortOrder    Int                @default(0)
+  isCover      Boolean            @default(false)
+  width        Int?
+  height       Int?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  submission   PropertySubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId, sortOrder])
+}
+
+model PropertyMedia {
+  id          String    @id @default(uuid()) @db.Uuid
+  propertyId  String    @db.Uuid
+  storagePath String    @unique
+  type        MediaType @default(IMAGE)
+  altText     String
+  sortOrder   Int       @default(0)
+  isCover     Boolean   @default(false)
+  width       Int?
+  height      Int?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  property    Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId, sortOrder])
+}
+
+model PropertyDocument {
+  id           String             @id @default(uuid()) @db.Uuid
+  submissionId String             @db.Uuid
+  storagePath  String             @unique
+  documentType String             @db.VarChar(60)
+  fileName     String             @db.VarChar(180)
+  mimeType     String             @db.VarChar(100)
+  sizeBytes    Int
+  createdAt    DateTime           @default(now())
+  submission   PropertySubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId])
+}
+
+model Locality {
+  id             String     @id @default(uuid()) @db.Uuid
+  slug           String     @unique @db.VarChar(100)
+  name           String     @db.VarChar(100)
+  city           String     @db.VarChar(80)
+  state          String     @db.VarChar(80)
+  summary        String
+  heroImage      String?
+  isFeatured     Boolean    @default(false)
+  seoTitle       String?
+  seoDescription String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  properties     Property[]
+
+  @@index([city, isFeatured])
+}
+
+model Enquiry {
+  id                 String            @id @default(uuid()) @db.Uuid
+  propertyId         String?           @db.Uuid
+  assignedAdminId    String?           @db.Uuid
+  type               EnquiryType       @default(GENERAL)
+  status             EnquiryStatus     @default(NEW)
+  contactName        String            @db.VarChar(120)
+  email              String            @db.VarChar(320)
+  phone              String?           @db.VarChar(30)
+  message            String
+  preferredContact   String?           @db.VarChar(30)
+  requestedVisitDate DateTime?
+  source             String?           @db.VarChar(80)
+  consentAt          DateTime
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  property           Property?         @relation(fields: [propertyId], references: [id])
+  assignedAdmin      Profile?          @relation("EnquiryAssignee", fields: [assignedAdminId], references: [id])
+  activities         EnquiryActivity[]
+
+  @@index([status, createdAt])
+  @@index([assignedAdminId, status])
+  @@index([propertyId, createdAt])
+}
+
+model EnquiryActivity {
+  id        String   @id @default(uuid()) @db.Uuid
+  enquiryId String   @db.Uuid
+  actorId   String?  @db.Uuid
+  action    String   @db.VarChar(60)
+  note      String?
+  createdAt DateTime @default(now())
+  enquiry   Enquiry  @relation(fields: [enquiryId], references: [id], onDelete: Cascade)
+  actor     Profile? @relation("EnquiryActivityActor", fields: [actorId], references: [id])
+
+  @@index([enquiryId, createdAt])
+}
+
+model Notification {
+  id          String    @id @default(uuid()) @db.Uuid
+  recipientId String?   @db.Uuid
+  type        String    @db.VarChar(60)
+  title       String    @db.VarChar(180)
+  body        String
+  entityType  String?   @db.VarChar(60)
+  entityId    String?   @db.Uuid
+  readAt      DateTime?
+  createdAt   DateTime  @default(now())
+  recipient   Profile?  @relation("NotificationRecipient", fields: [recipientId], references: [id])
+
+  @@index([recipientId, readAt, createdAt])
+}
+
+model AuditLog {
+  id         String           @id @default(uuid()) @db.Uuid
+  actorId    String?          @db.Uuid
+  action     String           @db.VarChar(80)
+  entityType String           @db.VarChar(80)
+  entityId   String?          @db.Uuid
+  summary    String           @db.VarChar(240)
+  metadata   Json?
+  requestId  String?          @db.VarChar(100)
+  ipAddress  String?          @db.VarChar(64)
+  userAgent  String?          @db.VarChar(300)
+  createdAt  DateTime         @default(now())
+  actor      Profile?         @relation("AuditActor", fields: [actorId], references: [id])
+  archive    AuditLogArchive?
+
+  @@index([createdAt])
+  @@index([entityType, entityId, createdAt])
+  @@index([actorId, createdAt])
+}
+
+model AuditLogArchive {
+  id           String   @id @default(uuid()) @db.Uuid
+  auditLogId   String   @unique @db.Uuid
+  archivedById String   @db.Uuid
+  reason       String   @db.VarChar(500)
+  archivedAt   DateTime @default(now())
+  auditLog     AuditLog @relation(fields: [auditLogId], references: [id], onDelete: Restrict)
+  archivedBy   Profile  @relation("AuditArchiveActor", fields: [archivedById], references: [id], onDelete: Restrict)
+
+  @@index([archivedAt])
+  @@index([archivedById, archivedAt])
+}
+
+model BlogPost {
+  id             String      @id @default(uuid()) @db.Uuid
+  authorId       String      @db.Uuid
+  title          String      @db.VarChar(200)
+  slug           String      @unique @db.VarChar(120)
+  excerpt        String?     @db.VarChar(1000)
+  content        Json
+  readingMinutes Int         @default(1)
+  status         BlogStatus  @default(DRAFT)
+  seoTitle       String?     @db.VarChar(200)
+  seoDescription String?     @db.VarChar(320)
+  coverAssetId   String?     @unique @db.Uuid
+  version        Int         @default(1)
+  publishedAt    DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  author         Profile     @relation("BlogAuthor", fields: [authorId], references: [id], onDelete: Restrict)
+  coverAsset     BlogAsset?  @relation("BlogCover", fields: [coverAssetId], references: [id], onDelete: SetNull)
+  assets         BlogAsset[] @relation("BlogPostAssets")
+
+  @@index([status, publishedAt])
+  @@index([authorId, updatedAt])
+}
+
+model BlogAsset {
+  id           String    @id @default(uuid()) @db.Uuid
+  postId       String?   @db.Uuid
+  uploadedById String    @db.Uuid
+  storagePath  String    @unique
+  bucket       String    @default("blog-draft-media") @db.VarChar(40)
+  fileName     String    @db.VarChar(180)
+  mimeType     String    @db.VarChar(100)
+  sizeBytes    Int
+  altText      String    @db.VarChar(300)
+  caption      String?   @db.VarChar(500)
+  width        Int?
+  height       Int?
+  sortOrder    Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  post         BlogPost? @relation("BlogPostAssets", fields: [postId], references: [id], onDelete: SetNull)
+  coverFor     BlogPost? @relation("BlogCover")
+  uploadedBy   Profile   @relation("BlogAssetUploader", fields: [uploadedById], references: [id], onDelete: Restrict)
+
+  @@index([postId, sortOrder])
+  @@index([uploadedById, createdAt])
+}
+
+model SiteSetting {
+  id          String   @id @default(uuid()) @db.Uuid
+  key         String   @unique @db.VarChar(100)
+  value       Json
+  description String?
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublic, key])
+}

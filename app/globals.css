@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+:root {
+  --background: oklch(97% 0.018 92);
+  --foreground: oklch(23% 0.025 160);
+  --card: oklch(99% 0.008 92);
+  --muted: oklch(93% 0.025 92);
+  --muted-foreground: oklch(48% 0.025 160);
+  --border: oklch(85% 0.025 92);
+  --primary: oklch(34% 0.08 160);
+  --primary-foreground: oklch(98% 0.01 92);
+  --accent: oklch(75% 0.09 82);
+  --accent-foreground: oklch(23% 0.025 160);
+  --destructive: oklch(48% 0.16 28);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --font-sans: var(--font-manrope);
+  --font-serif: var(--font-cormorant);
+}
+
+.dark {
+  --background: oklch(19% 0.025 160);
+  --foreground: oklch(94% 0.018 92);
+  --card: oklch(23% 0.025 160);
+  --muted: oklch(28% 0.025 160);
+  --muted-foreground: oklch(74% 0.025 92);
+  --border: oklch(34% 0.025 160);
+  --primary: oklch(73% 0.095 160);
+  --primary-foreground: oklch(19% 0.025 160);
+  --accent: oklch(74% 0.09 82);
+  --accent-foreground: oklch(19% 0.025 160);
+  --destructive: oklch(70% 0.14 28);
+}
+
+* {
+  border-color: var(--border);
+}
+html {
+  background: var(--background);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+[data-password-field] input:focus-visible {
+  outline: none;
+}
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  transform: translateY(-5rem);
+  border-radius: 0.75rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+.hero-grid {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--foreground) 12%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--foreground) 12%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 4rem 4rem;
+}
+.architectural-art {
+  background: linear-gradient(
+    135deg,
+    oklch(29% 0.06 160),
+    oklch(43% 0.08 160) 52%,
+    oklch(70% 0.1 82)
+  );
+}
+
+.blog-rich-editor .ProseMirror {
+  min-height: 32rem;
+  padding: 2rem;
+  outline: none;
+}
+.blog-rich-editor .ProseMirror > * + * {
+  margin-top: 1.15rem;
+}
+.blog-rich-editor .ProseMirror p {
+  min-height: 1.5rem;
+  line-height: 1.9;
+}
+.blog-rich-editor .ProseMirror h2,
+.blog-rich-editor .ProseMirror h3,
+.blog-rich-editor .ProseMirror h4 {
+  font-family: var(--font-cormorant), Georgia, serif;
+  line-height: 1.1;
+}
+.blog-rich-editor .ProseMirror h2 {
+  font-size: 2.25rem;
+}
+.blog-rich-editor .ProseMirror h3 {
+  font-size: 1.875rem;
+}
+.blog-rich-editor .ProseMirror h4 {
+  font-size: 1.5rem;
+}
+.blog-rich-editor .ProseMirror ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+.blog-rich-editor .ProseMirror ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+}
+.blog-rich-editor .ProseMirror blockquote {
+  border-left: 2px solid var(--primary);
+  color: var(--muted-foreground);
+  font-style: italic;
+  padding-left: 1.25rem;
+}
+.blog-rich-editor .ProseMirror a {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.blog-rich-editor .ProseMirror figure {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--card);
+}
+.blog-rich-editor .ProseMirror figure.ProseMirror-selectednode {
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 25%, transparent);
+}
+.blog-rich-editor .ProseMirror figure img {
+  display: block;
+  width: 100%;
+  max-height: 36rem;
+  object-fit: cover;
+}
+.blog-rich-editor .ProseMirror figcaption {
+  padding: 0.75rem 1rem;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

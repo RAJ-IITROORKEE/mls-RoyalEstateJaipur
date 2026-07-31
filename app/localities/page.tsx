@@ -1,0 +1,7 @@
+import Link from "next/link";
+
+import { PublicPage } from "@/components/layout/public-page";
+
+export default function LocalitiesPage() {
+  return <PublicPage><section className="border-b border-border bg-card"><div className="mx-auto max-w-[1360px] px-5 py-20 sm:px-8 sm:py-28"><p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Localities</p><h1 className="mt-4 max-w-4xl font-serif text-5xl leading-[0.95] sm:text-7xl">Start with where the decision lives.</h1><p className="mt-7 max-w-2xl text-lg leading-8 text-muted-foreground">Locality pages are generated from approved catalogue data, so the guide stays grounded in the inventory actually available to explore.</p></div></section><section className="mx-auto max-w-[900px] px-5 py-20 sm:px-8 sm:py-28"><div className="rounded-2xl border border-dashed border-border p-8 sm:p-12"><p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Catalogue setup</p><h2 className="mt-4 font-serif text-4xl">Locality guides will appear after the first approved records.</h2><p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground">No neighbourhood claims or sample counts are shown before the database is connected and the admin team has published the underlying properties.</p><Link className="mt-8 inline-flex min-h-12 items-center rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground" href="/properties">Browse published properties</Link></div></section></PublicPage>;
+}
