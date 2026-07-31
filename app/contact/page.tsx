@@ -1,8 +1,13 @@
 import { Mail, Phone } from "lucide-react";
 import Link from "next/link";
 
+import { WhatsAppIcon } from "@/components/icons/whatsapp-icon";
 import { PublicPage } from "@/components/layout/public-page";
 import { Button } from "@/components/ui/button";
+import {
+  createWhatsAppEnquiryMessage,
+  createWhatsAppUrl,
+} from "@/features/properties/domain";
 import { getPublishedPropertyByReference } from "@/features/properties/queries";
 import { getEnvironment } from "@/lib/env";
 
@@ -32,6 +37,12 @@ export default async function ContactPage({
       : propertyIntent === "LEASE"
         ? "leasing"
         : "buying";
+  const whatsappMessage = createWhatsAppEnquiryMessage({
+    businessName: environment.NEXT_PUBLIC_BUSINESS_NAME,
+    intent: propertyIntent,
+    propertyTitle: property?.title,
+    referenceNumber: property?.referenceNumber,
+  });
   return (
     <PublicPage>
       <section className="border-b border-border bg-card">
@@ -67,6 +78,17 @@ export default async function ContactPage({
             >
               <Phone aria-hidden="true" className="size-4 text-primary" />{" "}
               {environment.NEXT_PUBLIC_BUSINESS_PHONE}
+            </a>
+            <a
+              className="flex items-center gap-3 font-semibold"
+              href={createWhatsAppUrl(
+                environment.NEXT_PUBLIC_BUSINESS_WHATSAPP,
+                whatsappMessage,
+              )}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <WhatsAppIcon className="size-4 text-primary" /> Chat on WhatsApp
             </a>
           </div>
           <p className="mt-8 text-sm leading-7 text-muted-foreground">
