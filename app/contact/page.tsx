@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { PublicPage } from "@/components/layout/public-page";
 import { Button } from "@/components/ui/button";
+import { getPublishedPropertyByReference } from "@/features/properties/queries";
 import { getEnvironment } from "@/lib/env";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -21,6 +22,10 @@ export default async function ContactPage({
   const error = first(params.error);
   const propertyReference = first(params.property);
   const propertyIntent = first(params.intent);
+  const property = propertyReference
+    ? await getPublishedPropertyByReference(propertyReference)
+    : null;
+  const propertyTitle = property?.title ?? propertyReference;
   const intentLabel =
     propertyIntent === "RENT"
       ? "renting"
@@ -77,11 +82,13 @@ export default async function ContactPage({
         </aside>
         <div className="rounded-2xl border border-border bg-card p-6 sm:p-10">
           <h2 className="font-serif text-4xl">
-            {propertyReference ? `Ask about ${propertyReference}` : "Send an enquiry"}
+            {propertyTitle ? `Ask about ${propertyTitle}` : "Send an enquiry"}
           </h2>
           {propertyReference && (
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
-              Your property reference is included automatically so the team can respond about {intentLabel} this listing.
+              Your enquiry is about {propertyTitle}. Reference{" "}
+              {propertyReference} is included automatically so the team can
+              respond about {intentLabel} this listing.
             </p>
           )}
           {params.sent && (
@@ -157,7 +164,7 @@ export default async function ContactPage({
                 className="min-h-36 rounded-xl border border-border bg-background p-3 font-normal outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 defaultValue={
                   propertyReference
-                    ? `I would like to know more about ${intentLabel} property ${propertyReference}.`
+                    ? `I would like to know more about ${intentLabel} property "${propertyTitle}". Reference: ${propertyReference}.`
                     : undefined
                 }
                 name="message"

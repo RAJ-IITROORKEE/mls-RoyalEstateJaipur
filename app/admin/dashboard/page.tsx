@@ -1,5 +1,8 @@
 import { redirect } from "next/navigation";
 
-export default function AdminDashboardAliasPage() {
+import { requireAdminPage } from "@/lib/auth/guards";
+
+export default async function AdminDashboardAliasPage() {
+  await requireAdminPage();
   redirect("/admin");
 }

@@ -219,6 +219,18 @@ export async function getPublishedProperty(slug: string) {
   }
 }
 
+export async function getPublishedPropertyByReference(referenceNumber: string) {
+  if (!hasDatabaseConfiguration()) return null;
+  try {
+    return await prisma.property.findFirst({
+      where: { referenceNumber, status: PropertyStatus.PUBLISHED },
+      select: { referenceNumber: true, title: true },
+    });
+  } catch {
+    return null;
+  }
+}
+
 export async function getPublishedPropertySlugs() {
   if (!hasDatabaseConfiguration()) return [];
   try {
