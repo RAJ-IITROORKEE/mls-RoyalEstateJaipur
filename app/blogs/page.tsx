@@ -51,7 +51,7 @@ export default async function BlogsPage() {
                   </p>
                   <h2 className="mt-5 font-serif text-3xl">{post.title}</h2>
                   <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                    {post.excerpt || "A practical note from RoyaleStateJaipur."}
+                    {post.excerpt || "A practical note from Royal Estates Jaipur."}
                   </p>
                 </div>
               </Link>

@@ -7,7 +7,7 @@ const environmentSchema = z.object({
   DATABASE_URL: z.string().min(1).optional(),
   DIRECT_URL: z.string().min(1).optional(),
   NEXT_PUBLIC_SITE_URL: z.string().url().default("http://localhost:3000"),
-  NEXT_PUBLIC_BUSINESS_NAME: z.string().default("RoyaleStateJaipur"),
+  NEXT_PUBLIC_BUSINESS_NAME: z.string().default("Royal Estates Jaipur"),
   NEXT_PUBLIC_BUSINESS_EMAIL: z.string().email().default("hello@example.com"),
   NEXT_PUBLIC_BUSINESS_PHONE: z.string().default("+91 00000 00000"),
   NEXT_PUBLIC_BUSINESS_WHATSAPP: z.string().default("910000000000"),

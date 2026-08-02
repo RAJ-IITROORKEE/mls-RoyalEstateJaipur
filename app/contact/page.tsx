@@ -1,8 +1,7 @@
-import { Mail, Phone } from "lucide-react";
 import Link from "next/link";
 
-import { WhatsAppIcon } from "@/components/icons/whatsapp-icon";
 import { PublicPage } from "@/components/layout/public-page";
+import { SocialLinks } from "@/components/layout/social-links";
 import { Button } from "@/components/ui/button";
 import {
   createWhatsAppEnquiryMessage,
@@ -62,34 +61,15 @@ export default async function ContactPage({
       <section className="mx-auto grid max-w-[1120px] gap-10 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[0.7fr_1.3fr]">
         <aside>
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
-            Direct contact
+            Connect with us
           </p>
-          <div className="mt-6 grid gap-4 text-sm">
-            <a
-              className="flex items-center gap-3 font-semibold"
-              href={`mailto:${environment.NEXT_PUBLIC_BUSINESS_EMAIL}`}
-            >
-              <Mail aria-hidden="true" className="size-4 text-primary" />{" "}
-              {environment.NEXT_PUBLIC_BUSINESS_EMAIL}
-            </a>
-            <a
-              className="flex items-center gap-3 font-semibold"
-              href={`tel:${environment.NEXT_PUBLIC_BUSINESS_PHONE}`}
-            >
-              <Phone aria-hidden="true" className="size-4 text-primary" />{" "}
-              {environment.NEXT_PUBLIC_BUSINESS_PHONE}
-            </a>
-            <a
-              className="flex items-center gap-3 font-semibold"
-              href={createWhatsAppUrl(
+          <div className="mt-6">
+            <SocialLinks
+              whatsappHref={createWhatsAppUrl(
                 environment.NEXT_PUBLIC_BUSINESS_WHATSAPP,
                 whatsappMessage,
               )}
-              rel="noreferrer"
-              target="_blank"
-            >
-              <WhatsAppIcon className="size-4 text-primary" /> Chat on WhatsApp
-            </a>
+            />
           </div>
           <p className="mt-8 text-sm leading-7 text-muted-foreground">
             We use the details you submit only to respond to the enquiry and

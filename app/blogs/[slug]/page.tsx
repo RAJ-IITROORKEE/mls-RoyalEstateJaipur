@@ -46,7 +46,7 @@ export default async function BlogDetailPage({
     <PublicPage>
       <article className="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-24">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
-          RoyaleStateJaipur journal · {post.readingMinutes} min read
+          Royal Estates Jaipur journal · {post.readingMinutes} min read
         </p>
         <h1 className="mt-4 font-serif text-5xl leading-tight">{post.title}</h1>
         {post.excerpt && (

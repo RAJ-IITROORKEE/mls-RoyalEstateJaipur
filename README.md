@@ -1,4 +1,4 @@
-# RoyaleStateJaipur
+# Royal Estates Jaipur
 
 An India-first property marketplace foundation built with Next.js App Router, Supabase Auth/Storage/Postgres, Prisma, Tailwind CSS, and strict TypeScript.
 
@@ -59,7 +59,7 @@ Configure the environment variables in Vercel, run `npm run prisma:deploy` from 
 ## Authentication setup
 
 - Enable Supabase email authentication and configure the site URL plus `/auth/callback` redirect URL.
-- Keep **Confirm email** enabled. In Supabase Dashboard, open **Authentication > Email Templates > Confirm signup**, use the subject `Your RoyaleStateJaipur verification code`, and paste the branded template from `docs/supabase-email-templates/confirm-signup.html`. The required `{{ .Token }}` variable supplies the standard six-digit code used by the in-app OTP form.
+- Keep **Confirm email** enabled. In Supabase Dashboard, open **Authentication > Email Templates > Confirm signup**, use the subject `Your Royal Estates Jaipur verification code`, and paste the branded template from `docs/supabase-email-templates/confirm-signup.html`. The required `{{ .Token }}` variable supplies the standard six-digit code used by the in-app OTP form.
 - Set the hosted email OTP length to six in **Authentication > Sign In / Providers > Email**, or configure a local `SUPABASE_ACCESS_TOKEN` and run `npm run supabase:auth-config`. The command changes only `mailer_otp_length`, verifies the saved value, and does not print the token.
 - Configure hosted SMTP using `docs/supabase-email-templates/README.md`. Run `npm run diagnose:signup` after saving the SMTP and template settings; it performs a disposable signup test without printing credentials.
 

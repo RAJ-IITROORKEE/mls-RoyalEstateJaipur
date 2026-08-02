@@ -5,7 +5,7 @@ These files are source-controlled copies of the hosted Supabase Auth templates. 
 ## Confirm signup OTP
 
 - Dashboard: **Authentication > Email Templates > Confirm signup**
-- Subject: `Your RoyaleStateJaipur verification code`
+- Subject: `Your Royal Estates Jaipur verification code`
 - Body: paste the complete contents of `confirm-signup.html`
 - Required variable: `{{ .Token }}`
 - Do not replace the token with `{{ .ConfirmationURL }}` because the application verifies a six-digit OTP.
@@ -15,7 +15,7 @@ These files are source-controlled copies of the hosted Supabase Auth templates. 
 Open **Authentication > SMTP Settings**, enable custom SMTP, and use:
 
 - Sender email: the same Gmail address as the SMTP username
-- Sender name: `RoyaleStateJaipur`
+- Sender name: `Royal Estates Jaipur`
 - Host: `smtp.gmail.com`
 - Port: `587`
 - Username: the complete Gmail address

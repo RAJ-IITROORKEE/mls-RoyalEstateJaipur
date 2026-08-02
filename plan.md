@@ -1,4 +1,4 @@
-# RoyaleStateJaipur Upgrade Plan
+# Royal Estates Jaipur Upgrade Plan
 
 ## Objective
 
@@ -379,7 +379,7 @@ Admin:
 
 ### Rich editor pattern
 
-Adapt the reference project’s product patterns using an original RoyaleStateJaipur implementation:
+Adapt the reference project’s product patterns using an original Royal Estates Jaipur implementation:
 
 - Install only required Tiptap packages after dependency review.
 - Single continuous editor surface.

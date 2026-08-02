@@ -24,7 +24,7 @@ async function seedSettings() {
   const settings = [
     {
       key: "business.name",
-      value: "RoyaleStateJaipur",
+      value: "Royal Estates Jaipur",
       description: "Public business name",
       isPublic: true,
     },

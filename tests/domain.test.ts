@@ -27,18 +27,18 @@ describe("property domain helpers", () => {
   it("creates contextual and general WhatsApp enquiry messages", () => {
     expect(
       createWhatsAppEnquiryMessage({
-        businessName: "RoyaleStateJaipur",
+        businessName: "Royal Estates Jaipur",
         intent: "SELL",
         propertyTitle: "Garden-facing plot",
         referenceNumber: "RSJ-001",
       }),
     ).toBe(
-      'Hello RoyaleStateJaipur, I would like to know more about buying property "Garden-facing plot". Reference: RSJ-001.',
+      'Hello Royal Estates Jaipur, I would like to know more about buying property "Garden-facing plot". Reference: RSJ-001.',
     );
     expect(
-      createWhatsAppEnquiryMessage({ businessName: "RoyaleStateJaipur" }),
+      createWhatsAppEnquiryMessage({ businessName: "Royal Estates Jaipur" }),
     ).toBe(
-      "Hello RoyaleStateJaipur, I would like help finding a property in Jaipur.",
+      "Hello Royal Estates Jaipur, I would like help finding a property in Jaipur.",
     );
   });
 

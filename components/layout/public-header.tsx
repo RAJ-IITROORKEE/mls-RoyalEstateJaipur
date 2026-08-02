@@ -34,10 +34,15 @@ export function PublicHeader({
       <div className="mx-auto flex h-18 max-w-[1360px] items-center justify-between gap-4 px-5 sm:px-8">
         <Link className="flex min-w-0 items-center gap-3" href="/">
           <span
-            aria-hidden="true"
-            className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary text-xs font-bold text-primary-foreground"
+            className="relative size-10 shrink-0 overflow-hidden rounded-full border-2 border-accent"
           >
-            RS
+            <Image
+              alt={businessName}
+              className="object-cover"
+              fill
+              sizes="40px"
+              src="/logo.jpeg"
+            />
           </span>
           <span className="truncate text-sm font-bold tracking-[0.16em] text-foreground">
             {businessName}
