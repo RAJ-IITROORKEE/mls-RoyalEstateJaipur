@@ -385,7 +385,7 @@ export default async function AdminPropertiesPage({
                                 {property.referenceNumber}
                               </p>
                               {property.isFeatured ? (
-                                <span className="mt-1 inline-flex rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-900">
+                                <span className="mt-1 inline-flex rounded-full bg-secondary/15 px-2 py-0.5 text-[10px] font-bold uppercase text-secondary-foreground">
                                   Featured
                                 </span>
                               ) : null}

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { SocialLinks } from "@/components/layout/social-links";
+import { ThemeToggle } from "@/components/theme-toggle";
 import {
   createWhatsAppEnquiryMessage,
   createWhatsAppUrl,
@@ -37,7 +38,7 @@ export function PublicFooter({ businessName }: { businessName: string }) {
             A considered way to discover and present property across Jaipur.
             Every public listing is reviewed before it is published.
           </p>
-          <SocialLinks whatsappHref={whatsappHref} />
+          <SocialLinks className="mt-6 gap-2" whatsappHref={whatsappHref} />
         </div>
         <div>
           <h2 className="text-sm font-bold">Explore</h2>
@@ -61,10 +62,13 @@ export function PublicFooter({ businessName }: { businessName: string }) {
           <span>
             © {new Date().getFullYear()} {businessName}. Demo foundation.
           </span>
-          <span className="flex gap-4">
-            <Link href="/privacy">Privacy</Link>
-            <Link href="/terms">Terms</Link>
-          </span>
+          <div className="flex items-center gap-4">
+            <span className="flex gap-4">
+              <Link href="/privacy">Privacy</Link>
+              <Link href="/terms">Terms</Link>
+            </span>
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </footer>

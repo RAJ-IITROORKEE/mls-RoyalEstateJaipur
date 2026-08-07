@@ -105,7 +105,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       </aside>
       <div
         className={cn(
-          "transition-[padding] duration-200",
+          "flex min-h-screen flex-col transition-[padding] duration-200",
           collapsed ? "lg:pl-[76px]" : "lg:pl-[256px]",
         )}
       >
@@ -130,16 +130,20 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <span className="hidden rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground sm:inline-flex">
               Foundation preview
             </span>
-            <ThemeToggle />
           </div>
         </header>
         <main
-          className="mx-auto w-full max-w-[1600px] p-5 sm:p-8"
+          className="mx-auto w-full max-w-[1600px] flex-1 p-5 sm:p-8"
           id="admin-main"
           tabIndex={-1}
         >
           {children}
         </main>
+        <footer className="border-t border-border px-5 py-4 sm:px-8">
+          <div className="mx-auto flex max-w-[1600px] justify-end">
+            <ThemeToggle />
+          </div>
+        </footer>
       </div>
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">

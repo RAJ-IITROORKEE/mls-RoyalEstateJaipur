@@ -1,4 +1,4 @@
-import { ClipboardList, Database } from "lucide-react";
+import { ArrowUpRight, ClipboardList, Database } from "lucide-react";
 import Link from "next/link";
 
 import { SubmissionArchiveAction } from "@/components/admin/submission-archive-action";
@@ -87,38 +87,54 @@ export default async function AdminSubmissionsPage({
             <span>Updated</span>
             <span>Actions</span>
           </div>
-          {result.submissions.map((submission) => (
-            <Link
-              className="grid gap-3 border-b border-border p-5 last:border-0 hover:bg-muted/30 sm:grid-cols-[1.2fr_1fr_0.8fr_0.8fr_auto] sm:items-center"
-              href={`/admin/submissions/${submission.id}`}
-              key={submission.id}
-            >
-              <div>
-                <p className="text-xs font-bold text-primary">
-                  {submission.referenceNumber}
+          {result.submissions.map((submission) => {
+            const isActionable =
+              submission.status === "SUBMITTED" ||
+              submission.status === "UNDER_REVIEW" ||
+              submission.status === "RESUBMITTED";
+            return (
+              <div
+                className="grid gap-3 border-b border-border p-5 last:border-0 hover:bg-muted/30 sm:grid-cols-[1.2fr_1fr_0.8fr_0.8fr_auto] sm:items-center"
+                key={submission.id}
+              >
+                <Link
+                  className="group block rounded-lg"
+                  href={`/admin/submissions/${submission.id}`}
+                >
+                  <p className="text-xs font-bold text-primary">
+                    {submission.referenceNumber}
+                  </p>
+                  <p className="mt-1 font-semibold group-hover:text-primary">
+                    {submission.category.toLowerCase()} ·{" "}
+                    {submission.intent.toLowerCase()}
+                  </p>
+                </Link>
+                <p className="text-sm text-muted-foreground">
+                  {submission.owner.displayName || submission.owner.email}
                 </p>
-                <p className="mt-1 font-semibold">
-                  {submission.category.toLowerCase()} ·{" "}
-                  {submission.intent.toLowerCase()}
+                <span className="w-fit rounded-full bg-muted px-3 py-1 text-xs font-bold">
+                  {submission.status.replaceAll("_", " ")}
+                </span>
+                <p className="text-xs text-muted-foreground">
+                  {submission.updatedAt.toLocaleDateString("en-IN")}
                 </p>
+                <span className="flex items-center justify-start gap-2 sm:justify-end">
+                  <Link
+                    aria-label={`${isActionable ? "Review" : "View"} submission ${submission.referenceNumber}`}
+                    className="inline-flex min-h-9 items-center gap-1 rounded-lg px-2 text-xs font-bold text-primary hover:bg-primary/10"
+                    href={`/admin/submissions/${submission.id}`}
+                  >
+                    {isActionable ? "Review" : "View"}
+                    <ArrowUpRight aria-hidden="true" className="size-3.5" />
+                  </Link>
+                  {(submission.status === "APPROVED" ||
+                    submission.status === "REJECTED") && (
+                    <SubmissionArchiveAction submissionId={submission.id} />
+                  )}
+                </span>
               </div>
-              <p className="text-sm text-muted-foreground">
-                {submission.owner.displayName || submission.owner.email}
-              </p>
-              <span className="w-fit rounded-full bg-muted px-3 py-1 text-xs font-bold">
-                {submission.status.replaceAll("_", " ")}
-              </span>
-              <p className="text-xs text-muted-foreground">
-                {submission.updatedAt.toLocaleDateString("en-IN")}
-              </p>
-              <span className="flex justify-end">
-                {(submission.status === "APPROVED" ||
-                  submission.status === "REJECTED") && (
-                  <SubmissionArchiveAction submissionId={submission.id} />
-                )}
-              </span>
-            </Link>
-          ))}
+            );
+          })}
         </section>
       )}
     </div>

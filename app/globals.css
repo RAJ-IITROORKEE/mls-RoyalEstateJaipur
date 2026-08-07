@@ -1,17 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: oklch(97% 0.018 92);
-  --foreground: oklch(23% 0.025 160);
-  --card: oklch(99% 0.008 92);
-  --muted: oklch(93% 0.025 92);
-  --muted-foreground: oklch(48% 0.025 160);
-  --border: oklch(85% 0.025 92);
-  --primary: oklch(34% 0.08 160);
-  --primary-foreground: oklch(98% 0.01 92);
-  --accent: oklch(75% 0.09 82);
-  --accent-foreground: oklch(23% 0.025 160);
-  --destructive: oklch(48% 0.16 28);
+  --background: #faf8f4;
+  --foreground: #222222;
+  --card: #ffffff;
+  --muted: #f3f4f6;
+  --muted-foreground: #666666;
+  --border: #e5e7eb;
+  --primary: #0b1f3a;
+  --primary-foreground: #ffffff;
+  --primary-hover: #b8860b;
+  --primary-hover-foreground: #222222;
+  --secondary: #d4a017;
+  --secondary-foreground: #222222;
+  --accent: #d4a017;
+  --accent-foreground: #222222;
+  --success: #16a34a;
+  --destructive: #dc2626;
+  --ring: #0b1f3a;
 }
 
 @theme inline {
@@ -23,25 +29,37 @@
   --color-border: var(--border);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-hover-foreground: var(--primary-hover-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
   --color-destructive: var(--destructive);
+  --color-ring: var(--ring);
   --font-sans: var(--font-manrope);
   --font-serif: var(--font-cormorant);
 }
 
 .dark {
-  --background: oklch(19% 0.025 160);
-  --foreground: oklch(94% 0.018 92);
-  --card: oklch(23% 0.025 160);
-  --muted: oklch(28% 0.025 160);
-  --muted-foreground: oklch(74% 0.025 92);
-  --border: oklch(34% 0.025 160);
-  --primary: oklch(73% 0.095 160);
-  --primary-foreground: oklch(19% 0.025 160);
-  --accent: oklch(74% 0.09 82);
-  --accent-foreground: oklch(19% 0.025 160);
-  --destructive: oklch(70% 0.14 28);
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --card: #171717;
+  --muted: #262626;
+  --muted-foreground: #a3a3a3;
+  --border: #404040;
+  --primary: #d4a017;
+  --primary-foreground: #171717;
+  --primary-hover: #b8860b;
+  --primary-hover-foreground: #171717;
+  --secondary: #0b1f3a;
+  --secondary-foreground: #fafafa;
+  --accent: #d4a017;
+  --accent-foreground: #171717;
+  --success: #16a34a;
+  --destructive: #dc2626;
+  --ring: #d4a017;
 }
 
 * {
@@ -104,9 +122,9 @@ textarea:focus-visible {
 .architectural-art {
   background: linear-gradient(
     135deg,
-    oklch(29% 0.06 160),
-    oklch(43% 0.08 160) 52%,
-    oklch(70% 0.1 82)
+    var(--primary),
+    color-mix(in srgb, var(--primary) 68%, var(--secondary)) 52%,
+    var(--secondary)
   );
 }
 

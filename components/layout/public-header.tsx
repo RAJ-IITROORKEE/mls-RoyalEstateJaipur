@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -63,7 +62,6 @@ export function PublicHeader({
           ))}
         </nav>
         <div className="flex items-center gap-1">
-          <ThemeToggle />
           {user ? (
             <div className="relative hidden sm:block">
               <button
@@ -140,7 +138,7 @@ export function PublicHeader({
           )}
           {!user && (
             <Link
-              className="hidden min-h-11 items-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 md:inline-flex"
+              className="hidden min-h-11 items-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover hover:text-primary-hover-foreground md:inline-flex"
               href="/list-property"
             >
               List your property

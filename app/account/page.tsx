@@ -89,7 +89,7 @@ export default async function AccountDashboardPage() {
             </p>
           </Link>
           <Link
-            className="rounded-2xl bg-primary p-6 text-primary-foreground transition hover:bg-primary/90"
+            className="rounded-2xl bg-primary p-6 text-primary-foreground transition hover:bg-primary-hover hover:text-primary-hover-foreground"
             href="/account/submissions/new"
           >
             <ArrowUpRight className="size-6 text-accent" />

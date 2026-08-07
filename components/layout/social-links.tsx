@@ -1,11 +1,13 @@
 import { FacebookIcon, InstagramIcon } from "@/components/icons/social-icons";
 import { WhatsAppIcon } from "@/components/icons/whatsapp-icon";
+import { cn } from "@/lib/utils";
 
 type SocialLinksProps = {
+  className?: string;
   whatsappHref?: string;
 };
 
-export function SocialLinks({ whatsappHref }: SocialLinksProps) {
+export function SocialLinks({ className, whatsappHref }: SocialLinksProps) {
   const socialLinks = [
     {
       href: "https://www.facebook.com/share/1Bz8fy3RST/?mibextid=wwXIfr",
@@ -23,10 +25,10 @@ export function SocialLinks({ whatsappHref }: SocialLinksProps) {
   ];
 
   return (
-    <div aria-label="Social links" className="flex flex-wrap gap-3">
+    <nav aria-label="Social links" className={cn("flex flex-wrap gap-3", className)}>
       {socialLinks.map(({ href, label, Icon }) => (
         <a
-          className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-border px-3 text-sm font-semibold transition-colors hover:bg-muted"
+          className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-border px-3 text-sm font-semibold transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           href={href}
           key={label}
           rel="noreferrer"
@@ -36,6 +38,6 @@ export function SocialLinks({ whatsappHref }: SocialLinksProps) {
           {label}
         </a>
       ))}
-    </div>
+    </nav>
   );
 }

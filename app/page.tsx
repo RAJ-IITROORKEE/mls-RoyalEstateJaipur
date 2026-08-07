@@ -10,6 +10,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
+import { HomeHeroCarousel } from "@/components/home/home-hero-carousel";
 import { PublicFooter } from "@/components/layout/public-footer";
 import { PublicHeader } from "@/components/layout/public-header";
 import { getEnvironment } from "@/lib/env";
@@ -90,7 +91,7 @@ export default async function Home({
               </p>
               <div className="mt-9 flex flex-wrap gap-3">
                 <Link
-                  className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground transition hover:bg-primary/90"
+                  className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground transition hover:bg-primary-hover hover:text-primary-hover-foreground"
                   href="/properties"
                 >
                   Explore properties{" "}
@@ -104,35 +105,7 @@ export default async function Home({
                 </Link>
               </div>
             </div>
-            <div
-              aria-label="Architectural illustration"
-              className="architectural-art relative min-h-[370px] overflow-hidden rounded-[2rem] p-5 shadow-2xl sm:min-h-[490px] sm:p-8"
-            >
-              <div className="absolute inset-0 bg-black/10" />
-              <div className="absolute bottom-0 left-[9%] h-[71%] w-[31%] border-x border-t border-white/40 bg-white/10" />
-              <div className="absolute bottom-0 left-[39%] h-[83%] w-[26%] border-x border-t border-white/50 bg-white/15" />
-              <div className="absolute bottom-0 right-[8%] h-[59%] w-[26%] border-x border-t border-white/30 bg-black/10" />
-              <div className="absolute left-[13%] top-[18%] h-24 w-28 border border-white/30" />
-              <div className="absolute right-8 top-8 max-w-44 rounded-2xl border border-white/30 bg-black/20 p-4 text-white backdrop-blur-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-white/70">
-                  The brief
-                </p>
-                <p className="mt-2 font-serif text-2xl leading-tight">
-                  Space for a slower, better decision.
-                </p>
-              </div>
-              <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-white">
-                <span className="text-xs uppercase tracking-[0.2em] text-white/70">
-                  Jaipur / Rajasthan
-                </span>
-                <span
-                  aria-hidden="true"
-                  className="grid size-10 place-items-center rounded-full border border-white/40"
-                >
-                  <ArrowUpRight className="size-4" />
-                </span>
-              </div>
-            </div>
+            <HomeHeroCarousel />
           </div>
         </section>
         <section className="relative z-10 mx-auto -mt-7 max-w-[1120px] px-5 sm:px-8">
