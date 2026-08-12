@@ -12,6 +12,7 @@ import { resolve } from "node:path";
 import { z } from "zod";
 
 import { prisma } from "@/lib/db/prisma";
+import { siteSettingDefaults } from "@/features/admin/settings";
 
 config({ path: resolve(process.cwd(), ".env.local") });
 config({ path: resolve(process.cwd(), ".env") });
@@ -21,38 +22,7 @@ const demoOwnerEmail = process.env.DEMO_OWNER_EMAIL;
 const demoOwnerIdSchema = z.string().uuid();
 
 async function seedSettings() {
-  const settings = [
-    {
-      key: "business.name",
-      value: "Royal Estates Jaipur",
-      description: "Public business name",
-      isPublic: true,
-    },
-    {
-      key: "business.email",
-      value: "hello@example.com",
-      description: "Replace with the configured business email",
-      isPublic: true,
-    },
-    {
-      key: "business.phone",
-      value: "+91 00000 00000",
-      description: "Replace with the configured business phone",
-      isPublic: true,
-    },
-    {
-      key: "business.whatsapp",
-      value: "910000000000",
-      description: "Digits only WhatsApp destination",
-      isPublic: true,
-    },
-    {
-      key: "content.demoMode",
-      value: true,
-      description: "Marks seed content as non-production demo content",
-      isPublic: false,
-    },
-  ] as const;
+  const settings = Object.entries(siteSettingDefaults).map(([key, setting]) => ({ key, ...setting }));
 
   for (const setting of settings) {
     await prisma.siteSetting.upsert({

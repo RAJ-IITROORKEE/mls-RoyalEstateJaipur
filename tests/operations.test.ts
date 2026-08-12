@@ -49,6 +49,18 @@ describe("operational authorization boundaries", () => {
         value: "91 987",
       }).success,
     ).toBe(false);
+    expect(
+      settingsUpdateSchema.safeParse({
+        key: "appearance.fontFamily",
+        value: "dm-serif",
+      }).success,
+    ).toBe(true);
+    expect(
+      settingsUpdateSchema.safeParse({
+        key: "appearance.fontFamily",
+        value: "font-family: injected",
+      }).success,
+    ).toBe(false);
   });
 
   it("limits property inventory mutations to administrators", () => {

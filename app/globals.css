@@ -38,8 +38,35 @@
   --color-success: var(--success);
   --color-destructive: var(--destructive);
   --color-ring: var(--ring);
-  --font-sans: var(--font-manrope);
-  --font-serif: var(--font-cormorant);
+  --site-font-sans: var(--font-manrope);
+  --site-font-serif: var(--font-cormorant);
+  --font-sans: var(--site-font-sans);
+  --font-serif: var(--site-font-serif);
+}
+
+.font-theme-current {
+  --site-font-sans: var(--font-manrope);
+  --site-font-serif: var(--font-cormorant);
+}
+
+.font-theme-dm-serif {
+  --site-font-sans: var(--font-dm-sans);
+  --site-font-serif: var(--font-dm-serif);
+}
+
+.font-theme-playfair {
+  --site-font-sans: var(--font-plus-jakarta);
+  --site-font-serif: var(--font-playfair);
+}
+
+.font-theme-lora {
+  --site-font-sans: var(--font-outfit);
+  --site-font-serif: var(--font-lora);
+}
+
+.font-theme-fraunces {
+  --site-font-sans: var(--font-figtree);
+  --site-font-serif: var(--font-fraunces);
 }
 
 .dark {
@@ -72,7 +99,7 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
+  font-family: var(--site-font-sans), Arial, Helvetica, sans-serif;
 }
 
 button,
@@ -143,7 +170,7 @@ textarea:focus-visible {
 .blog-rich-editor .ProseMirror h2,
 .blog-rich-editor .ProseMirror h3,
 .blog-rich-editor .ProseMirror h4 {
-  font-family: var(--font-cormorant), Georgia, serif;
+  font-family: var(--site-font-serif), Georgia, serif;
   line-height: 1.1;
 }
 .blog-rich-editor .ProseMirror h2 {
