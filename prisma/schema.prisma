@@ -252,6 +252,8 @@ model Locality {
   summary        String
   heroImage      String?
   isFeatured     Boolean    @default(false)
+  isActive       Boolean    @default(true)
+  sortOrder      Int        @default(0)
   seoTitle       String?
   seoDescription String?
   createdAt      DateTime   @default(now())
@@ -259,6 +261,20 @@ model Locality {
   properties     Property[]
 
   @@index([city, isFeatured])
+  @@index([isActive, sortOrder, name])
+}
+
+model FaqItem {
+  id          String   @id @default(uuid()) @db.Uuid
+  key         String   @unique @db.VarChar(100)
+  question    String   @db.VarChar(240)
+  answer      String   @db.VarChar(2000)
+  sortOrder   Int      @default(0)
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublished, sortOrder, createdAt])
 }
 
 model Enquiry {

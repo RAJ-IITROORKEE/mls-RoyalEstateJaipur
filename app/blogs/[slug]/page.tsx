@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { PublicPage } from "@/components/layout/public-page";
@@ -11,7 +12,13 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const post = await getPublishedBlogPost((await params).slug);
+  const result = await getPublishedBlogPost((await params).slug);
+  if (!result.connected)
+    return {
+      title: "Journal temporarily unavailable",
+      robots: { index: false, follow: false },
+    };
+  const post = result.post;
   return post
     ? {
         title: post.seoTitle || post.title,
@@ -37,7 +44,31 @@ export default async function BlogDetailPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const post = await getPublishedBlogPost((await params).slug);
+  const result = await getPublishedBlogPost((await params).slug);
+  if (!result.connected)
+    return (
+      <PublicPage>
+        <section className="mx-auto max-w-3xl px-5 py-20 sm:px-8 sm:py-28">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+            Journal
+          </p>
+          <h1 className="mt-4 font-serif text-4xl leading-tight sm:text-5xl">
+            This story is temporarily unavailable.
+          </h1>
+          <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground">
+            Please try again shortly. The property catalogue and contact page
+            are available in the meantime.
+          </p>
+          <Link
+            className="mt-8 inline-flex min-h-11 items-center rounded-xl border border-border px-4 text-sm font-semibold hover:bg-muted"
+            href="/blogs"
+          >
+            Return to the journal
+          </Link>
+        </section>
+      </PublicPage>
+    );
+  const post = result.post;
   if (!post) notFound();
   const coverAsset = post.assets.find(
     (asset) => asset.id === post.coverAssetId,

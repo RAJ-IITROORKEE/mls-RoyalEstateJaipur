@@ -13,6 +13,7 @@ import { z } from "zod";
 
 import { prisma } from "@/lib/db/prisma";
 import { siteSettingDefaults } from "@/features/admin/settings";
+import { defaultFaqItems, defaultLocalities } from "@/features/site-content/default-content";
 
 config({ path: resolve(process.cwd(), ".env.local") });
 config({ path: resolve(process.cwd(), ".env") });
@@ -36,6 +37,26 @@ async function seedSettings() {
     });
   }
   return settings.length;
+}
+
+async function seedSiteContent() {
+  for (const locality of defaultLocalities) {
+    await prisma.locality.upsert({
+      where: { slug: locality.slug },
+      update: {},
+      create: locality,
+    });
+  }
+
+  for (const faq of defaultFaqItems) {
+    await prisma.faqItem.upsert({
+      where: { key: faq.key },
+      update: {},
+      create: { ...faq },
+    });
+  }
+
+  return { localityCount: defaultLocalities.length, faqCount: defaultFaqItems.length };
 }
 
 async function seedDemoContent() {
@@ -324,9 +345,10 @@ async function seedDemoContent() {
 
 async function main() {
   const settingCount = await seedSettings();
+  const siteContent = await seedSiteContent();
   const demoSeeded = await seedDemoContent();
   console.info(
-    `Seeded ${settingCount} safe settings${demoSeeded ? " and guarded demo content" : ""}.`,
+    `Seeded ${settingCount} safe settings and ${siteContent.localityCount} default localities${siteContent.faqCount ? ` and ${siteContent.faqCount} initial FAQs` : ""}${demoSeeded ? " and guarded demo content" : ""}.`,
   );
 }
 

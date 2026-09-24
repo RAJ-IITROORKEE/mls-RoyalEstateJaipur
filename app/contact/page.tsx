@@ -30,12 +30,7 @@ export default async function ContactPage({
     ? await getPublishedPropertyByReference(propertyReference)
     : null;
   const propertyTitle = property?.title ?? propertyReference;
-  const intentLabel =
-    propertyIntent === "RENT"
-      ? "renting"
-      : propertyIntent === "LEASE"
-        ? "leasing"
-        : "buying";
+  const intentLabel = propertyIntent === "RENT" ? "renting" : "buying";
   const whatsappMessage = createWhatsAppEnquiryMessage({
     businessName: environment.NEXT_PUBLIC_BUSINESS_NAME,
     intent: propertyIntent,

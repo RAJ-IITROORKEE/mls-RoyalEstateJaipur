@@ -85,7 +85,7 @@ export default async function AccountDashboardPage() {
             <Search className="size-6 text-primary" />
             <p className="mt-8 font-serif text-3xl">Explore</p>
             <p className="mt-2 text-sm text-muted-foreground">
-              See properties to buy, rent, or lease
+              See properties to buy or rent
             </p>
           </Link>
           <Link

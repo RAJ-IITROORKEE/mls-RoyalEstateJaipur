@@ -2,9 +2,18 @@ import type { User } from "@supabase/supabase-js";
 
 import { prisma } from "@/lib/db/prisma";
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
 function getDisplayName(user: User) {
-  const value = user.user_metadata?.display_name;
-  return typeof value === "string" && value.trim() ? value.trim() : null;
+  const metadata: unknown = user.user_metadata;
+  if (!isRecord(metadata)) return null;
+  for (const key of ["display_name", "full_name", "name"]) {
+    const value = metadata[key];
+    if (typeof value === "string" && value.trim()) return value.trim().slice(0, 120);
+  }
+  return null;
 }
 
 export async function provisionProfile(user: User, updateLastLogin = false) {

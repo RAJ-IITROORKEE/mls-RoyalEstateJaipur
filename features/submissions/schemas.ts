@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const submissionIntents = ["SELL", "RENT", "LEASE"] as const;
+export const submissionIntents = ["SELL", "RENT"] as const;
 export const submissionCategories = [
   "PLOT",
   "RESIDENTIAL",

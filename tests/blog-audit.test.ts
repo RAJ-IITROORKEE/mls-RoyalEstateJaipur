@@ -1,11 +1,25 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("@/lib/db/prisma", () => ({
+  prisma: { blogPost: { findMany: vi.fn(), findFirst: vi.fn() } },
+}));
 
 import {
   blogContentSchema,
   blogPostInputSchema,
 } from "@/features/blog/schemas";
-import { canManageBlog } from "@/features/blog/service";
+import {
+  canManageBlog,
+  getPublishedBlogPost,
+  getPublishedBlogPosts,
+} from "@/features/blog/service";
 import { auditArchiveSchema } from "@/features/admin/audit-schema";
+import { prisma } from "@/lib/db/prisma";
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+  vi.clearAllMocks();
+});
 
 describe("blog content boundaries", () => {
   it("accepts allowlisted editorial blocks and rejects empty content", () => {
@@ -98,6 +112,32 @@ describe("blog content boundaries", () => {
         },
       }).success,
     ).toBe(false);
+  });
+});
+
+describe("public blog database failures", () => {
+  it("returns an unavailable result when the list query cannot connect", async () => {
+    vi.stubEnv("DATABASE_URL", "postgresql://unavailable");
+    vi.mocked(prisma.blogPost.findMany).mockRejectedValue(
+      new Error("PrismaClientInitializationError: connection details"),
+    );
+
+    await expect(getPublishedBlogPosts()).resolves.toEqual({
+      connected: false,
+      posts: [],
+    });
+  });
+
+  it("returns an unavailable result for a failed detail query", async () => {
+    vi.stubEnv("DATABASE_URL", "postgresql://unavailable");
+    vi.mocked(prisma.blogPost.findFirst).mockRejectedValue(
+      new Error("PrismaClientInitializationError: connection details"),
+    );
+
+    await expect(getPublishedBlogPost("sample-story")).resolves.toEqual({
+      connected: false,
+      post: null,
+    });
   });
 });
 

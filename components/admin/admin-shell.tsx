@@ -2,6 +2,7 @@
 
 import {
   Bell,
+  BookOpenText,
   ChevronRight,
   History,
   LayoutDashboard,
@@ -28,6 +29,7 @@ const navigation = [
   { href: "/admin/properties", label: "Properties", icon: LayoutDashboard },
   { href: "/admin/enquiries", label: "Enquiries", icon: Bell },
   { href: "/admin/blog", label: "Blogs", icon: Newspaper },
+  { href: "/admin/content", label: "FAQs & locations", icon: BookOpenText },
   { href: "/admin/audit", label: "Audit history", icon: History },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];

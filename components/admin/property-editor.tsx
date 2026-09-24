@@ -7,7 +7,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   propertyCategories,
-  propertyIntents,
+  publicPropertyIntents,
 } from "@/features/properties/domain";
 
 type EditableProperty = {
@@ -126,11 +126,14 @@ export function PropertyEditor({ property }: { property: EditableProperty }) {
               defaultValue={property.intent}
               name="intent"
             >
-              {propertyIntents.map((value) => (
+              {publicPropertyIntents.map((value) => (
                 <option key={value} value={value}>
                   {value}
                 </option>
               ))}
+              {property.intent === "LEASE" && (
+                <option value="LEASE">Legacy lease record</option>
+              )}
             </select>
           </label>
           <label className={labelClass}>

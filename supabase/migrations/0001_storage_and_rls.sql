@@ -17,16 +17,20 @@ alter table if exists public."PropertyMedia" enable row level security;
 alter table if exists public."PropertyDocument" enable row level security;
 alter table if exists public."PropertySubmissionMedia" enable row level security;
 alter table if exists public."Locality" enable row level security;
+alter table if exists public."FaqItem" enable row level security;
 alter table if exists public."Enquiry" enable row level security;
 alter table if exists public."EnquiryActivity" enable row level security;
 alter table if exists public."Notification" enable row level security;
 alter table if exists public."AuditLog" enable row level security;
+alter table if exists public."AuditLogArchive" enable row level security;
+alter table if exists public."BlogPost" enable row level security;
+alter table if exists public."BlogAsset" enable row level security;
 alter table if exists public."SiteSetting" enable row level security;
+alter table if exists public."_prisma_migrations" enable row level security;
 
+-- Public buckets serve known object paths through Supabase's public-object endpoint.
+-- Do not grant anonymous bucket listing; public pages already get paths from Prisma.
 drop policy if exists "Public can read listing media" on storage.objects;
-create policy "Public can read listing media"
-  on storage.objects for select
-  using (bucket_id = 'property-media');
 
 drop policy if exists "Service role manages listing media" on storage.objects;
 create policy "Service role manages listing media"
@@ -50,9 +54,6 @@ create policy "Service role manages private submission media"
   with check (bucket_id = 'property-submission-media');
 
 drop policy if exists "Public can read profile avatars" on storage.objects;
-create policy "Public can read profile avatars"
-  on storage.objects for select
-  using (bucket_id = 'profile-avatars');
 
 drop policy if exists "Service role manages profile avatars" on storage.objects;
 create policy "Service role manages profile avatars"
@@ -69,9 +70,6 @@ create policy "Service role manages blog draft media"
   with check (bucket_id = 'blog-draft-media');
 
 drop policy if exists "Public can read published blog media" on storage.objects;
-create policy "Public can read published blog media"
-  on storage.objects for select
-  using (bucket_id = 'blog-media');
 
 drop policy if exists "Service role manages published blog media" on storage.objects;
 create policy "Service role manages published blog media"

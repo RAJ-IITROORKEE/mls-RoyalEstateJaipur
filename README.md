@@ -4,7 +4,7 @@ An India-first property marketplace foundation built with Next.js App Router, Su
 
 ## Prerequisites
 
-- Node.js 20 or newer
+- Node.js 20.19 or newer, 22.12 or newer, or 24 or newer (the installed JSDOM toolchain uses the current ESM-capable runtime versions)
 - npm
 - A Supabase project for Auth, Postgres, and Storage
 
@@ -59,6 +59,8 @@ Configure the environment variables in Vercel, run `npm run prisma:deploy` from 
 ## Authentication setup
 
 - Enable Supabase email authentication and configure the site URL plus `/auth/callback` redirect URL.
+- For Google sign-in, create a Google OAuth Web application. In Google Cloud, register Supabase's callback URL (`https://<project-ref>.supabase.co/auth/v1/callback`). In Supabase, enable Google under **Authentication > Sign In / Providers** and enter the Google client ID and secret there. Set the Supabase Site URL to `NEXT_PUBLIC_SITE_URL` and add `http://localhost:3000/auth/callback` plus the deployed site's `/auth/callback` as allowed redirect URLs. Keep the Google secret in the Supabase provider settings; it does not belong in this repository or a `NEXT_PUBLIC_*` variable.
+- `/api/auth/google` starts OAuth through Supabase Auth, and `/auth/callback` verifies the PKCE code and provisions the matching `Profile` UUID. A working Postgres connection is required to finish profile provisioning.
 - Keep **Confirm email** enabled. In Supabase Dashboard, open **Authentication > Email Templates > Confirm signup**, use the subject `Your Royal Estates Jaipur verification code`, and paste the branded template from `docs/supabase-email-templates/confirm-signup.html`. The required `{{ .Token }}` variable supplies the standard six-digit code used by the in-app OTP form.
 - Set the hosted email OTP length to six in **Authentication > Sign In / Providers > Email**, or configure a local `SUPABASE_ACCESS_TOKEN` and run `npm run supabase:auth-config`. The command changes only `mailer_otp_length`, verifies the saved value, and does not print the token.
 - Configure hosted SMTP using `docs/supabase-email-templates/README.md`. Run `npm run diagnose:signup` after saving the SMTP and template settings; it performs a disposable signup test without printing credentials.
@@ -69,11 +71,13 @@ Configure the environment variables in Vercel, run `npm run prisma:deploy` from 
 
 ## Supabase MCP connection
 
-MCP authorization is managed by the host session. Do not put an MCP token in `.env.local` or commit it to this repository. The authenticated project connection has been used to apply and verify the checked-in Storage/RLS configuration; rerun `npm run supabase:configure` safely because it is idempotent.
+MCP authorization is managed by the host session. Do not put an MCP token in `.env.local` or commit it to this repository. Before using database-backed features, verify the project is online with `npm run db:check`. Then run `npm run prisma:deploy`, `npm run db:seed`, `npm run supabase:configure`, and `npm run supabase:check-storage`. The Storage check verifies bucket names and public/private visibility without printing credentials.
+
+The checked-in Storage policy separates public `property-media`, `profile-avatars`, and `blog-media` from private `property-documents`, `property-submission-media`, and `blog-draft-media`. Keep private documents and draft assets private; authorized server operations use short-lived access where needed.
 
 ## Current checkpoint
 
-The application foundation, authentication, public catalogue, owner intake, moderation, and operations slices are implemented. Prisma migrations, seed, database connectivity, admin bootstrap, password sign-in, browser session authorization, and Storage bucket visibility have been verified against the configured Supabase project. Hosted email-template changes remain managed in the Supabase Dashboard.
+The application foundation, authentication, public catalogue, owner intake, moderation, and operations slices are implemented. Provider status and connectivity can change independently of this checkout; verify the database and Storage buckets using the commands above before a release. Hosted email templates, Google OAuth credentials, and allowed callback URLs are managed in the Supabase Dashboard.
 
 ## Getting Started
 

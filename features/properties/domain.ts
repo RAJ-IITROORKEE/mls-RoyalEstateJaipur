@@ -1,6 +1,10 @@
 export const propertyIntents = ["SELL", "RENT", "LEASE"] as const;
 export type PropertyIntent = (typeof propertyIntents)[number];
 
+/** Intents offered in public search and new owner submissions. */
+export const publicPropertyIntents = ["SELL", "RENT"] as const;
+export type PublicPropertyIntent = (typeof publicPropertyIntents)[number];
+
 export const propertyCategories = [
   "PLOT",
   "RESIDENTIAL",

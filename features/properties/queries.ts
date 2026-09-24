@@ -31,12 +31,14 @@ export type PublicPropertyResult = {
   connected: boolean;
   properties: PublicPropertyCard[];
   hasMore: boolean;
+  totalCount: number;
 };
 
 export type PublicPropertyFilters = {
   intent?: PropertyIntent;
   category?: PropertyCategory;
   query?: string;
+  locality?: string;
   page?: number;
   minPriceMinor?: string;
   maxPriceMinor?: string;
@@ -53,6 +55,7 @@ const emptyResult: PublicPropertyResult = {
   connected: false,
   properties: [],
   hasMore: false,
+  totalCount: 0,
 };
 
 export async function getPublishedProperties(
@@ -68,78 +71,93 @@ export async function getPublishedProperties(
         ? [{ priceMinor: "desc" }, { publishedAt: "desc" }]
         : [{ isFeatured: "desc" }, { publishedAt: "desc" }];
   try {
-    const properties = await prisma.property.findMany({
-      where: {
-        status: PropertyStatus.PUBLISHED,
-        ...(filters.intent ? { intent: filters.intent } : {}),
-        ...(filters.category ? { category: filters.category } : {}),
-        ...(filters.query
-          ? {
-              OR: [
-                {
-                  localityName: {
-                    contains: filters.query,
-                    mode: "insensitive",
-                  },
+    const where: Prisma.PropertyWhereInput = {
+      status: PropertyStatus.PUBLISHED,
+      intent: { in: [PropertyIntent.SELL, PropertyIntent.RENT] },
+      ...(filters.intent ? { intent: filters.intent } : {}),
+      ...(filters.category ? { category: filters.category } : {}),
+      ...(filters.locality
+        ? { localityName: { equals: filters.locality, mode: "insensitive" } }
+        : {}),
+      ...(filters.query
+        ? {
+            OR: [
+              {
+                localityName: {
+                  contains: filters.query,
+                  mode: "insensitive",
                 },
-                { city: { contains: filters.query, mode: "insensitive" } },
-                { title: { contains: filters.query, mode: "insensitive" } },
-              ],
-            }
-          : {}),
-        ...(filters.minPriceMinor || filters.maxPriceMinor
-          ? {
-              priceMinor: {
-                gte: filters.minPriceMinor
-                  ? BigInt(filters.minPriceMinor)
-                  : undefined,
-                lte: filters.maxPriceMinor
-                  ? BigInt(filters.maxPriceMinor)
-                  : undefined,
               },
-            }
-          : {}),
-        ...(filters.minArea || filters.maxArea
-          ? {
-              areaValue: {
-                gte: filters.minArea
-                  ? new Prisma.Decimal(filters.minArea)
-                  : undefined,
-                lte: filters.maxArea
-                  ? new Prisma.Decimal(filters.maxArea)
-                  : undefined,
+              { city: { contains: filters.query, mode: "insensitive" } },
+              { title: { contains: filters.query, mode: "insensitive" } },
+              { addressLine: { contains: filters.query, mode: "insensitive" } },
+              {
+                referenceNumber: {
+                  contains: filters.query,
+                  mode: "insensitive",
+                },
               },
-            }
-          : {}),
-        ...(filters.bedrooms ? { bedrooms: { gte: filters.bedrooms } } : {}),
-        ...(filters.furnishing
-          ? { furnishing: { equals: filters.furnishing } }
-          : {}),
-        ...(filters.amenity ? { amenities: { has: filters.amenity } } : {}),
-      },
-      orderBy,
-      skip: (page - 1) * limit,
-      take: limit + 1,
-      select: {
-        slug: true,
-        referenceNumber: true,
-        title: true,
-        intent: true,
-        category: true,
-        otherPropertyType: true,
-        localityName: true,
-        city: true,
-        priceMinor: true,
-        priceOnRequest: true,
-        areaValue: true,
-        areaUnit: true,
-        media: {
-          orderBy: [{ isCover: "desc" }, { sortOrder: "asc" }],
-          take: 1,
-          select: { storagePath: true, altText: true },
+            ],
+          }
+        : {}),
+      ...(filters.minPriceMinor || filters.maxPriceMinor
+        ? {
+            priceMinor: {
+              gte: filters.minPriceMinor
+                ? BigInt(filters.minPriceMinor)
+                : undefined,
+              lte: filters.maxPriceMinor
+                ? BigInt(filters.maxPriceMinor)
+                : undefined,
+            },
+          }
+        : {}),
+      ...(filters.minArea || filters.maxArea
+        ? {
+            areaValue: {
+              gte: filters.minArea
+                ? new Prisma.Decimal(filters.minArea)
+                : undefined,
+              lte: filters.maxArea
+                ? new Prisma.Decimal(filters.maxArea)
+                : undefined,
+            },
+          }
+        : {}),
+      ...(filters.bedrooms ? { bedrooms: { gte: filters.bedrooms } } : {}),
+      ...(filters.furnishing
+        ? { furnishing: { equals: filters.furnishing } }
+        : {}),
+      ...(filters.amenity ? { amenities: { has: filters.amenity } } : {}),
+    };
+    const [properties, totalCount] = await Promise.all([
+      prisma.property.findMany({
+        where,
+        orderBy,
+        skip: (page - 1) * limit,
+        take: limit + 1,
+        select: {
+          slug: true,
+          referenceNumber: true,
+          title: true,
+          intent: true,
+          category: true,
+          otherPropertyType: true,
+          localityName: true,
+          city: true,
+          priceMinor: true,
+          priceOnRequest: true,
+          areaValue: true,
+          areaUnit: true,
+          media: {
+            orderBy: [{ isCover: "desc" }, { sortOrder: "asc" }],
+            take: 1,
+            select: { storagePath: true, altText: true },
+          },
         },
-      },
-    });
+      }),
+      prisma.property.count({ where }),
+    ]);
     return {
       connected: true,
       properties: properties.slice(0, limit).map(({ media, ...property }) => ({
@@ -153,6 +171,7 @@ export async function getPublishedProperties(
           : null,
       })),
       hasMore: properties.length > limit,
+      totalCount,
     };
   } catch {
     return emptyResult;
@@ -164,7 +183,11 @@ export async function getPublishedProperty(slug: string) {
     return { connected: false as const, property: null };
   try {
     const property = await prisma.property.findFirst({
-      where: { slug, status: PropertyStatus.PUBLISHED },
+      where: {
+        slug,
+        status: PropertyStatus.PUBLISHED,
+        intent: { in: [PropertyIntent.SELL, PropertyIntent.RENT] },
+      },
       select: {
         id: true,
         slug: true,
@@ -223,7 +246,11 @@ export async function getPublishedPropertyByReference(referenceNumber: string) {
   if (!hasDatabaseConfiguration()) return null;
   try {
     return await prisma.property.findFirst({
-      where: { referenceNumber, status: PropertyStatus.PUBLISHED },
+      where: {
+        referenceNumber,
+        status: PropertyStatus.PUBLISHED,
+        intent: { in: [PropertyIntent.SELL, PropertyIntent.RENT] },
+      },
       select: { referenceNumber: true, title: true },
     });
   } catch {
@@ -235,7 +262,10 @@ export async function getPublishedPropertySlugs() {
   if (!hasDatabaseConfiguration()) return [];
   try {
     const properties = await prisma.property.findMany({
-      where: { status: PropertyStatus.PUBLISHED },
+      where: {
+        status: PropertyStatus.PUBLISHED,
+        intent: { in: [PropertyIntent.SELL, PropertyIntent.RENT] },
+      },
       select: { slug: true },
       orderBy: { publishedAt: "desc" },
       take: 5000,

@@ -1,15 +1,17 @@
-import { Search, SlidersHorizontal } from "lucide-react";
+import { ArrowUpRight, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { PublicPage } from "@/components/layout/public-page";
 import {
+  publicPropertyIntents,
   propertyCategories,
-  propertyIntents,
 } from "@/features/properties/domain";
-import { getPublishedProperties } from "@/features/properties/queries";
-import type { PublicPropertySort } from "@/features/properties/queries";
-import { getEnvironment } from "@/lib/env";
+import {
+  getPublishedProperties,
+  type PublicPropertySort,
+} from "@/features/properties/queries";
+import { getPublicLocalities } from "@/features/site-content/queries";
 import { formatInrMinorUnits } from "@/lib/utils";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -19,7 +21,10 @@ function first(value: string | string[] | undefined) {
 }
 
 function label(value: string) {
-  return value === "SELL" ? "Buy" : value[0] + value.slice(1).toLowerCase();
+  if (value === "SELL") return "Buy";
+  if (value === "RENT") return "Rent";
+  if (value === "PLOT") return "Plot & land";
+  return value[0] + value.slice(1).toLowerCase();
 }
 
 function integerParam(value: string | undefined) {
@@ -28,6 +33,11 @@ function integerParam(value: string | undefined) {
 
 function decimalParam(value: string | undefined) {
   return value && /^\d+(\.\d{1,2})?$/.test(value) ? value : undefined;
+}
+
+function shortTextParam(value: string | undefined, maximum: number) {
+  const trimmed = value?.trim();
+  return trimmed && trimmed.length <= maximum ? trimmed : undefined;
 }
 
 function rupeesToPaise(value: string | undefined) {
@@ -41,16 +51,17 @@ export default async function PropertiesPage({
   searchParams: SearchParams;
 }) {
   const params = await searchParams;
-  const intent = first(params.intent);
-  const category = first(params.category);
-  const query = first(params.q)?.trim();
+  const intentParam = first(params.intent);
+  const categoryParam = first(params.category);
+  const query = shortTextParam(first(params.q), 120);
+  const locality = shortTextParam(first(params.locality), 100);
   const minPrice = integerParam(first(params.minPrice));
   const maxPrice = integerParam(first(params.maxPrice));
   const minArea = decimalParam(first(params.minArea));
   const maxArea = decimalParam(first(params.maxArea));
   const bedrooms = integerParam(first(params.bedrooms));
-  const furnishing = first(params.furnishing)?.trim();
-  const amenity = first(params.amenity)?.trim();
+  const furnishing = shortTextParam(first(params.furnishing), 40);
+  const amenity = shortTextParam(first(params.amenity), 80);
   const requestedSort = first(params.sort);
   const sort = ["newest", "price_asc", "price_desc"].includes(
     requestedSort ?? "",
@@ -60,31 +71,41 @@ export default async function PropertiesPage({
   const requestedPage = Number(first(params.page));
   const page =
     Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
-  const result = await getPublishedProperties({
-    intent: propertyIntents.includes(intent as (typeof propertyIntents)[number])
-      ? (intent as (typeof propertyIntents)[number])
-      : undefined,
-    category: propertyCategories.includes(
-      category as (typeof propertyCategories)[number],
-    )
-      ? (category as (typeof propertyCategories)[number])
-      : undefined,
-    query: query || undefined,
-    minPriceMinor: rupeesToPaise(minPrice),
-    maxPriceMinor: rupeesToPaise(maxPrice),
-    minArea,
-    maxArea,
-    bedrooms: bedrooms ? Number(bedrooms) : undefined,
-    furnishing: furnishing || undefined,
-    amenity: amenity || undefined,
-    page,
-    sort,
-  });
-  const { NEXT_PUBLIC_BUSINESS_NAME: businessName } = getEnvironment();
+  const validIntent = publicPropertyIntents.includes(
+    intentParam as (typeof publicPropertyIntents)[number],
+  )
+    ? (intentParam as (typeof publicPropertyIntents)[number])
+    : undefined;
+  const validCategory = propertyCategories.includes(
+    categoryParam as (typeof propertyCategories)[number],
+  )
+    ? (categoryParam as (typeof propertyCategories)[number])
+    : undefined;
+
+  const [result, localityResult] = await Promise.all([
+    getPublishedProperties({
+      intent: validIntent,
+      category: validCategory,
+      query,
+      locality,
+      minPriceMinor: rupeesToPaise(minPrice),
+      maxPriceMinor: rupeesToPaise(maxPrice),
+      minArea,
+      maxArea,
+      bedrooms: bedrooms ? Number(bedrooms) : undefined,
+      furnishing,
+      amenity,
+      page,
+      sort,
+    }),
+    getPublicLocalities(),
+  ]);
+
   const pageQuery = new URLSearchParams();
   if (query) pageQuery.set("q", query);
-  if (intent) pageQuery.set("intent", intent);
-  if (category) pageQuery.set("category", category);
+  if (locality) pageQuery.set("locality", locality);
+  if (validIntent) pageQuery.set("intent", validIntent);
+  if (validCategory) pageQuery.set("category", validCategory);
   if (minPrice) pageQuery.set("minPrice", minPrice);
   if (maxPrice) pageQuery.set("maxPrice", maxPrice);
   if (minArea) pageQuery.set("minArea", minArea);
@@ -94,278 +115,346 @@ export default async function PropertiesPage({
   if (amenity) pageQuery.set("amenity", amenity);
   if (sort !== "newest") pageQuery.set("sort", sort);
   const queryString = pageQuery.toString();
-  const previousHref = `/properties${queryString ? `?${queryString}&page=${page - 1}` : `?page=${page - 1}`}`;
-  const nextHref = `/properties${queryString ? `?${queryString}&page=${page + 1}` : `?page=${page + 1}`}`;
+  const previousHref =
+    "/properties" +
+    (queryString
+      ? "?" + queryString + "&page=" + String(page - 1)
+      : "?page=" + String(page - 1));
+  const nextHref =
+    "/properties" +
+    (queryString
+      ? "?" + queryString + "&page=" + String(page + 1)
+      : "?page=" + String(page + 1));
 
   return (
     <PublicPage>
       <section className="border-b border-border bg-card">
-        <div className="mx-auto max-w-[1360px] px-5 py-16 sm:px-8 sm:py-24">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
-            The catalogue
+        <div className="mx-auto max-w-[1360px] px-5 py-12 sm:px-8 sm:py-16">
+          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
+                The property catalogue
+              </p>
+              <h1 className="mt-3 font-serif text-4xl leading-tight sm:text-5xl">
+                Properties in Jaipur
+              </h1>
+            </div>
+            <p className="text-sm font-semibold text-muted-foreground" aria-live="polite">
+              {result.connected
+                ? result.totalCount + (result.totalCount === 1 ? " property" : " properties") + " found"
+                : "Catalogue temporarily unavailable"}
+            </p>
+          </div>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground">
+            Search published listings by title, area, locality, or property
+            type. Confirm current availability with the team.
           </p>
-          <h1 className="mt-4 max-w-3xl font-serif text-5xl leading-[0.95] sm:text-7xl">
-            Properties with the useful details in view.
-          </h1>
-          <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground">
-            Browse published listings by intent, type, and locality.
-            Availability is confirmed directly with the team.
-          </p>
+
           <form
-            className="mt-10 grid gap-3 rounded-2xl border border-border bg-background p-3 sm:grid-cols-2 lg:grid-cols-5"
+            action="/properties"
+            className="mt-8 rounded-2xl border border-border bg-background p-4 sm:p-5"
             method="get"
+            role="search"
           >
-            <label className="flex min-h-12 items-center gap-2 rounded-xl border border-border px-3 text-sm">
-              <Search aria-hidden="true" className="size-4 text-primary" />
-              <span className="sr-only">Search locality</span>
-              <input
-                className="min-w-0 flex-1 bg-transparent outline-none"
-                defaultValue={query}
-                name="q"
-                placeholder="Search locality or city"
-              />
-            </label>
-            <select
-              aria-label="Intent"
-              className="min-h-12 rounded-xl border border-border bg-background px-3 text-sm"
-              defaultValue={intent ?? ""}
-              name="intent"
-            >
-              <option value="">Any intent</option>
-              {propertyIntents.map((value) => (
-                <option key={value} value={value}>
-                  {label(value)}
-                </option>
-              ))}
-            </select>
-            <select
-              aria-label="Property type"
-              className="min-h-12 rounded-xl border border-border bg-background px-3 text-sm"
-              defaultValue={category ?? ""}
-              name="category"
-            >
-              <option value="">Any type</option>
-              {propertyCategories.map((value) => (
-                <option key={value} value={value}>
-                  {label(value)}
-                </option>
-              ))}
-            </select>
-            <label className="flex min-h-12 items-center gap-2 rounded-xl border border-border px-3 text-sm">
-              <span className="sr-only">Minimum price in rupees</span>
-              <input
-                className="min-w-0 flex-1 bg-transparent outline-none"
-                defaultValue={minPrice}
-                inputMode="numeric"
-                min="0"
-                name="minPrice"
-                placeholder="Min price (₹)"
-                type="number"
-              />
-            </label>
-            <label className="flex min-h-12 items-center gap-2 rounded-xl border border-border px-3 text-sm">
-              <span className="sr-only">Maximum price in rupees</span>
-              <input
-                className="min-w-0 flex-1 bg-transparent outline-none"
-                defaultValue={maxPrice}
-                inputMode="numeric"
-                min="0"
-                name="maxPrice"
-                placeholder="Max price (₹)"
-                type="number"
-              />
-            </label>
-            <label className="flex min-h-12 items-center gap-2 rounded-xl border border-border px-3 text-sm">
-              <span className="sr-only">Minimum area</span>
-              <input
-                className="min-w-0 flex-1 bg-transparent outline-none"
-                defaultValue={minArea}
-                inputMode="decimal"
-                min="0"
-                name="minArea"
-                placeholder="Min area"
-                type="number"
-              />
-            </label>
-            <label className="flex min-h-12 items-center gap-2 rounded-xl border border-border px-3 text-sm">
-              <span className="sr-only">Maximum area</span>
-              <input
-                className="min-w-0 flex-1 bg-transparent outline-none"
-                defaultValue={maxArea}
-                inputMode="decimal"
-                min="0"
-                name="maxArea"
-                placeholder="Max area"
-                type="number"
-              />
-            </label>
-            <select
-              aria-label="Minimum bedrooms"
-              className="min-h-12 rounded-xl border border-border bg-background px-3 text-sm"
-              defaultValue={bedrooms ?? ""}
-              name="bedrooms"
-            >
-              <option value="">Any bedrooms</option>
-              {[1, 2, 3, 4, 5].map((value) => (
-                <option key={value} value={value}>
-                  {value}+ bedrooms
-                </option>
-              ))}
-            </select>
-            <select
-              aria-label="Furnishing"
-              className="min-h-12 rounded-xl border border-border bg-background px-3 text-sm"
-              defaultValue={furnishing ?? ""}
-              name="furnishing"
-            >
-              <option value="">Any furnishing</option>
-              {["Furnished", "Semi-furnished", "Unfurnished"].map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </select>
-            <input
-              aria-label="Amenity"
-              className="min-h-12 rounded-xl border border-border bg-background px-3 text-sm"
-              defaultValue={amenity}
-              name="amenity"
-              placeholder="Amenity"
-            />
-            <select
-              aria-label="Sort properties"
-              className="min-h-12 rounded-xl border border-border bg-background px-3 text-sm"
-              defaultValue={sort}
-              name="sort"
-            >
-              <option value="newest">Newest first</option>
-              <option value="price_asc">Price: low to high</option>
-              <option value="price_desc">Price: high to low</option>
-            </select>
-            <button
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground"
-              type="submit"
-            >
-              <SlidersHorizontal aria-hidden="true" className="size-4" /> Search
-            </button>
-            <Link
-              className="inline-flex min-h-12 items-center justify-center rounded-xl border border-border px-5 text-sm font-bold"
-              href="/properties"
-            >
-              Clear
-            </Link>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[1.35fr_1fr_1fr_0.8fr_auto] lg:items-end">
+              <label className="grid min-w-0 gap-1.5 text-xs font-semibold text-muted-foreground">
+                Search by title, area, locality
+                <input
+                  className="min-h-12 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                  defaultValue={query}
+                  name="q"
+                  placeholder="e.g. 3 BHK, Jagatpura"
+                  type="search"
+                />
+              </label>
+              <label className="grid min-w-0 gap-1.5 text-xs font-semibold text-muted-foreground">
+                Location
+                <select
+                  className="min-h-12 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  defaultValue={locality ?? ""}
+                  name="locality"
+                >
+                  <option value="">All Locations</option>
+                  {localityResult.localities.map((item) => (
+                    <option key={item.slug} value={item.name}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="grid min-w-0 gap-1.5 text-xs font-semibold text-muted-foreground">
+                Property type
+                <select
+                  className="min-h-12 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  defaultValue={validCategory ?? ""}
+                  name="category"
+                >
+                  <option value="">All property types</option>
+                  {propertyCategories.map((value) => (
+                    <option key={value} value={value}>
+                      {label(value)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="grid min-w-0 gap-1.5 text-xs font-semibold text-muted-foreground">
+                I am looking to
+                <select
+                  className="min-h-12 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  defaultValue={validIntent ?? ""}
+                  name="intent"
+                >
+                  <option value="">Buy or rent</option>
+                  {publicPropertyIntents.map((value) => (
+                    <option key={value} value={value}>
+                      {label(value)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary-hover hover:text-primary-hover-foreground"
+                type="submit"
+              >
+                <Search aria-hidden="true" className="size-4" />
+                Search
+              </button>
+            </div>
+
+            <details className="group mt-4 border-t border-border pt-3">
+              <summary className="flex min-h-11 cursor-pointer items-center gap-2 text-sm font-semibold text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+                More filters
+              </summary>
+              <div className="grid gap-3 pb-2 pt-2 sm:grid-cols-2 lg:grid-cols-4">
+                <label className="grid gap-1.5 text-xs font-semibold text-muted-foreground">
+                  Minimum price (₹)
+                  <input
+                    className="min-h-11 rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground"
+                    defaultValue={minPrice}
+                    inputMode="numeric"
+                    min="0"
+                    name="minPrice"
+                    type="number"
+                  />
+                </label>
+                <label className="grid gap-1.5 text-xs font-semibold text-muted-foreground">
+                  Maximum price (₹)
+                  <input
+                    className="min-h-11 rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground"
+                    defaultValue={maxPrice}
+                    inputMode="numeric"
+                    min="0"
+                    name="maxPrice"
+                    type="number"
+                  />
+                </label>
+                <label className="grid gap-1.5 text-xs font-semibold text-muted-foreground">
+                  Minimum area
+                  <input
+                    className="min-h-11 rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground"
+                    defaultValue={minArea}
+                    inputMode="decimal"
+                    min="0"
+                    name="minArea"
+                    type="number"
+                  />
+                </label>
+                <label className="grid gap-1.5 text-xs font-semibold text-muted-foreground">
+                  Maximum area
+                  <input
+                    className="min-h-11 rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground"
+                    defaultValue={maxArea}
+                    inputMode="decimal"
+                    min="0"
+                    name="maxArea"
+                    type="number"
+                  />
+                </label>
+                <label className="grid gap-1.5 text-xs font-semibold text-muted-foreground">
+                  Bedrooms
+                  <select
+                    className="min-h-11 rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground"
+                    defaultValue={bedrooms ?? ""}
+                    name="bedrooms"
+                  >
+                    <option value="">Any bedrooms</option>
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <option key={value} value={value}>
+                        {value}+ bedrooms
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="grid gap-1.5 text-xs font-semibold text-muted-foreground">
+                  Furnishing
+                  <select
+                    className="min-h-11 rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground"
+                    defaultValue={furnishing ?? ""}
+                    name="furnishing"
+                  >
+                    <option value="">Any furnishing</option>
+                    {["Furnished", "Semi-furnished", "Unfurnished"].map((value) => (
+                      <option key={value} value={value}>
+                        {value}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="grid gap-1.5 text-xs font-semibold text-muted-foreground">
+                  Amenity
+                  <input
+                    className="min-h-11 rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground"
+                    defaultValue={amenity}
+                    name="amenity"
+                    placeholder="e.g. parking"
+                  />
+                </label>
+                <label className="grid gap-1.5 text-xs font-semibold text-muted-foreground">
+                  Sort properties
+                  <select
+                    className="min-h-11 rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground"
+                    defaultValue={sort}
+                    name="sort"
+                  >
+                    <option value="newest">Newest first</option>
+                    <option value="price_asc">Price: low to high</option>
+                    <option value="price_desc">Price: high to low</option>
+                  </select>
+                </label>
+              </div>
+              <div className="flex flex-wrap items-center gap-3 pt-3">
+                <button
+                  className="inline-flex min-h-11 items-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground"
+                  type="submit"
+                >
+                  Apply filters
+                </button>
+                <Link
+                  className="inline-flex min-h-11 items-center rounded-xl px-4 text-sm font-semibold text-muted-foreground underline underline-offset-4 hover:text-foreground"
+                  href="/properties"
+                >
+                  Clear all
+                </Link>
+              </div>
+            </details>
           </form>
         </div>
       </section>
-      <section className="mx-auto max-w-[1360px] px-5 py-16 sm:px-8 sm:py-24">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <p className="text-sm font-semibold text-muted-foreground">
-              {result.connected
-                ? `${result.properties.length}${result.hasMore ? "+" : ""} published ${result.properties.length === 1 ? "listing" : "listings"}`
-                : "Catalogue setup"}
-            </p>
-            <h2 className="mt-2 font-serif text-4xl">
-              A considered shortlist.
-            </h2>
-          </div>
-          <span className="hidden text-xs text-muted-foreground sm:block">
-            {businessName}
-          </span>
-        </div>
+
+      <section className="mx-auto max-w-[1360px] px-5 py-12 sm:px-8 sm:py-16">
         {!result.connected ? (
-          <div className="mt-8 rounded-2xl border border-dashed border-border p-8">
-            <h3 className="font-serif text-3xl">
-              Listings will appear here after database setup.
-            </h3>
-            <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
-              No sample inventory is presented as real. Connect Supabase
-              Postgres, run the checked-in Prisma migration, and publish
-              approved properties from the admin workspace.
+          <div className="rounded-2xl border border-dashed border-border p-8 sm:p-10" role="status">
+            <h2 className="font-serif text-3xl">The catalogue is temporarily unavailable.</h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
+              Please try again shortly. Your filters are still in the address
+              bar, so you can return to this search later.
             </p>
             <Link
-              className="mt-6 inline-flex min-h-11 items-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground"
-              href="/contact"
+              className="mt-6 inline-flex min-h-11 items-center rounded-xl border border-border px-4 text-sm font-semibold hover:bg-muted"
+              href={"/properties" + (queryString ? "?" + queryString : "")}
             >
-              Talk to the team
+              Try again
             </Link>
           </div>
         ) : result.properties.length === 0 ? (
-          <div className="mt-8 rounded-2xl border border-dashed border-border p-8">
-            <h3 className="font-serif text-3xl">
-              No published properties match this search.
-            </h3>
-            <p className="mt-3 text-sm leading-6 text-muted-foreground">
-              Try another locality or clear the filters. Published availability
-              is intentionally separate from private submissions.
+          <div className="rounded-2xl border border-dashed border-border p-8 sm:p-10">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
+              No matching properties
             </p>
+            <h2 className="mt-3 font-serif text-3xl">
+              Try another location or broaden your search.
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
+              Clear a filter or return to the full catalogue to see all
+              published listings.
+            </p>
+            <Link
+              className="mt-6 inline-flex min-h-11 items-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground"
+              href="/properties"
+            >
+              Clear filters
+            </Link>
           </div>
         ) : (
           <>
-            <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm text-muted-foreground">
+                Showing {Math.min((page - 1) * 24 + 1, result.totalCount)}–
+                {Math.min(page * 24, result.totalCount)} of {result.totalCount}
+              </p>
+              {localityResult.connected ? null : (
+                <p className="text-xs text-muted-foreground" role="status">
+                  Using the default location list while updates are unavailable.
+                </p>
+              )}
+            </div>
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
               {result.properties.map((property) => (
-                <Link
-                  className="group overflow-hidden rounded-2xl border border-border bg-card transition hover:-translate-y-0.5 hover:border-primary/40"
-                  href={`/properties/${property.slug}`}
+                <article
+                  className="group overflow-hidden rounded-2xl border border-border bg-card transition-[border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-primary/40 motion-reduce:transform-none motion-reduce:transition-none"
                   key={property.slug}
                 >
-                  <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-                    {property.coverImage?.publicUrl ? (
-                      <Image
-                        alt={property.coverImage.altText}
-                        className="object-cover transition duration-300 group-hover:scale-[1.025]"
-                        fill
-                        sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-                        src={property.coverImage.publicUrl}
-                      />
-                    ) : (
-                      <div
-                        aria-hidden="true"
-                        className="architectural-art h-full opacity-80"
-                      />
-                    )}
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-start justify-between gap-4">
-                      <span className="rounded-full bg-muted px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+                  <Link
+                    className="block focus-visible:outline-none"
+                    href={"/properties/" + property.slug}
+                  >
+                    <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                      {property.coverImage?.publicUrl ? (
+                        <Image
+                          alt={property.coverImage.altText}
+                          className="object-cover transition-transform duration-300 group-hover:scale-[1.025] motion-reduce:transform-none motion-reduce:transition-none"
+                          fill
+                          sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
+                          src={property.coverImage.publicUrl}
+                        />
+                      ) : (
+                        <div
+                          aria-hidden="true"
+                          className="architectural-art h-full opacity-80"
+                        />
+                      )}
+                      <span className="absolute left-4 top-4 rounded-full border border-border bg-background/95 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-primary">
                         {label(property.intent)}
                       </span>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="absolute right-4 top-4 rounded-full bg-background/95 px-3 py-1 text-[11px] font-semibold tabular-nums text-foreground">
                         {property.referenceNumber}
                       </span>
                     </div>
-                    <h3 className="mt-8 font-serif text-3xl leading-tight group-hover:text-primary">
-                      {property.title}
-                    </h3>
-                    <p className="mt-3 text-sm text-muted-foreground">
-                      {property.localityName}, {property.city}
-                    </p>
-                    <div className="mt-8 flex flex-wrap gap-2 text-xs font-semibold text-muted-foreground">
-                      <span className="rounded-lg bg-muted px-2.5 py-1">
+                    <div className="p-5 sm:p-6">
+                      <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary">
                         {label(property.category)}
-                      </span>
-                      {property.areaValue && (
-                        <span className="rounded-lg bg-muted px-2.5 py-1">
-                          {property.areaValue} {property.areaUnit}
-                        </span>
-                      )}
-                      {property.priceOnRequest ? (
-                        <span className="rounded-lg bg-muted px-2.5 py-1">
-                          Price on request
-                        </span>
-                      ) : (
-                        property.priceMinor !== null && (
-                          <span className="rounded-lg bg-muted px-2.5 py-1">
-                            {formatInrMinorUnits(property.priceMinor)}
+                      </p>
+                      <h2 className="mt-3 font-serif text-2xl leading-tight group-hover:text-primary sm:text-3xl">
+                        {property.title}
+                      </h2>
+                      <p className="mt-3 text-sm text-muted-foreground">
+                        {property.localityName}, {property.city}
+                      </p>
+                      <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold text-muted-foreground">
+                        {property.areaValue && (
+                          <span className="rounded-lg bg-muted px-2.5 py-1.5">
+                            {property.areaValue} {property.areaUnit}
                           </span>
-                        )
-                      )}
+                        )}
+                        <span className="rounded-lg bg-muted px-2.5 py-1.5">
+                          {property.priceOnRequest ||
+                          property.priceMinor === null
+                            ? "Price on request"
+                            : formatInrMinorUnits(property.priceMinor)}
+                        </span>
+                      </div>
+                      <div className="mt-6 flex items-center justify-between border-t border-border pt-4">
+                        <span className="text-sm font-bold text-primary">
+                          View property
+                        </span>
+                        <ArrowUpRight
+                          aria-hidden="true"
+                          className="size-4 text-primary"
+                        />
+                      </div>
                     </div>
-                    <span className="mt-6 inline-flex items-center text-sm font-bold text-primary">
-                      View full property
-                    </span>
-                  </div>
-                </Link>
+                  </Link>
+                </article>
               ))}
             </div>
             <nav
@@ -374,7 +463,7 @@ export default async function PropertiesPage({
             >
               {page > 1 ? (
                 <Link
-                  className="inline-flex min-h-11 items-center rounded-xl border border-border px-4 text-sm font-bold"
+                  className="inline-flex min-h-11 items-center rounded-xl border border-border px-4 text-sm font-bold hover:bg-muted"
                   href={previousHref}
                 >
                   Previous
@@ -384,10 +473,11 @@ export default async function PropertiesPage({
               )}
               {result.hasMore && (
                 <Link
-                  className="inline-flex min-h-11 items-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground"
                   href={nextHref}
                 >
                   Next page
+                  <ArrowUpRight aria-hidden="true" className="size-4" />
                 </Link>
               )}
             </nav>

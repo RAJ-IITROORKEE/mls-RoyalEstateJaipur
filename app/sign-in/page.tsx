@@ -2,6 +2,7 @@ import { ArrowLeft, LockKeyhole } from "lucide-react";
 import Link from "next/link";
 
 import { PasswordField } from "@/components/forms/password-field";
+import { GoogleSignInLink } from "@/components/forms/google-sign-in-link";
 import { Button } from "@/components/ui/button";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -97,6 +98,11 @@ export default async function SignInPage({
               Sign in
             </Button>
           </form>
+          <div className="relative my-5 text-center text-xs text-muted-foreground">
+            <span className="relative z-10 bg-background px-3">or</span>
+            <span aria-hidden="true" className="absolute inset-x-0 top-1/2 border-t border-border" />
+          </div>
+          <GoogleSignInLink next={redirectPath || undefined} />
           <div className="mt-6 flex justify-between gap-4 text-sm">
             <Link
               className="font-semibold text-primary"

@@ -5,7 +5,7 @@ import { PublicPage } from "@/components/layout/public-page";
 import { getPublishedBlogPosts } from "@/features/blog/service";
 
 export default async function BlogsPage() {
-  const posts = await getPublishedBlogPosts();
+  const result = await getPublishedBlogPosts();
   return (
     <PublicPage>
       <section className="mx-auto max-w-[1120px] px-5 py-16 sm:px-8 sm:py-24">
@@ -16,10 +16,29 @@ export default async function BlogsPage() {
           Notes for better property decisions.
         </h1>
         <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground">
-          Practical guidance for buying, renting, leasing, and presenting a
+          Practical guidance for buying, renting, and presenting a
           property in Jaipur.
         </p>
-        {posts.length === 0 ? (
+        {!result.connected ? (
+          <div
+            className="mt-12 rounded-2xl border border-dashed border-border p-8"
+            role="status"
+          >
+            <h2 className="font-serif text-3xl">
+              The journal is temporarily unavailable.
+            </h2>
+            <p className="mt-3 text-sm text-muted-foreground">
+              Please try again shortly, or contact our team if you need help
+              with a property decision.
+            </p>
+            <Link
+              className="mt-6 inline-flex min-h-11 items-center rounded-xl border border-border px-4 text-sm font-semibold hover:bg-muted"
+              href="/blogs"
+            >
+              Try again
+            </Link>
+          </div>
+        ) : result.posts.length === 0 ? (
           <div className="mt-12 rounded-2xl border border-dashed border-border p-8">
             <h2 className="font-serif text-3xl">Stories are on the way.</h2>
             <p className="mt-3 text-sm text-muted-foreground">
@@ -28,7 +47,7 @@ export default async function BlogsPage() {
           </div>
         ) : (
           <div className="mt-12 grid gap-5 md:grid-cols-2">
-            {posts.map((post) => (
+            {result.posts.map((post) => (
               <Link
                 className="group overflow-hidden rounded-2xl border border-border bg-card transition hover:-translate-y-1 hover:border-primary/40"
                 href={`/blogs/${post.slug}`}

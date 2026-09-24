@@ -17,6 +17,10 @@ export function canManagePropertyInventory(role: Role) {
   return role === "ADMIN" || role === "SUPER_ADMIN";
 }
 
+export function canManageSiteContent(role: Role) {
+  return role === "ADMIN" || role === "SUPER_ADMIN";
+}
+
 export function canReviewSubmissions(role: Role) {
   return role === "REVIEWER" || role === "ADMIN" || role === "SUPER_ADMIN";
 }

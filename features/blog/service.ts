@@ -10,6 +10,7 @@ import {
   type BlogContent,
 } from "@/features/blog/schemas";
 import { prisma } from "@/lib/db/prisma";
+import { hasDatabaseConfiguration } from "@/lib/env";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getPublicBlogMediaUrl } from "@/lib/supabase/blog-url";
 
@@ -79,75 +80,101 @@ export async function getAdminBlogPost(id: string) {
 }
 
 export async function getPublishedBlogPosts() {
-  const posts = await prisma.blogPost.findMany({
-    where: { status: BlogStatus.PUBLISHED },
-    orderBy: { publishedAt: "desc" },
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      excerpt: true,
-      readingMinutes: true,
-      publishedAt: true,
-      coverAsset: {
-        select: { storagePath: true, bucket: true, altText: true },
+  if (!hasDatabaseConfiguration())
+    return { connected: false as const, posts: [] };
+
+  try {
+    const posts = await prisma.blogPost.findMany({
+      where: { status: BlogStatus.PUBLISHED },
+      orderBy: { publishedAt: "desc" },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        excerpt: true,
+        readingMinutes: true,
+        publishedAt: true,
+        coverAsset: {
+          select: { storagePath: true, bucket: true, altText: true },
+        },
       },
-    },
-  });
-  return posts.map((post) => ({
-    ...post,
-    coverUrl:
-      post.coverAsset?.bucket === publicBucket
-        ? getPublicBlogMediaUrl(post.coverAsset.storagePath)
-        : null,
-  }));
+    });
+    return {
+      connected: true as const,
+      posts: posts.map((post) => ({
+        ...post,
+        coverUrl:
+          post.coverAsset?.bucket === publicBucket
+            ? getPublicBlogMediaUrl(post.coverAsset.storagePath)
+            : null,
+      })),
+    };
+  } catch {
+    return { connected: false as const, posts: [] };
+  }
 }
 
 export async function getPublishedBlogSlugs() {
-  const posts = await prisma.blogPost.findMany({
-    where: { status: BlogStatus.PUBLISHED },
-    select: { slug: true },
-    take: 5000,
-  });
-  return posts.map((post) => post.slug);
+  if (!hasDatabaseConfiguration()) return [];
+  try {
+    const posts = await prisma.blogPost.findMany({
+      where: { status: BlogStatus.PUBLISHED },
+      select: { slug: true },
+      take: 5000,
+    });
+    return posts.map((post) => post.slug);
+  } catch {
+    return [];
+  }
 }
 
 export async function getPublishedBlogPost(slug: string) {
-  const post = await prisma.blogPost.findFirst({
-    where: { slug, status: BlogStatus.PUBLISHED },
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      excerpt: true,
-      content: true,
-      readingMinutes: true,
-      seoTitle: true,
-      seoDescription: true,
-      publishedAt: true,
-      coverAssetId: true,
-      assets: {
-        where: { bucket: publicBucket },
-        orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
-        select: {
-          id: true,
-          storagePath: true,
-          altText: true,
-          caption: true,
-          width: true,
-          height: true,
+  if (!hasDatabaseConfiguration())
+    return { connected: false as const, post: null };
+
+  try {
+    const post = await prisma.blogPost.findFirst({
+      where: { slug, status: BlogStatus.PUBLISHED },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        excerpt: true,
+        content: true,
+        readingMinutes: true,
+        seoTitle: true,
+        seoDescription: true,
+        publishedAt: true,
+        coverAssetId: true,
+        assets: {
+          where: { bucket: publicBucket },
+          orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
+          select: {
+            id: true,
+            storagePath: true,
+            altText: true,
+            caption: true,
+            width: true,
+            height: true,
+          },
         },
       },
-    },
-  });
-  if (!post) return null;
-  return {
-    ...post,
-    assets: post.assets.map((asset) => ({
-      ...asset,
-      url: getPublicBlogMediaUrl(asset.storagePath),
-    })),
-  };
+    });
+    return {
+      connected: true as const,
+      post: post
+        ? {
+            ...post,
+            assets: post.assets.map((asset) => ({
+              ...asset,
+              url: getPublicBlogMediaUrl(asset.storagePath),
+            })),
+          }
+        : null,
+    };
+  } catch {
+    return { connected: false as const, post: null };
+  }
 }
 
 async function verifyContentAssets(postId: string, content: BlogContent) {
