@@ -103,6 +103,13 @@ The failed connectivity and dashboard-access findings above describe the initial
 - User action needed: create/configure an OAuth Web client in Google Cloud, set the Supabase callback URL shown in the provider panel, then enter that client ID and secret in Supabase's Google provider panel. Do not send the secret through chat or commit it. After that, rerun browser OAuth sign-in and callback checks.
 - Remaining Supabase Security Advisor warning: leaked-password protection is disabled. No paid plan change or CAPTCHA vendor was configured.
 
+#### Google OAuth failure recheck — 2026-09-25
+
+- `GET /api/auth/google` returns HTTP 303 to the Supabase `/auth/v1/authorize` endpoint with `provider=google` and the correct `http://localhost:3000/auth/callback` redirect.
+- Following that authorization URL returns HTTP 400 with `validation_failed: Unsupported provider: provider is not enabled`.
+- The OAuth flow therefore stops in Supabase before Google authentication or the app callback. This confirms the current failure is provider configuration, not the local callback URL or redirect construction.
+- Fix remains: configure a Google Cloud OAuth Web client and enable Google in Supabase with its Client ID and Client Secret, then retry the end-to-end flow.
+
 ### Phase 5 — Verification and handoff
 
 **Status:** Automated and local browser checks complete; Google provider activation and admin-session end-to-end CRUD remain externally dependent.
