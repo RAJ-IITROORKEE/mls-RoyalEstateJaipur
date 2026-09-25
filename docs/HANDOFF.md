@@ -46,7 +46,7 @@ The failed connectivity and dashboard-access findings above describe the initial
 
 ### External information still needed
 
-- Google OAuth Web client ID and secret must be entered by the user in the existing Supabase Google provider settings before Google sign-in can be exercised end to end. Do not send the secret through chat or commit it.
+- Google Auth Platform consent setup and OAuth Web client creation are complete in `My First Project`. The Supabase provider remains disabled until the user enters the new Client ID and Client Secret directly in Supabase; never send the secret through chat or commit it.
 - No Vercel deployment, GitHub push, or remote Supabase migration has been performed.
 
 ## Phase updates
@@ -96,11 +96,11 @@ The failed connectivity and dashboard-access findings above describe the initial
 
 ### Phase 4 — Google sign-in/sign-up
 
-**Status:** Application flow implemented; provider activation and end-to-end check blocked by missing Google OAuth credentials.
+**Status:** Application flow implemented and Google OAuth Web client created; provider activation awaits the user entering its credentials directly in Supabase.
 
 - Added rate-limited Google OAuth initiation, safe callback redirect handling, idempotent profile provisioning, suspended-profile rejection, role-aware destinations, and buttons on sign-in/sign-up. Existing email/OTP recovery stays available.
 - Dashboard verification: Supabase Google provider is **Disabled**; client ID and secret are blank. Redirect allowlist already includes `http://localhost:3000/auth/callback` and `https://royalestatejaipur.vercel.app/auth/callback` plus reset-password variants. Email sign-up and email confirmation are enabled.
-- User action needed: create/configure an OAuth Web client in Google Cloud, set the Supabase callback URL shown in the provider panel, then enter that client ID and secret in Supabase's Google provider panel. Do not send the secret through chat or commit it. After that, rerun browser OAuth sign-in and callback checks.
+- User action needed: enter the new OAuth Web client ID and secret directly in Supabase's Google provider panel and enable Google. The secret must not be sent through chat or committed. After that, rerun browser OAuth sign-in and callback checks.
 - Remaining Supabase Security Advisor warning: leaked-password protection is disabled. No paid plan change or CAPTCHA vendor was configured.
 
 #### Google OAuth failure recheck — 2026-09-25
@@ -114,9 +114,17 @@ The failed connectivity and dashboard-access findings above describe the initial
 
 - In the authenticated Supabase project `Mls-RealEstate` (`hyshazxauycyhlafyenp`), Authentication → Sign In / Providers shows Google disabled; Client IDs and Client Secret are blank. The provider callback shown by Supabase is `https://hyshazxauycyhlafyenp.supabase.co/auth/v1/callback`.
 - Supabase URL Configuration is already set to `https://royalestatejaipur.vercel.app` and allows the exact local and production `/auth/callback` URLs plus their password-reset callback variants. Email signup and confirmation are enabled. No allowlist change is currently needed for localhost or the canonical production site.
-- Google Cloud Console opens on `My First Project`, where Google Auth Platform is not configured and no OAuth client is listed. No Google Cloud or Supabase settings were changed during this inspection.
-- Before creating the OAuth client, confirm that `My First Project` is the intended project; use a different project if this application belongs elsewhere. For the web client, authorized JavaScript origins are `http://localhost:3000` and `https://royalestatejaipur.vercel.app`; the authorized redirect URI is the Supabase callback above.
+- At the initial dashboard inspection, Google Cloud Console opened on `My First Project`, where Google Auth Platform was not configured and no OAuth client was listed. No Google Cloud or Supabase settings had been changed at that point.
+- The user confirmed `My First Project` as the correct project. The created web client uses authorized JavaScript origins `http://localhost:3000` and `https://royalestatejaipur.vercel.app`, plus the Supabase callback above as its authorized redirect URI.
 - Once the Web client is created, enter its Client ID and Client Secret directly in Supabase's Google provider panel, enable Google, and keep “Skip nonce checks” off. Never send the secret through chat or commit it. Then verify login/signup from the browser through the app's PKCE callback and profile provisioning.
+
+#### Google OAuth setup progress — 2026-09-25
+
+- The user confirmed `My First Project` and supplied the consent-screen support contact. Google Auth Platform's App Information step is complete with the app name `Royal Estates Jaipur` and that contact.
+- The user selected External for the audience. App Information, Audience, and Contact Information steps are complete for `Royal Estates Jaipur`.
+- The user explicitly accepted the Google API Services: User Data Policy. Google Cloud displayed “OAuth configuration created!” and the consent configuration is complete for External audience.
+- After the user approved the action-time prompt, an OAuth Web client named `Royal Estates Jaipur Web` was created successfully in `My First Project`. It has authorized origins `http://localhost:3000` and `https://royalestatejaipur.vercel.app`, and authorized redirect URI `https://hyshazxauycyhlafyenp.supabase.co/auth/v1/callback`. The client is enabled. Its ID and secret were not copied into documentation or chat.
+- Supabase's Google provider is still disabled with blank credentials. The Supabase provider form is open for the user to enter the Client ID and Client Secret directly; computer-use policy requires the user to take over before a new authentication credential is entered. Keep “Skip nonce checks” off, then save and test Google sign-in. No billing or payment action was taken.
 
 ### Phase 5 — Verification and handoff
 
