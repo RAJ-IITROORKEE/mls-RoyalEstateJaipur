@@ -185,6 +185,7 @@ The failed connectivity and dashboard-access findings above describe the initial
 | Vitest with system Node 20 | Runtime incompatibility: `ERR_REQUIRE_ESM` while loading `html-encoding-sniffer`; no tests started |
 | Vitest with bundled Node 24.19.0 | Pass — 52 tests across 12 files |
 | Next.js production build with bundled Node 24.19.0 | Pass |
+| Playwright `public.spec.ts` | Pass — 3 tests covering the hero/reduced-motion/card-focus flow, catalogue/contact labels, and signed-out admin redirect |
 | `git diff --check` | Pass |
 | Browser: homepage, light theme | Pass — headline spacing, search, and updated homepage card actions rendered |
 | Browser: property catalogue, light theme | Pass — shared card action rendered on all six listings |
@@ -198,6 +199,7 @@ The dev server was restarted on its default host after the production build so t
 
 - `app/page.tsx`, `app/properties/page.tsx`, `app/globals.css`
 - `components/properties/property-card-action.tsx`
+- `e2e/public.spec.ts`
 - `docs/PLAN.md`, `docs/HANDOFF.md`
 
 ### Follow-up — 2026-09-25 — Slate dark appearance

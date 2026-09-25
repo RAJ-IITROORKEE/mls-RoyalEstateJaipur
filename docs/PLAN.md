@@ -140,7 +140,7 @@ The about page will be original and factual. Reference patterns are inspiration 
 - [x] Add subtle theme-token spotlight motion and a one-time headline reveal, with reduced-motion support.
 - [x] Create one shared animated “View property” CTA for homepage and property catalogue cards.
 - [x] Preserve visible keyboard focus for each card link.
-- [x] Run lint, typecheck, Vitest with bundled Node 24, production build, and desktop homepage/catalogue browser review.
+- [x] Run lint, typecheck, Vitest with bundled Node 24, production build, Playwright public flows, and desktop homepage/catalogue browser review.
 - [x] Record final results in `docs/HANDOFF.md`.
 
 ## Follow-up — 2026-09-25
