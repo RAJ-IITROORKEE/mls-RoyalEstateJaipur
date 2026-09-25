@@ -39,25 +39,12 @@ export default async function ContactPage({
   });
   return (
     <PublicPage>
-      <section className="border-b border-border bg-card">
-        <div className="mx-auto max-w-[1360px] px-5 py-20 sm:px-8 sm:py-28">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
-            Contact
-          </p>
-          <h1 className="mt-4 max-w-4xl font-serif text-5xl leading-[0.95] sm:text-7xl">
-            Bring the question. We will bring the next step.
-          </h1>
-          <p className="mt-7 max-w-2xl text-lg leading-8 text-muted-foreground">
-            Ask about a published property, request a callback, or tell us what
-            you are looking for.
-          </p>
-        </div>
-      </section>
       <section className="mx-auto grid max-w-[1120px] gap-10 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[0.7fr_1.3fr]">
         <aside>
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
-            Connect with us
+            Contact
           </p>
+          <h1 className="mt-3 font-serif text-4xl">Get in touch</h1>
           <div className="mt-6">
             <SocialLinks
               whatsappHref={createWhatsAppUrl(

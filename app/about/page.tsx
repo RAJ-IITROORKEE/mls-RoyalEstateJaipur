@@ -3,145 +3,196 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
 import { PublicPage } from "@/components/layout/public-page";
+import { propertyCategories } from "@/features/properties/domain";
+import { getPublicLocalities } from "@/features/site-content/queries";
 
 export const metadata: Metadata = {
   title: "About Royal Estates Jaipur",
   description:
-    "Explore how Royal Estates Jaipur presents property details, enquiries, and owner submissions.",
+    "Learn how Royal Estates Jaipur organizes property listings by type and location, and find a useful place to begin your search.",
   alternates: { canonical: "/about" },
 };
 
-const steps = [
-  {
-    number: "01",
-    title: "Explore with context",
-    body: "Property pages bring the location, category, area, price, and available listing details together.",
-  },
-  {
-    number: "02",
-    title: "Ask a focused question",
-    body: "Send an enquiry from the listing page so the team can follow up about the property you have in mind.",
-  },
-  {
-    number: "03",
-    title: "Confirm the next step",
-    body: "Availability and site visits are discussed directly with the team. An enquiry does not reserve a property.",
-  },
-];
+const categoryLabels: Record<(typeof propertyCategories)[number], string> = {
+  PLOT: "Plots and land",
+  RESIDENTIAL: "Homes and residential property",
+  COMMERCIAL: "Commercial property",
+  INDUSTRIAL: "Industrial property",
+  AGRICULTURAL: "Agricultural land",
+  OTHER: "Other property types",
+};
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const localityResult = await getPublicLocalities();
+  const featuredLocalities = localityResult.localities.filter(
+    (locality) => locality.isFeatured,
+  );
+  const areasToShow = (featuredLocalities.length
+    ? featuredLocalities
+    : localityResult.localities
+  ).slice(0, 10);
+
   return (
     <PublicPage>
       <section className="border-b border-border bg-card">
-        <div className="mx-auto grid max-w-[1360px] gap-12 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+        <div className="mx-auto grid max-w-[1360px] gap-8 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-16">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
               About Royal Estates Jaipur
             </p>
-            <h1 className="mt-5 max-w-4xl font-serif text-5xl leading-[0.96] tracking-tight sm:text-6xl lg:text-7xl">
-              Property decisions start with better questions.
+            <h1 className="mt-4 max-w-4xl text-balance font-serif text-5xl leading-[0.98] sm:text-6xl lg:text-7xl">
+              A clearer place to begin your property search.
             </h1>
           </div>
           <p className="max-w-xl text-base leading-8 text-muted-foreground sm:text-lg">
-            We bring property listings and the practical details around them
-            into one place, so buyers, renters, and owners can begin their next
-            conversation with more context.
+            Explore published homes, plots, and commercial spaces by property
+            type or locality. Each listing brings its available details
+            together, so you can decide what to ask before contacting the team.
           </p>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-[1360px] gap-10 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[0.72fr_1.28fr]">
+      <section className="mx-auto grid max-w-[1360px] gap-10 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
-            How we work
+            Start with what matters
           </p>
-          <h2 className="mt-3 max-w-md font-serif text-4xl leading-tight sm:text-5xl">
-            From the first search to a real conversation.
+          <h2 className="mt-4 max-w-md font-serif text-4xl leading-tight sm:text-5xl">
+            Compare the details that shape a decision.
           </h2>
         </div>
-        <ol className="divide-y divide-border border-y border-border">
-          {steps.map((step) => (
-            <li className="grid gap-3 py-6 sm:grid-cols-[64px_1fr]" key={step.number}>
-              <span className="text-sm font-bold tabular-nums text-accent">
-                {step.number}
-              </span>
-              <div>
-                <h3 className="font-serif text-2xl">{step.title}</h3>
-                <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
-                  {step.body}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ol>
+        <div className="max-w-3xl">
+          <p className="text-base leading-8 text-muted-foreground">
+            Property needs vary from one search to the next. A home, a plot, a
+            place to rent, and a space for work each call for different
+            questions. Browse by the type of property and the Jaipur area that
+            fits your plans, then review the information shown on each listing.
+          </p>
+          <p className="mt-5 text-base leading-8 text-muted-foreground">
+            Online details are a starting point. Confirm availability, price,
+            measurements, terms, and supporting documents directly with the
+            team before making a decision. Sending an enquiry does not reserve
+            a property.
+          </p>
+        </div>
       </section>
 
-      <section className="border-y border-border bg-muted/60">
-        <div className="mx-auto grid max-w-[1360px] gap-8 px-5 py-16 sm:px-8 sm:py-20 md:grid-cols-2">
-          <article className="border-l-2 border-primary pl-6 sm:pl-8">
+      <section className="border-y border-border bg-muted/50">
+        <div className="mx-auto grid max-w-[1360px] gap-10 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+          <div>
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
-              For buyers and renters
+              Browse property types
             </p>
-            <h2 className="mt-4 max-w-md font-serif text-3xl leading-tight sm:text-4xl">
-              Find the details that help you decide what to ask next.
+            <h2 className="mt-4 max-w-md font-serif text-4xl leading-tight sm:text-5xl">
+              A search that starts with the right category.
             </h2>
-            <p className="mt-4 max-w-lg text-sm leading-7 text-muted-foreground">
-              Browse by locality and property type, review the information on a
-              listing, and contact the team to confirm current availability.
-            </p>
             <Link
-              className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-primary underline decoration-border underline-offset-4 hover:decoration-primary"
+              className="mt-7 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-primary underline decoration-border underline-offset-4 hover:decoration-primary"
               href="/properties"
             >
-              Explore properties
+              View all properties
               <ArrowUpRight aria-hidden="true" className="size-4" />
             </Link>
-          </article>
-          <article className="border-l-2 border-accent pl-6 sm:pl-8">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
-              For property owners
-            </p>
-            <h2 className="mt-4 max-w-md font-serif text-3xl leading-tight sm:text-4xl">
-              Share your property for review.
-            </h2>
-            <p className="mt-4 max-w-lg text-sm leading-7 text-muted-foreground">
-              Add the key information and photos through your owner workspace.
-              A staff review happens before a listing is published.
-            </p>
-            <Link
-              className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-primary underline decoration-border underline-offset-4 hover:decoration-primary"
-              href="/list-property"
-            >
-              Submit a property
-              <ArrowUpRight aria-hidden="true" className="size-4" />
-            </Link>
-          </article>
+          </div>
+          <ul className="divide-y divide-border border-y border-border">
+            {propertyCategories.map((category, index) => (
+              <li key={category}>
+                <Link
+                  className="group flex min-h-16 items-center justify-between gap-5 py-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                  href={`/properties?category=${category}`}
+                >
+                  <span className="flex items-center gap-5">
+                    <span className="font-sans text-sm font-bold tabular-nums text-primary/75">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="font-semibold group-hover:text-primary">
+                      {categoryLabels[category]}
+                    </span>
+                  </span>
+                  <ArrowUpRight
+                    aria-hidden="true"
+                    className="size-4 shrink-0 text-primary"
+                  />
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      <section className="mx-auto flex max-w-[1360px] flex-col gap-7 px-5 py-16 sm:px-8 sm:py-20 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
-            Take the next step
-          </p>
-          <h2 className="mt-3 max-w-2xl font-serif text-4xl leading-tight sm:text-5xl">
-            Start with a search or speak with the team.
-          </h2>
-        </div>
-        <div className="flex flex-wrap gap-3">
+      <section className="mx-auto max-w-[1360px] px-5 py-16 sm:px-8 sm:py-20">
+        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
+              Explore Jaipur
+            </p>
+            <h2 className="mt-4 font-serif text-4xl leading-tight sm:text-5xl">
+              Find a starting point by locality.
+            </h2>
+          </div>
           <Link
-            className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary-hover hover:text-primary-hover-foreground"
-            href="/properties"
+            className="inline-flex min-h-11 items-center gap-2 self-start text-sm font-bold text-primary underline decoration-border underline-offset-4 hover:decoration-primary sm:self-auto"
+            href="/localities"
           >
-            Browse properties
+            All localities
             <ArrowUpRight aria-hidden="true" className="size-4" />
           </Link>
-          <Link
-            className="inline-flex min-h-12 items-center rounded-xl border border-border px-5 text-sm font-bold transition-colors hover:bg-muted"
-            href="/contact"
-          >
-            Contact us
-          </Link>
+        </div>
+        {!localityResult.connected && (
+          <p className="mt-6 rounded-xl border border-border bg-muted px-4 py-3 text-sm text-muted-foreground" role="status">
+            Showing the default locality list while updated location data is unavailable.
+          </p>
+        )}
+        {areasToShow.length ? (
+          <ul className="mt-8 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
+            {areasToShow.map((locality) => (
+              <li className="border-t border-border" key={locality.slug}>
+                <Link
+                  className="flex min-h-14 items-center justify-between gap-4 py-3 text-sm font-semibold hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                  href={`/properties?locality=${encodeURIComponent(locality.name)}`}
+                >
+                  {locality.name}
+                  <ArrowUpRight
+                    aria-hidden="true"
+                    className="size-4 shrink-0 text-primary"
+                  />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-8 text-sm text-muted-foreground">
+            No localities are published yet. Browse the full property catalogue
+            or contact the team for help.
+          </p>
+        )}
+      </section>
+
+      <section className="border-t border-border bg-card">
+        <div className="mx-auto flex max-w-[1360px] flex-col gap-6 px-5 py-14 sm:px-8 sm:py-16 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
+              Your next step
+            </p>
+            <h2 className="mt-3 max-w-2xl font-serif text-4xl leading-tight sm:text-5xl">
+              Browse first. Ask when you are ready.
+            </h2>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary-hover hover:text-primary-hover-foreground"
+              href="/properties"
+            >
+              Browse properties
+              <ArrowUpRight aria-hidden="true" className="size-4" />
+            </Link>
+            <Link
+              className="inline-flex min-h-12 items-center rounded-xl border border-border px-5 text-sm font-bold transition-colors hover:bg-muted"
+              href="/contact"
+            >
+              Contact us
+            </Link>
+          </div>
         </div>
       </section>
     </PublicPage>

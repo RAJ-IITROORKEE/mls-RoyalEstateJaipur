@@ -14,7 +14,7 @@ const getCachedPublicFontFamily = unstable_cache(
     });
     return parseFontFamily(setting?.value);
   },
-  ["site-font-family"],
+  ["site-font-family-v2"],
   { tags: ["site-font-family"] },
 );
 

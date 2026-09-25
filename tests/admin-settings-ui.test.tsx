@@ -29,7 +29,7 @@ describe("site font setting control", () => {
 
     const select = screen.getByRole("combobox", { name: "Site font family" });
     expect(select).toHaveValue("current");
-    expect(screen.getByRole("option", { name: /Current.*Manrope/i })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: /Current.*Plus Jakarta Sans/i })).toBeInTheDocument();
 
     await user.selectOptions(select, "dm-serif");
     expect(select).toHaveValue("dm-serif");

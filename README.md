@@ -24,9 +24,10 @@ Set the values in `.env.local` before using database-backed features. Never expo
 1. Set `DATABASE_URL` to the pooled Supabase connection and `DIRECT_URL` to the direct migration connection. Prisma commands load both values from `.env.local` automatically through the checked-in wrapper.
 2. Run `npm run prisma:validate` to verify configuration, then `npm run prisma:migrate` for local development or `npm run prisma:deploy` in deployment automation.
 3. Run `npm run db:seed` to create safe, clearly marked placeholder settings.
-4. Run `npm run db:check` to execute a minimal Prisma query without printing credentials.
-5. Run `npm run supabase:configure` to create/update the four Storage buckets and apply the checked-in Storage policies/RLS configuration. Run `npm run supabase:check-storage` to verify bucket names and public/private visibility without printing credentials.
-6. For the first admin only, set `ADMIN_BOOTSTRAP_EMAIL`, `ADMIN_BOOTSTRAP_PASSWORD`, and `ADMIN_BOOTSTRAP_NAME` in uncommitted `.env.local`, then run `npm run admin:bootstrap`. The command uses the server-only service-role key, confirms/updates the Auth user, and upserts an active `SUPER_ADMIN` profile. Remove or rotate the bootstrap password after successful access.
+4. For local UI review only, `npm run db:seed:preview` can add five unverified listings and two original sample articles. It requires `SEED_REFERENCE_PREVIEW=true` and a localhost `NEXT_PUBLIC_SITE_URL`. A remote `DATABASE_URL` additionally requires `SEED_REFERENCE_PREVIEW_ALLOW_REMOTE=true`; this intentionally creates published preview records in that database, so do not enable it for production inventory.
+5. Run `npm run db:check` to execute a minimal Prisma query without printing credentials.
+6. Run `npm run supabase:configure` to create/update the four Storage buckets and apply the checked-in Storage policies/RLS configuration. Run `npm run supabase:check-storage` to verify bucket names and public/private visibility without printing credentials.
+7. For the first admin only, set `ADMIN_BOOTSTRAP_EMAIL`, `ADMIN_BOOTSTRAP_PASSWORD`, and `ADMIN_BOOTSTRAP_NAME` in uncommitted `.env.local`, then run `npm run admin:bootstrap`. The command uses the server-only service-role key, confirms/updates the Auth user, and upserts an active `SUPER_ADMIN` profile. Remove or rotate the bootstrap password after successful access.
 
 ## Commands
 
@@ -42,6 +43,7 @@ npm run prisma:validate
 npm run prisma:migrate
 npm run prisma:deploy
 npm run db:seed
+npm run db:seed:preview
 npm run db:check
 npm run supabase:configure
 npm run supabase:check-storage

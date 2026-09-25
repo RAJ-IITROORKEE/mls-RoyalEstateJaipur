@@ -1,3 +1,4 @@
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -12,7 +13,7 @@ export default async function BlogsPage() {
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
           From the studio
         </p>
-        <h1 className="mt-3 font-serif text-5xl">
+        <h1 className="mt-3 max-w-3xl text-balance font-serif text-5xl leading-tight sm:text-6xl">
           Notes for better property decisions.
         </h1>
         <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground">
@@ -47,14 +48,14 @@ export default async function BlogsPage() {
           </div>
         ) : (
           <div className="mt-12 grid gap-5 md:grid-cols-2">
-            {result.posts.map((post) => (
+            {result.posts.map((post, index) => (
               <Link
-                className="group overflow-hidden rounded-2xl border border-border bg-card transition hover:-translate-y-1 hover:border-primary/40"
+                className="group overflow-hidden rounded-2xl border border-border bg-card transition-colors hover:border-primary/50"
                 href={`/blogs/${post.slug}`}
                 key={post.id}
               >
-                <div className="relative aspect-[16/9] bg-muted">
-                  {post.coverUrl ? (
+                {post.coverUrl && (
+                  <div className="relative aspect-[16/9] bg-muted">
                     <Image
                       alt={post.coverAsset?.altText ?? ""}
                       className="object-cover transition duration-300 group-hover:scale-[1.02]"
@@ -62,16 +63,25 @@ export default async function BlogsPage() {
                       sizes="(min-width: 768px) 50vw, 100vw"
                       src={post.coverUrl}
                     />
-                  ) : null}
-                </div>
+                  </div>
+                )}
                 <div className="p-6">
-                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">
-                    {post.readingMinutes} min read
-                  </p>
-                  <h2 className="mt-5 font-serif text-3xl">{post.title}</h2>
+                  <div className="flex items-center justify-between gap-4 border-b border-border pb-4">
+                    <span className="text-3xl font-bold tabular-nums tracking-tight text-primary/70">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold text-muted-foreground">
+                      {post.readingMinutes} min read
+                    </span>
+                  </div>
+                  <h2 className="mt-5 font-serif text-2xl leading-snug sm:text-3xl">{post.title}</h2>
                   <p className="mt-3 text-sm leading-7 text-muted-foreground">
                     {post.excerpt || "A practical note from Royal Estates Jaipur."}
                   </p>
+                  <span className="mt-6 inline-flex min-h-6 items-center gap-2 text-sm font-bold text-foreground">
+                    Read article
+                    <ArrowUpRight aria-hidden="true" className="size-4 text-primary" />
+                  </span>
                 </div>
               </Link>
             ))}

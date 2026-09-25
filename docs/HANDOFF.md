@@ -128,3 +128,40 @@ The failed connectivity and dashboard-access findings above describe the initial
 - Content/admin: new `features/site-content/*`, `app/admin/content/`, `app/api/admin/faqs/`, `app/api/admin/localities/`, `components/admin/site-content-manager.tsx`, `prisma/migrations/0006_site_content/`, and seed/model updates.
 - Auth: `app/api/auth/google/`, `app/auth/callback/route.ts`, sign-in/up pages, Google button component, and profile metadata handling.
 - Reliability/security: blog and public property queries, blog pages, public media policy SQL, tests, README, `docs/PLAN.md`, and this handoff.
+
+### Follow-up — 2026-09-25 — UI content review and Google provider recheck
+
+**Status:** Public UI/content preview and OAuth provider diagnostics complete. Google sign-in is still externally blocked because the Google OAuth client credentials are not configured in Supabase.
+
+- Font: changed the “current” font option to Plus Jakarta Sans for both body and display text, updated its admin label, and applied migration `0007_reference_font_default` to Supabase. The migration resets the stored appearance font to `current` and records an audit entry. A cache-key revision ensures the old font setting cache is not reused.
+- Homepage/cards: strengthened the homepage headline and search panel; moved the Buy/Rent badge to the high-contrast top-right on homepage and catalogue cards; moved catalogue reference numbers to bottom-left to prevent collision. The homepage now previews two articles.
+- About/Contact: About now follows a text-first overview, category list, locality links, and a clear CTA; the promotional Contact banner is removed, leaving a compact Contact title beside the enquiry form.
+- Preview data: `npm run db:seed:preview` succeeded against the configured Supabase database with five idempotent, explicitly unverified preview listings and two original blog articles. They are visible for UI review; no source-site images were copied, so property cards use the existing architectural placeholder. Replace or remove these records and upload authorized media before presenting them as verified Royal Estates inventory.
+- Database safety: the active Supabase dashboard branch is named `main` / `PRODUCTION`, and `.env.local` points to it. The preview rows and font migration are therefore in that connected project. The preview seed now requires `SEED_REFERENCE_PREVIEW_ALLOW_REMOTE=true` when the configured database host is remote, in addition to its localhost UI and seed opt-ins. The records must be replaced or unpublished before treating the production catalogue as real inventory.
+- OAuth: Supabase Dashboard still shows Google **Disabled** and both Client IDs and Client Secret empty. The public Auth settings endpoint reports `external.google: false`. `/api/auth/google` now checks the setting and returns an actionable message instead of sending users to Supabase's raw `Unsupported provider` 400 page. Browser verified that redirect. No OAuth credentials were created, exposed, or stored.
+- Required external setup: create a Google OAuth Web client, register the Supabase callback `https://hyshazxauycyhlafyenp.supabase.co/auth/v1/callback` in Google Cloud, then enter the client ID and secret in Supabase **Authentication → Sign In / Providers → Google** and enable it. Keep the secret inside Supabase; do not send it through chat or commit it.
+
+#### Verification
+
+| Check | Result |
+| --- | --- |
+| `npm run typecheck` | Pass |
+| `npm run lint` | Pass |
+| Vitest via Node 24 | Pass — 50 tests across 11 files |
+| `npm run build` | Pass; Supabase client warns that Node 20 and below are deprecated |
+| `npm run db:check` | Pass — Supabase database connection available |
+| `npm run prisma:deploy` | Pass — applied `0007_reference_font_default` |
+| Browser: homepage | Pass — search defaults, five preview listings, two journal articles, and badge placement visible |
+| Browser: About and Contact | Pass — requested page structures rendered; Contact promotional banner absent |
+| Browser: `/blogs` | Pass — both original article cards visible |
+| Browser: mobile 375 px | Pass — About, Contact, Blogs, and Properties showed no horizontal overflow |
+| Browser: OAuth initiation | Pass — disabled provider returns a clear sign-in notice; full OAuth handshake remains blocked by missing external credentials |
+
+#### Changed in this follow-up
+
+- `app/about/page.tsx`, `app/contact/page.tsx`, `app/page.tsx`, `app/properties/page.tsx`, `app/blogs/page.tsx`, `app/api/auth/google/route.ts`
+- `features/auth/provider-availability.ts`, `features/site-appearance/font-family.ts`, `features/site-appearance/queries.ts`
+- `app/globals.css`, `components/home/home-property-search.tsx`, `package.json`
+- `prisma/seed-reference-preview.ts`, `prisma/migrations/0007_reference_font_default/migration.sql`
+- `tests/provider-availability.test.ts`, `tests/admin-settings-ui.test.tsx`
+- `docs/PLAN.md` and `docs/HANDOFF.md`

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { getSafeRedirectPath } from "@/features/auth/schemas";
+import { getGoogleProviderStatus } from "@/features/auth/provider-availability";
 import { hasSupabaseConfiguration } from "@/lib/env";
 import { checkRateLimit, getRequestIdentifier } from "@/lib/security/rate-limit";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -18,6 +19,14 @@ export async function GET(request: Request) {
   }
   if (!hasSupabaseConfiguration()) {
     signInUrl.searchParams.set("error", "Google sign-in is not configured yet.");
+    return NextResponse.redirect(signInUrl, 303);
+  }
+
+  if ((await getGoogleProviderStatus()) === "disabled") {
+    signInUrl.searchParams.set(
+      "error",
+      "Google sign-in is disabled in this Supabase project. An administrator must finish the Google OAuth provider setup.",
+    );
     return NextResponse.redirect(signInUrl, 303);
   }
 

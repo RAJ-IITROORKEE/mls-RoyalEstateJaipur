@@ -12,6 +12,7 @@ import { HomeLocalitySection } from "@/components/home/home-locality-section";
 import { HomePropertySearch } from "@/components/home/home-property-search";
 import { PublicFooter } from "@/components/layout/public-footer";
 import { PublicHeader } from "@/components/layout/public-header";
+import { getPublishedBlogPosts } from "@/features/blog/service";
 import {
   publicPropertyIntents,
   propertyCategories,
@@ -61,12 +62,13 @@ export default async function Home({
     ? (requestedSort as PublicPropertySort)
     : "newest";
   const { NEXT_PUBLIC_BUSINESS_NAME: businessName } = getEnvironment();
-  const [access, latestProperties, localityResult, faqResult] =
+  const [access, latestProperties, localityResult, faqResult, journalResult] =
     await Promise.all([
       getCurrentUserAccess(),
       getPublishedProperties({ category, sort, limit: 6 }),
       getPublicLocalities(),
       getPublicFaqItems(),
+      getPublishedBlogPosts(),
     ]);
   const user =
     access.mode === "authorized"
@@ -91,17 +93,19 @@ export default async function Home({
       <PublicHeader businessName={businessName} user={user} />
       <main className="flex-1">
         <section className="border-b border-border bg-card">
-          <div className="mx-auto max-w-[1360px] px-5 pb-16 pt-16 sm:px-8 sm:pb-20 sm:pt-20">
+          <div className="mx-auto max-w-[1360px] px-5 pb-14 pt-14 sm:px-8 sm:pb-20 sm:pt-20">
             <div className="hero-reveal mx-auto max-w-4xl text-center">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
-                {businessName} · Jaipur
+              <p className="mx-auto inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-background px-4 text-xs font-semibold text-muted-foreground">
+                <MapPin aria-hidden="true" className="size-3.5 text-primary" />
+                Property search across Jaipur
               </p>
-              <h1 className="mt-4 font-serif text-5xl leading-[0.98] tracking-tight sm:text-6xl lg:text-7xl">
-                Find your next property in Jaipur
+              <h1 className="mx-auto mt-6 max-w-4xl text-balance font-sans text-4xl font-extrabold leading-[1.04] tracking-[-0.055em] sm:text-6xl lg:text-7xl">
+                Find your next{" "}
+                <span className="text-primary">property in Jaipur</span>
               </h1>
               <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-                Explore homes, plots, and commercial spaces for sale and rent
-                across the city.
+                Compare homes, plots, and commercial spaces for sale or rent,
+                then contact the team to confirm the details.
               </p>
             </div>
             <HomePropertySearch
@@ -223,7 +227,7 @@ export default async function Home({
                           className="architectural-art h-full opacity-80"
                         />
                       )}
-                      <span className="absolute left-4 top-4 rounded-full border border-border bg-background/95 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-primary">
+                      <span className="absolute right-4 top-4 inline-flex min-h-9 items-center rounded-full border border-primary-foreground/30 bg-primary px-4 text-xs font-extrabold uppercase tracking-[0.14em] text-primary-foreground ring-2 ring-background">
                         {propertyLabel(property.intent)}
                       </span>
                     </div>
@@ -320,6 +324,70 @@ export default async function Home({
         </section>
 
         <HomeLocalitySection localities={localityResult.localities} />
+        {journalResult.connected && journalResult.posts.length > 0 && (
+          <section
+            aria-labelledby="home-journal-title"
+            className="border-y border-border bg-card"
+          >
+            <div className="mx-auto max-w-[1360px] px-5 py-16 sm:px-8 sm:py-20">
+              <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+                <div className="max-w-2xl">
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
+                    The journal
+                  </p>
+                  <h2
+                    className="mt-3 font-serif text-4xl leading-tight sm:text-5xl"
+                    id="home-journal-title"
+                  >
+                    A little more clarity for your next move.
+                  </h2>
+                  <p className="mt-4 text-sm leading-7 text-muted-foreground">
+                    Straightforward guides for comparing homes and planning a visit.
+                  </p>
+                </div>
+                <Link
+                  className="inline-flex min-h-11 items-center gap-2 self-start text-sm font-bold text-primary underline decoration-border underline-offset-4 hover:decoration-primary sm:self-auto"
+                  href="/blogs"
+                >
+                  All articles
+                  <ArrowUpRight aria-hidden="true" className="size-4" />
+                </Link>
+              </div>
+              <div className="mt-8 grid gap-4 lg:grid-cols-2">
+                {journalResult.posts.slice(0, 2).map((post, index) => (
+                  <article
+                    className="group rounded-2xl border border-border bg-background transition-colors hover:border-primary/50"
+                    key={post.id}
+                  >
+                    <Link
+                      className="block rounded-2xl p-5 focus-visible:outline-none sm:p-7"
+                      href={`/blogs/${post.slug}`}
+                    >
+                      <div className="flex items-center justify-between gap-4 border-b border-border pb-4">
+                        <span className="font-sans text-3xl font-bold tabular-nums tracking-tight text-primary/70">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold text-muted-foreground">
+                          {post.readingMinutes} min read
+                        </span>
+                      </div>
+                      <h3 className="mt-5 font-serif text-2xl leading-snug group-hover:text-primary sm:text-3xl">
+                        {post.title}
+                      </h3>
+                      <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                        {post.excerpt || "Practical notes for your property search."}
+                      </p>
+                      <span className="mt-6 inline-flex min-h-6 items-center gap-2 text-sm font-bold text-foreground">
+                        Read the guide
+                        <ArrowUpRight aria-hidden="true" className="size-4 text-primary" />
+                      </span>
+                    </Link>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
         <HomeFaqSection faqs={faqResult.faqs} />
 
         <section className="mx-auto max-w-[1360px] px-5 pb-16 sm:px-8 sm:pb-20">

@@ -131,5 +131,14 @@ The about page will be original and factual. Reference patterns are inspiration 
 - About content is original, factual, and useful.
 - Dark mode has intentional surfaces and readable controls.
 - `/blogs` does not throw on a database outage, and provider/authentication issues are reported without leaking internals.
-- Google OAuth is implemented on Supabase Auth; external Google/Supabase settings are documented and never guessed.
+- Google OAuth is implemented on Supabase Auth; the app checks whether Google is enabled and reports its setup state. End-to-end Google login remains pending valid Google OAuth Web credentials in Supabase.
 - Automated and browser verification results are recorded honestly in the handoff.
+
+## Follow-up — 2026-09-25
+
+- Updated the public heading/body typeface to Plus Jakarta Sans, matching the reference site's font family. A tracked migration resets the previously saved Playfair choice to the requested default and writes an audit event.
+- Refined the homepage heading and search surface, added the journal preview, and raised the Buy/Rent badges to the upper-right of both home and catalogue cards. Catalogue reference numbers move to the lower-left so labels do not overlap.
+- Reworked About into an original locality/category-led page using the reference's broad content rhythm, and removed the large promotional section from Contact while retaining its enquiry form.
+- Added five idempotent preview listings and two original articles using public listing facts requested for UI review. Their ownership, availability, pricing, and approvals are unverified; no reference photos were copied, so listing image placeholders remain until authorized media is supplied. Replace or remove preview inventory before treating it as real stock.
+- Verified Supabase reports `external.google: false`; the authenticated dashboard shows Google disabled and empty client fields. OAuth initiation now checks provider state and returns an actionable sign-in message before redirecting. The provider cannot be enabled until its Google Web OAuth client ID and secret are configured by the project owner.
+- Final checks for this follow-up are recorded in `docs/HANDOFF.md`.

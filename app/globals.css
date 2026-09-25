@@ -46,8 +46,8 @@
 }
 
 .font-theme-current {
-  --site-font-sans: var(--font-manrope);
-  --site-font-serif: var(--font-cormorant);
+  --site-font-sans: var(--font-plus-jakarta);
+  --site-font-serif: var(--font-plus-jakarta);
 }
 
 .font-theme-dm-serif {

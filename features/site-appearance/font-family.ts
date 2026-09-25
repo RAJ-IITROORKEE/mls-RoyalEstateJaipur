@@ -13,8 +13,8 @@ export const defaultFontFamily: FontFamily = "current";
 export const fontFamilyOptions = [
   {
     value: "current",
-    label: "Current: Manrope + Cormorant Garamond",
-    description: "Clean interface text with classic editorial headings.",
+    label: "Current: Plus Jakarta Sans",
+    description: "A clear geometric sans across interface and display text.",
   },
   {
     value: "dm-serif",

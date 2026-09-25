@@ -16,6 +16,7 @@
     "prisma:deploy": "tsx scripts/prisma-cli.ts migrate deploy",
     "prisma:validate": "tsx scripts/prisma-cli.ts validate",
     "db:seed": "tsx prisma/seed.ts",
+    "db:seed:preview": "tsx prisma/seed-reference-preview.ts",
     "db:check": "tsx scripts/check-db.ts",
     "diagnose:admin": "tsx scripts/diagnose-admin.ts",
     "diagnose:signup": "tsx scripts/diagnose-signup.ts",

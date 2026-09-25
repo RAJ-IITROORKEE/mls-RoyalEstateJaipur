@@ -413,10 +413,10 @@ export default async function PropertiesPage({
                           className="architectural-art h-full opacity-80"
                         />
                       )}
-                      <span className="absolute left-4 top-4 rounded-full border border-border bg-background/95 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-primary">
+                      <span className="absolute right-4 top-4 inline-flex min-h-9 items-center rounded-full border border-primary-foreground/30 bg-primary px-4 text-xs font-extrabold uppercase tracking-[0.14em] text-primary-foreground ring-2 ring-background">
                         {label(property.intent)}
                       </span>
-                      <span className="absolute right-4 top-4 rounded-full bg-background/95 px-3 py-1 text-[11px] font-semibold tabular-nums text-foreground">
+                      <span className="absolute bottom-4 left-4 rounded-full border border-border bg-background/95 px-3 py-1 text-[11px] font-semibold tabular-nums text-foreground">
                         {property.referenceNumber}
                       </span>
                     </div>

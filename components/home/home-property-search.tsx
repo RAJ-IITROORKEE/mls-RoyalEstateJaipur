@@ -32,7 +32,7 @@ export function HomePropertySearch({
     >
       <form
         action="/properties"
-        className="rounded-2xl border border-border bg-card p-4 shadow-[0_20px_56px_-40px_color-mix(in_oklab,var(--foreground)_40%,transparent)] sm:p-5"
+        className="rounded-2xl border border-border bg-background p-4 shadow-[0_16px_40px_-32px_color-mix(in_oklab,var(--foreground)_48%,transparent)] sm:p-5 lg:p-6"
         method="get"
         role="search"
       >
