@@ -152,3 +152,9 @@ The about page will be original and factual. Reference patterns are inspiration 
 - Verified Supabase reports `external.google: false`; the authenticated dashboard shows Google disabled and empty client fields. OAuth initiation now checks provider state and returns an actionable sign-in message before redirecting. The provider cannot be enabled until its Google Web OAuth client ID and secret are configured by the project owner.
 - Final checks for this follow-up are recorded in `docs/HANDOFF.md`.
 - Dark appearance refinement: switched to slate 950 surfaces, separated spotlight panels from gold action colors, added Light/Dark/System selection, and exposed the control in public, mobile, admin, and sign-in navigation. Verification is in `docs/HANDOFF.md`.
+
+## Follow-up — move public theme selection to footer
+
+- [x] Remove the theme selector from the public desktop header and mobile navigation.
+- [x] Keep the Light/Dark/System selector in the public footer and verify that it still changes the active theme.
+- [x] Record implementation and verification in `docs/HANDOFF.md`.

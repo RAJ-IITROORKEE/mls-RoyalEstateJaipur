@@ -226,3 +226,25 @@ The dev server was restarted on its default host after the production build so t
 - `app/globals.css`, `components/theme-provider.tsx`, `components/theme-toggle.tsx`, `components/layout/public-header.tsx`
 - `app/sign-in/page.tsx`, `app/page.tsx`, `app/list-property/page.tsx`, `app/admin/page.tsx`, `app/account/page.tsx`, `app/properties/[slug]/page.tsx`, `components/forms/owner-submission-wizard.tsx`
 - `DESIGN.md`, `tests/theme-toggle.test.tsx`
+
+### Follow-up — move public theme selection to footer
+
+**Status:** Implemented; browser verification recorded below.
+
+- Removed the Light/Dark/System selector from the public desktop header and mobile navigation. The public footer remains the theme-selection location for public pages; admin and standalone sign-in controls remain in their task-specific shells.
+- Added a public browser check confirming the selector appears in the footer, is absent from the header, and still applies dark mode.
+
+#### Verification
+
+| Check | Result |
+| --- | --- |
+| Playwright `public.spec.ts` | Pass — 4 tests, including footer placement and dark-theme selection |
+| `npm run lint` | Pass |
+| `npm run typecheck` | Pass |
+| Browser: homepage accessibility tree | Pass — no theme selector in public header; Light/Dark/System control is in the footer |
+
+#### Changed in this follow-up
+
+- `components/layout/public-header.tsx`
+- `e2e/public.spec.ts`
+- `docs/PLAN.md`, `docs/HANDOFF.md`

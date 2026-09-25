@@ -10,6 +10,21 @@ function readHeroAnimations(element: Element) {
 }
 
 test.describe("public experience", () => {
+  test("public theme control is in the footer", async ({ page }) => {
+    await page.goto("/");
+
+    const themeControl = page.getByRole("combobox", { name: "Color theme" });
+    await expect(
+      page.locator("header").getByRole("combobox", { name: "Color theme" }),
+    ).toHaveCount(0);
+    await expect(
+      page.locator("footer").getByRole("combobox", { name: "Color theme" }),
+    ).toBeVisible();
+
+    await themeControl.selectOption("dark");
+    await expect(page.locator("html")).toHaveClass(/dark/);
+  });
+
   test("home page presents the animated search hero and accessible card actions", async ({ page }) => {
     await page.goto("/");
     await expect(
