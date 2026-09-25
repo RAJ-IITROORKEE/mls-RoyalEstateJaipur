@@ -28,10 +28,10 @@ export default async function ListPropertyPage() {
               workspace. A reviewer decides what can become public.
             </p>
           </div>
-          <div className="rounded-2xl bg-primary p-7 text-primary-foreground">
-            <LockKeyhole aria-hidden="true" className="size-7 text-accent" />
+          <div className="rounded-2xl bg-spotlight p-7 text-spotlight-foreground ring-1 ring-border">
+            <LockKeyhole aria-hidden="true" className="size-7 text-primary" />
             <h2 className="mt-8 font-serif text-3xl">Private by default.</h2>
-            <p className="mt-3 text-sm leading-7 text-primary-foreground/70">
+            <p className="mt-3 text-sm leading-7 text-spotlight-foreground/75">
               Your draft and uploaded documents are not public listing content.
             </p>
             <Link

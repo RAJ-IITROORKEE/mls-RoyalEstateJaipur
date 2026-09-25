@@ -142,14 +142,14 @@ export default async function AdminDashboardPage() {
             Show all activity
           </Link>
         </section>
-        <section className="rounded-2xl border border-border bg-primary p-5 text-primary-foreground sm:p-6">
+        <section className="rounded-2xl border border-border bg-spotlight p-5 text-spotlight-foreground sm:p-6">
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-accent">
             Review principle
           </p>
           <h2 className="mt-8 font-serif text-3xl leading-tight">
             Moderation and verification are different decisions.
           </h2>
-          <p className="mt-4 text-sm leading-6 text-primary-foreground/75">
+          <p className="mt-4 text-sm leading-6 text-spotlight-foreground/75">
             Approval means the submission passed your review. It does not make
             an unverified legal claim about the property.
           </p>

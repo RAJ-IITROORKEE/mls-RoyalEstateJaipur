@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { PasswordField } from "@/components/forms/password-field";
 import { GoogleSignInLink } from "@/components/forms/google-sign-in-link";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -26,12 +27,12 @@ export default async function SignInPage({
   const redirectPath = first(params.redirect) ?? "";
   return (
     <main className="grid min-h-screen lg:grid-cols-[0.85fr_1.15fr]">
-      <section className="hidden bg-primary p-12 text-primary-foreground lg:flex lg:flex-col lg:justify-between">
+      <section className="hidden border-r border-border bg-spotlight p-12 text-spotlight-foreground lg:flex lg:flex-col lg:justify-between">
         <Link
-          className="flex items-center gap-3 text-sm font-bold tracking-[0.14em]"
+          className="flex items-center gap-3 text-sm font-bold tracking-[0.14em] text-spotlight-foreground"
           href="/"
         >
-          <span className="grid size-9 place-items-center rounded-xl bg-accent text-xs text-accent-foreground">
+          <span className="grid size-9 place-items-center rounded-xl bg-primary text-xs text-primary-foreground">
             RS
           </span>{" "}
           ROYALESTATEJAIPUR
@@ -43,23 +44,26 @@ export default async function SignInPage({
           <h1 className="mt-5 max-w-md font-serif text-6xl leading-[0.95]">
             Keep the details close.
           </h1>
-          <p className="mt-6 max-w-md text-sm leading-6 text-primary-foreground/70">
+          <p className="mt-6 max-w-md text-sm leading-6 text-spotlight-foreground/75">
             Sign in to save a submission, return to your draft, or follow its
             review status.
           </p>
         </div>
-        <p className="text-xs text-primary-foreground/50">
+        <p className="text-xs text-spotlight-foreground/60">
           A secure Supabase Auth session powers this workspace.
         </p>
       </section>
       <section className="flex items-center justify-center p-5 sm:p-10">
         <div className="w-full max-w-md">
-          <Link
-            className="mb-12 inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground"
-            href="/"
-          >
-            <ArrowLeft aria-hidden="true" className="size-4" /> Back to site
-          </Link>
+          <div className="mb-10 flex items-center justify-between gap-4 lg:justify-end">
+            <Link
+              className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground"
+              href="/"
+            >
+              <ArrowLeft aria-hidden="true" className="size-4" /> Back to site
+            </Link>
+            <ThemeToggle />
+          </div>
           <div className="mb-8">
             <span className="grid size-11 place-items-center rounded-xl bg-muted text-primary">
               <LockKeyhole aria-hidden="true" className="size-5" />

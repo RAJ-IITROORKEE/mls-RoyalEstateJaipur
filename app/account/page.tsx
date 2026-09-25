@@ -89,12 +89,12 @@ export default async function AccountDashboardPage() {
             </p>
           </Link>
           <Link
-            className="rounded-2xl bg-primary p-6 text-primary-foreground transition hover:bg-primary-hover hover:text-primary-hover-foreground"
+            className="rounded-2xl bg-spotlight p-6 text-spotlight-foreground ring-1 ring-border transition-colors hover:bg-card"
             href="/account/submissions/new"
           >
             <ArrowUpRight className="size-6 text-accent" />
             <p className="mt-8 font-serif text-3xl">List yours</p>
-            <p className="mt-2 text-sm text-primary-foreground/70">
+            <p className="mt-2 text-sm text-spotlight-foreground/75">
               Create a private property submission
             </p>
           </Link>

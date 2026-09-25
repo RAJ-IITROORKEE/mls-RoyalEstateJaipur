@@ -165,3 +165,28 @@ The failed connectivity and dashboard-access findings above describe the initial
 - `prisma/seed-reference-preview.ts`, `prisma/migrations/0007_reference_font_default/migration.sql`
 - `tests/provider-availability.test.ts`, `tests/admin-settings-ui.test.tsx`
 - `docs/PLAN.md` and `docs/HANDOFF.md`
+
+### Follow-up — 2026-09-25 — Slate dark appearance
+
+**Status:** Implemented and verified in the local browser.
+
+- Replaced the green-charcoal dark tokens with a layered slate palette: Slate 950 canvas, Slate 900 cards, Slate 800 muted controls, and Slate 700 borders. Warm gold remains the action and selected-state accent.
+- Added a separate spotlight surface so large feature panels remain deep slate in dark mode instead of inheriting the gold CTA color. Applied it to sign-in, owner submission, listing enquiry, homepage CTA, account submission, listing, and admin guidance panels.
+- Theme selection now offers Light, Dark, and System, defaults to System for new visitors, persists explicit choices through `next-themes`, and appears in the public header, footer, mobile menu, admin shell, and sign-in page.
+- Added restrained dark ambient color and a lower-contrast architectural image fallback. Updated `DESIGN.md` with the new dark palette.
+
+#### Verification
+
+| Check | Result |
+| --- | --- |
+| `npm run typecheck` | Pass |
+| ESLint via Node 24 | Pass |
+| Vitest via Node 24 | Pass — 52 tests across 12 files |
+| Browser: sign-in dark mode | Pass — slate canvas, layered slate surfaces, gold controls, and theme selector visible |
+| Browser: home at 360 px | Pass — background `#020617`, card surface `#0f172a`, no horizontal overflow |
+
+#### Changed in this follow-up
+
+- `app/globals.css`, `components/theme-provider.tsx`, `components/theme-toggle.tsx`, `components/layout/public-header.tsx`
+- `app/sign-in/page.tsx`, `app/page.tsx`, `app/list-property/page.tsx`, `app/admin/page.tsx`, `app/account/page.tsx`, `app/properties/[slug]/page.tsx`, `components/forms/owner-submission-wizard.tsx`
+- `DESIGN.md`, `tests/theme-toggle.test.tsx`

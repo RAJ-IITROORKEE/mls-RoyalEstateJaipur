@@ -320,14 +320,14 @@ export default async function PropertyDetailPage({
                     </div>
                   )}
                 </article>
-                <aside className="h-fit rounded-2xl bg-primary p-6 text-primary-foreground sm:p-8">
+                <aside className="h-fit rounded-2xl bg-spotlight p-6 text-spotlight-foreground ring-1 ring-border sm:p-8">
                   <p className="text-xs font-bold uppercase tracking-[0.18em] text-accent">
                     Next step
                   </p>
                   <h2 className="mt-4 font-serif text-4xl">
                     Ask about this property.
                   </h2>
-                  <p className="mt-4 text-sm leading-6 text-primary-foreground/70">
+                  <p className="mt-4 text-sm leading-6 text-spotlight-foreground/75">
                     A request starts a conversation. It does not reserve the
                     property or confirm availability.
                   </p>

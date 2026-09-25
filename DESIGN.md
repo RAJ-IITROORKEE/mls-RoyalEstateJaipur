@@ -55,15 +55,15 @@ Implement colors as semantic CSS variables using OKLCH where supported by the pr
 
 | Token | Intent | Suggested visual |
 | --- | --- | --- |
-| `--background` | Main canvas | Near-black graphite with a warm/green undertone |
-| `--foreground` | Primary text | Warm off-white |
-| `--card` | Cards/surfaces | Elevated charcoal |
-| `--muted` | Quiet surfaces | Soft graphite |
-| `--muted-foreground` | Secondary text | Light neutral grey |
-| `--border` | Dividers | Visible but quiet graphite line |
-| `--primary` | Main CTA/selected | Brighter accessible jade/teal |
-| `--primary-foreground` | Text on primary | Very dark graphite |
-| `--accent` | Editorial highlight | Muted warm gold |
+| `--background` | Main canvas | Slate 950 (`#020617`) |
+| `--foreground` | Primary text | Slate 100 (`#f1f5f9`) |
+| `--card` | Cards/surfaces | Slate 900 (`#0f172a`) |
+| `--muted` | Quiet surfaces | Slate 800 (`#1e293b`) |
+| `--muted-foreground` | Secondary text | Soft slate (`#a8b3c4`) |
+| `--border` | Dividers | Slate 700 (`#334155`) |
+| `--primary` | Main CTA/selected | Warm gold with dark readable text |
+| `--primary-foreground` | Text on primary | Deep slate |
+| `--accent` | Editorial highlight | Restrained warm gold |
 | `--destructive` | Dangerous action | Accessible coral-red |
 
 Rules:
@@ -408,7 +408,7 @@ Reduced motion:
 
 ## 17. Theme behavior
 
-- Default to system theme on first visit.
+- Default to system theme on first visit; keep explicit user choices persistent.
 - Persist explicit user selection.
 - Prevent a flash of the wrong theme.
 - Both themes use the same semantic hierarchy; dark mode is not an inverted afterthought.

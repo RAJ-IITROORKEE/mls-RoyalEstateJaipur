@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -62,6 +63,7 @@ export function PublicHeader({
           ))}
         </nav>
         <div className="flex items-center gap-1">
+          <ThemeToggle className="hidden sm:inline-flex" />
           {user ? (
             <div className="relative hidden sm:block">
               <button
@@ -170,6 +172,7 @@ export function PublicHeader({
           aria-label="Mobile navigation"
           className="mx-auto grid max-w-[1360px] gap-1 px-5 py-4 sm:px-8"
         >
+          <ThemeToggle className="mb-2 w-fit" />
           {links.map(([label, href]) => (
             <Link
               className="rounded-xl px-3 py-3 text-sm font-semibold hover:bg-muted"

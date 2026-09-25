@@ -391,7 +391,7 @@ export default async function Home({
         <HomeFaqSection faqs={faqResult.faqs} />
 
         <section className="mx-auto max-w-[1360px] px-5 pb-16 sm:px-8 sm:pb-20">
-          <div className="grid gap-6 rounded-[2rem] bg-primary p-7 text-primary-foreground sm:p-10 lg:grid-cols-[1fr_auto] lg:items-end lg:p-12">
+          <div className="grid gap-6 rounded-[2rem] bg-spotlight p-7 text-spotlight-foreground ring-1 ring-border sm:p-10 lg:grid-cols-[1fr_auto] lg:items-end lg:p-12">
             <div className="max-w-2xl">
               <ShieldCheck
                 aria-hidden="true"
@@ -403,7 +403,7 @@ export default async function Home({
               <h2 className="mt-3 font-serif text-4xl leading-tight sm:text-5xl">
                 Start with the property. Take the next step when you are ready.
               </h2>
-              <div className="mt-6 grid gap-2 text-sm text-primary-foreground/85 sm:grid-cols-2">
+              <div className="mt-6 grid gap-2 text-sm text-spotlight-foreground/85 sm:grid-cols-2">
                 <p className="flex items-center gap-2">
                   <Check aria-hidden="true" className="size-4 text-accent" />
                   Published listings only
@@ -423,7 +423,7 @@ export default async function Home({
                 <ArrowUpRight aria-hidden="true" className="size-4" />
               </Link>
               <Link
-                className="inline-flex min-h-12 items-center rounded-xl border border-primary-foreground/40 px-5 text-sm font-bold transition-colors hover:bg-primary-foreground/10"
+                className="inline-flex min-h-12 items-center rounded-xl border border-spotlight-foreground/40 px-5 text-sm font-bold transition-colors hover:bg-spotlight-foreground/10"
                 href="/about"
               >
                 About us

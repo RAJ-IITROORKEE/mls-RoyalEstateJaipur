@@ -170,7 +170,7 @@ export function OwnerSubmissionWizard({
 
   return (
     <div className="grid gap-8 lg:grid-cols-[0.35fr_0.65fr]">
-      <aside className="h-fit rounded-2xl bg-primary p-6 text-primary-foreground lg:sticky lg:top-24">
+      <aside className="h-fit rounded-2xl bg-spotlight p-6 text-spotlight-foreground ring-1 ring-border lg:sticky lg:top-24">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
           Owner workspace
         </p>
@@ -180,7 +180,7 @@ export function OwnerSubmissionWizard({
         <ol className="mt-10 grid gap-3">
           {steps.map((label, index) => (
             <li
-              className={`flex items-center gap-3 text-sm ${index === step ? "font-bold text-accent" : "text-primary-foreground/60"}`}
+              className={`flex items-center gap-3 text-sm ${index === step ? "font-bold text-primary" : "text-spotlight-foreground/70"}`}
               key={label}
             >
               <span className="grid size-7 place-items-center rounded-full border border-current text-xs">
@@ -194,7 +194,7 @@ export function OwnerSubmissionWizard({
             </li>
           ))}
         </ol>
-        <p className="mt-10 text-xs leading-5 text-primary-foreground/60">
+        <p className="mt-10 text-xs leading-5 text-spotlight-foreground/70">
           Your draft stays private until you submit it for review.
         </p>
       </aside>

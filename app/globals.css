@@ -12,6 +12,8 @@
   --primary-foreground: #ffffff;
   --primary-hover: #b8860b;
   --primary-hover-foreground: #222222;
+  --spotlight: #0b1f3a;
+  --spotlight-foreground: #ffffff;
   --secondary: #d4a017;
   --secondary-foreground: #222222;
   --accent: #d4a017;
@@ -32,6 +34,8 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-primary-hover: var(--primary-hover);
   --color-primary-hover-foreground: var(--primary-hover-foreground);
+  --color-spotlight: var(--spotlight);
+  --color-spotlight-foreground: var(--spotlight-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-accent: var(--accent);
@@ -72,23 +76,38 @@
 
 .dark {
   color-scheme: dark;
-  --background: #171b19;
-  --foreground: #f3f2e9;
-  --card: #202622;
-  --muted: #2a332e;
-  --muted-foreground: #bac5bc;
-  --border: #3d4a42;
-  --primary: #72d0b1;
-  --primary-foreground: #10231b;
-  --primary-hover: #92e0c5;
-  --primary-hover-foreground: #10231b;
-  --secondary: #39463c;
-  --secondary-foreground: #f3f2e9;
-  --accent: #dec27d;
-  --accent-foreground: #282316;
-  --success: #78d39e;
-  --destructive: #ff8982;
-  --ring: #8bdfc2;
+  --background: #020617;
+  --foreground: #f1f5f9;
+  --card: #0f172a;
+  --muted: #1e293b;
+  --muted-foreground: #a8b3c4;
+  --border: #334155;
+  --primary: #f2c66d;
+  --primary-foreground: #111827;
+  --primary-hover: #ffda8e;
+  --primary-hover-foreground: #111827;
+  --spotlight: #0f172a;
+  --spotlight-foreground: #f1f5f9;
+  --secondary: #263449;
+  --secondary-foreground: #e2e8f0;
+  --accent: #f2c66d;
+  --accent-foreground: #111827;
+  --success: #4ade80;
+  --destructive: #f87171;
+  --ring: #f2c66d;
+}
+
+.dark body {
+  background-image: radial-gradient(
+    ellipse 80% 34rem at 50% -12rem,
+    color-mix(in oklab, var(--primary) 7%, transparent),
+    transparent 72%
+  );
+}
+
+.dark ::selection {
+  background: color-mix(in oklab, var(--primary) 36%, var(--muted));
+  color: var(--foreground);
 }
 
 * {
@@ -153,6 +172,15 @@ textarea:focus-visible {
     var(--primary),
     color-mix(in srgb, var(--primary) 68%, var(--secondary)) 52%,
     var(--secondary)
+  );
+}
+
+.dark .architectural-art {
+  background: linear-gradient(
+    135deg,
+    #1e293b,
+    color-mix(in oklab, var(--primary) 13%, var(--card)) 52%,
+    #0b1220
   );
 }
 
