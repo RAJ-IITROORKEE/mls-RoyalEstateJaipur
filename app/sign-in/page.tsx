@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import { PasswordField } from "@/components/forms/password-field";
 import { GoogleSignInLink } from "@/components/forms/google-sign-in-link";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -62,7 +61,6 @@ export default async function SignInPage({
             >
               <ArrowLeft aria-hidden="true" className="size-4" /> Back to site
             </Link>
-            <ThemeToggle />
           </div>
           <div className="mb-8">
             <span className="grid size-11 place-items-center rounded-xl bg-muted text-primary">

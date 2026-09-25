@@ -4,7 +4,9 @@ function readHeroAnimations(element: Element) {
   const heading = element.querySelector("h1");
 
   return {
-    background: getComputedStyle(element, "::before").animationName,
+    backdrop: element
+      .querySelector("[data-hero-backdrop]")
+      ?.getAttribute("data-motion-enabled"),
     title: heading ? getComputedStyle(heading).animationName : "missing",
   };
 }
@@ -26,14 +28,19 @@ test.describe("public experience", () => {
   });
 
   test("home page presents the animated search hero and accessible card actions", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
     await page.goto("/");
     await expect(
       page.getByRole("heading", { name: "Find your next property in Jaipur" }),
     ).toBeVisible();
     const hero = page.locator(".home-hero");
+    await expect(hero.locator("[data-hero-backdrop]")).toHaveAttribute(
+      "data-motion-enabled",
+      "true",
+    );
     const heroMotion = await hero.evaluate(readHeroAnimations);
     expect(heroMotion).toEqual({
-      background: "hero-spotlight-drift",
+      backdrop: "true",
       title: "hero-title-reveal",
     });
     await expect(page.getByRole("radio", { name: "Buy" })).toBeVisible();
@@ -54,13 +61,26 @@ test.describe("public experience", () => {
       .not.toBe(restingBackground);
 
     await page.emulateMedia({ reducedMotion: "reduce" });
+    await expect(hero.locator("[data-hero-backdrop]")).toHaveAttribute(
+      "data-motion-enabled",
+      "false",
+    );
     const reducedMotion = await hero.evaluate(readHeroAnimations);
-    expect(reducedMotion).toEqual({ background: "none", title: "none" });
+    expect(reducedMotion).toEqual({ backdrop: "false", title: "none" });
   });
 
   test("catalogue and contact pages expose labelled controls", async ({
     page,
   }) => {
+    await page.goto("/blogs");
+    await expect(
+      page.getByRole("heading", { name: "Notes for better property decisions." }),
+    ).toBeVisible();
+    const featuredArticle = page.locator('a[data-featured="true"]');
+    await expect(featuredArticle).toBeVisible();
+    await expect(featuredArticle.getByText("Featured guide")).toBeVisible();
+    await expect(featuredArticle.getByText("Read article")).toBeVisible();
+
     await page.goto("/properties");
     await expect(
       page.getByRole("heading", { name: "Properties in Jaipur" }),
@@ -85,5 +105,8 @@ test.describe("public experience", () => {
     await expect(
       page.getByRole("heading", { name: "Welcome back." }),
     ).toBeVisible();
+    await expect(
+      page.getByRole("combobox", { name: "Color theme" }),
+    ).toHaveCount(0);
   });
 });

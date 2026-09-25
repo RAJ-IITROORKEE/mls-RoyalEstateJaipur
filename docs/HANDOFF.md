@@ -110,6 +110,14 @@ The failed connectivity and dashboard-access findings above describe the initial
 - The OAuth flow therefore stops in Supabase before Google authentication or the app callback. This confirms the current failure is provider configuration, not the local callback URL or redirect construction.
 - Fix remains: configure a Google Cloud OAuth Web client and enable Google in Supabase with its Client ID and Client Secret, then retry the end-to-end flow.
 
+#### Google OAuth dashboard recheck — 2026-09-25
+
+- In the authenticated Supabase project `Mls-RealEstate` (`hyshazxauycyhlafyenp`), Authentication → Sign In / Providers shows Google disabled; Client IDs and Client Secret are blank. The provider callback shown by Supabase is `https://hyshazxauycyhlafyenp.supabase.co/auth/v1/callback`.
+- Supabase URL Configuration is already set to `https://royalestatejaipur.vercel.app` and allows the exact local and production `/auth/callback` URLs plus their password-reset callback variants. Email signup and confirmation are enabled. No allowlist change is currently needed for localhost or the canonical production site.
+- Google Cloud Console opens on `My First Project`, where Google Auth Platform is not configured and no OAuth client is listed. No Google Cloud or Supabase settings were changed during this inspection.
+- Before creating the OAuth client, confirm that `My First Project` is the intended project; use a different project if this application belongs elsewhere. For the web client, authorized JavaScript origins are `http://localhost:3000` and `https://royalestatejaipur.vercel.app`; the authorized redirect URI is the Supabase callback above.
+- Once the Web client is created, enter its Client ID and Client Secret directly in Supabase's Google provider panel, enable Google, and keep “Skip nonce checks” off. Never send the secret through chat or commit it. Then verify login/signup from the browser through the app's PKCE callback and profile provisioning.
+
 ### Phase 5 — Verification and handoff
 
 **Status:** Automated and local browser checks complete; Google provider activation and admin-session end-to-end CRUD remain externally dependent.
@@ -231,7 +239,7 @@ The dev server was restarted on its default host after the production build so t
 
 **Status:** Implemented; browser verification recorded below.
 
-- Removed the Light/Dark/System selector from the public desktop header and mobile navigation. The public footer remains the theme-selection location for public pages; admin and standalone sign-in controls remain in their task-specific shells.
+- Removed the Light/Dark/System selector from the public desktop header, mobile navigation, and standalone sign-in page. The public footer remains the theme-selection location for public pages; the admin shell retains its task-specific control.
 - Added a public browser check confirming the selector appears in the footer, is absent from the header, and still applies dark mode.
 
 #### Verification
@@ -242,9 +250,40 @@ The dev server was restarted on its default host after the production build so t
 | `npm run lint` | Pass |
 | `npm run typecheck` | Pass |
 | Browser: homepage accessibility tree | Pass — no theme selector in public header; Light/Dark/System control is in the footer |
+| Browser: production `/sign-in` | Pass — direct sign-in route has no theme selector |
 
 #### Changed in this follow-up
 
 - `components/layout/public-header.tsx`
 - `e2e/public.spec.ts`
+- `docs/PLAN.md`, `docs/HANDOFF.md`
+
+### Follow-up — strengthened homepage hero and journal cards
+
+**Status:** Implemented and verified in the local browser.
+
+- Replaced the barely visible hero color wash with a token-based architectural grid, framed edges, and two slow-moving spotlights powered by Motion for React. The decorative client island starts static during server rendering and uses `useSyncExternalStore` to disable movement when `prefers-reduced-motion: reduce` is active.
+- Restyled the journal heading with an icon-led eyebrow and a stronger two-line title. The first published article is featured with a high-contrast slate panel; both articles now have clear, full-width “Read article” actions and reading-time icons.
+- Applied the same featured-card hierarchy and button treatment to the homepage journal preview. Existing property search behavior and listing cards are unchanged.
+- Added the `motion` dependency without re-resolving unrelated lockfile packages. `npm install` reported 41 advisories for the resolved dependency tree (31 moderate, 9 high, 1 critical); this UI change did not run automatic dependency upgrades.
+
+#### Verification
+
+| Check | Result |
+| --- | --- |
+| `npm run lint` | Pass |
+| `npm run typecheck` | Pass |
+| Vitest with bundled Node 24 | Pass — 52 tests across 12 files |
+| Playwright `public.spec.ts` | Pass — 4 tests, including animated/reduced-motion hero and featured journal CTA |
+| Next.js production build with bundled Node 24 | Pass |
+| Browser: production home and journal, light theme | Pass — animated grid/spotlight hero, featured article, and strong article actions visible |
+| Browser: production journal, dark theme | Pass — featured slate panel is distinct, with readable gold article actions |
+| Responsive browser check at 320, 375, 768, 1024, and 1440 px | Pass — no horizontal overflow on home or `/blogs` |
+| `git diff --check` | Pass |
+
+#### Changed in this follow-up
+
+- `app/page.tsx`, `app/blogs/page.tsx`, `app/globals.css`
+- `components/home/home-hero-background.tsx`
+- `e2e/public.spec.ts`, `package.json`, `package-lock.json`
 - `docs/PLAN.md`, `docs/HANDOFF.md`

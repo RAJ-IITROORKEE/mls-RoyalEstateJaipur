@@ -1,6 +1,8 @@
 import {
   ArrowUpRight,
+  BookOpenText,
   Check,
+  Clock3,
   MapPin,
   ShieldCheck,
 } from "lucide-react";
@@ -8,6 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { HomeFaqSection } from "@/components/home/home-faq-section";
+import { HomeHeroBackground } from "@/components/home/home-hero-background";
 import { HomeLocalitySection } from "@/components/home/home-locality-section";
 import { HomePropertySearch } from "@/components/home/home-property-search";
 import { PublicFooter } from "@/components/layout/public-footer";
@@ -94,6 +97,7 @@ export default async function Home({
       <PublicHeader businessName={businessName} user={user} />
       <main className="flex-1">
         <section className="home-hero relative isolate overflow-hidden border-b border-border bg-card">
+          <HomeHeroBackground />
           <div className="relative z-10 mx-auto max-w-[1360px] px-5 pb-14 pt-14 sm:px-8 sm:pb-20 sm:pt-20">
             <div className="mx-auto max-w-4xl text-center">
               <p className="mx-auto inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-background px-4 text-xs font-semibold text-muted-foreground">
@@ -325,54 +329,75 @@ export default async function Home({
             <div className="mx-auto max-w-[1360px] px-5 py-16 sm:px-8 sm:py-20">
               <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
                 <div className="max-w-2xl">
-                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
+                  <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-primary">
+                    <BookOpenText aria-hidden="true" className="size-4" />
                     The journal
                   </p>
                   <h2
                     className="mt-3 font-serif text-4xl leading-tight sm:text-5xl"
                     id="home-journal-title"
                   >
-                    A little more clarity for your next move.
+                    A little more clarity for
+                    <span className="text-primary"> your next move.</span>
                   </h2>
                   <p className="mt-4 text-sm leading-7 text-muted-foreground">
                     Straightforward guides for comparing homes and planning a visit.
                   </p>
                 </div>
                 <Link
-                  className="inline-flex min-h-11 items-center gap-2 self-start text-sm font-bold text-primary underline decoration-border underline-offset-4 hover:decoration-primary sm:self-auto"
+                  className="inline-flex min-h-11 items-center gap-2 self-start rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary-hover hover:text-primary-hover-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:self-auto"
                   href="/blogs"
                 >
-                  All articles
+                  Explore all articles
                   <ArrowUpRight aria-hidden="true" className="size-4" />
                 </Link>
               </div>
               <div className="mt-8 grid gap-4 lg:grid-cols-2">
                 {journalResult.posts.slice(0, 2).map((post, index) => (
                   <article
-                    className="group rounded-2xl border border-border bg-background transition-colors hover:border-primary/50"
+                    className={`journal-card group rounded-2xl border transition-[transform,border-color,background-color] duration-200 hover:-translate-y-0.5 hover:border-primary/50 ${index === 0 ? "journal-card--featured border-primary/35 bg-spotlight text-spotlight-foreground" : "border-border bg-background text-foreground"}`}
                     key={post.id}
                   >
                     <Link
-                      className="block rounded-2xl p-5 focus-visible:outline-none sm:p-7"
+                      aria-label={`Read article: ${post.title}`}
+                      className="flex h-full flex-col rounded-2xl p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:p-7"
                       href={`/blogs/${post.slug}`}
                     >
-                      <div className="flex items-center justify-between gap-4 border-b border-border pb-4">
-                        <span className="font-sans text-3xl font-bold tabular-nums tracking-tight text-primary/70">
-                          {String(index + 1).padStart(2, "0")}
+                      <div
+                        className={`flex items-center justify-between gap-4 border-b pb-4 ${index === 0 ? "border-spotlight-foreground/20" : "border-border"}`}
+                      >
+                        <span
+                          className={`inline-flex min-h-9 items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] ${index === 0 ? "text-accent" : "text-primary"}`}
+                        >
+                          {index === 0 ? (
+                            <BookOpenText aria-hidden="true" className="size-4" />
+                          ) : (
+                            <span className="font-sans text-lg tabular-nums tracking-normal">
+                              {String(index + 1).padStart(2, "0")}
+                            </span>
+                          )}
+                          {index === 0 ? "Featured guide" : "Property guide"}
                         </span>
-                        <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold text-muted-foreground">
+                        <span
+                          className={`inline-flex min-h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-semibold ${index === 0 ? "border-spotlight-foreground/25 text-spotlight-foreground/80" : "border-border text-muted-foreground"}`}
+                        >
+                          <Clock3 aria-hidden="true" className="size-3.5" />
                           {post.readingMinutes} min read
                         </span>
                       </div>
-                      <h3 className="mt-5 font-serif text-2xl leading-snug group-hover:text-primary sm:text-3xl">
+                      <h3
+                        className={`mt-5 font-serif text-2xl leading-snug sm:text-3xl ${index === 0 ? "text-spotlight-foreground group-hover:text-accent" : "text-foreground group-hover:text-primary"}`}
+                      >
                         {post.title}
                       </h3>
-                      <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                      <p
+                        className={`mt-3 flex-1 text-sm leading-7 ${index === 0 ? "text-spotlight-foreground/75" : "text-muted-foreground"}`}
+                      >
                         {post.excerpt || "Practical notes for your property search."}
                       </p>
-                      <span className="mt-6 inline-flex min-h-6 items-center gap-2 text-sm font-bold text-foreground">
+                      <span className="mt-7 inline-flex min-h-11 items-center justify-between gap-3 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground transition-colors group-hover:bg-primary-hover group-hover:text-primary-hover-foreground">
                         Read the guide
-                        <ArrowUpRight aria-hidden="true" className="size-4 text-primary" />
+                        <ArrowUpRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                       </span>
                     </Link>
                   </article>

@@ -155,6 +155,14 @@ The about page will be original and factual. Reference patterns are inspiration 
 
 ## Follow-up — move public theme selection to footer
 
-- [x] Remove the theme selector from the public desktop header and mobile navigation.
+- [x] Remove the theme selector from public navigation and standalone sign-in; keep the public selector in the footer.
 - [x] Keep the Light/Dark/System selector in the public footer and verify that it still changes the active theme.
 - [x] Record implementation and verification in `docs/HANDOFF.md`.
+
+## Follow-up — strengthen the homepage hero and journal
+
+- [x] Replace the nearly invisible hero wash with a Motion-powered architectural grid and slow spotlight movement.
+- [x] Keep the hero effect decorative, theme-token based, responsive, and disabled when reduced motion is requested.
+- [x] Give the journal page a clearer heading and a featured article card with readable contrast and obvious article actions.
+- [x] Use the same article hierarchy and button treatment in the homepage journal preview.
+- [x] Verify light and dark presentation, responsive widths, Playwright, unit tests, lint, typecheck, and production build; record results in `docs/HANDOFF.md`.
