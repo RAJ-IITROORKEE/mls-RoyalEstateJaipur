@@ -156,6 +156,76 @@ textarea:focus-visible {
 .hero-reveal {
   animation: hero-reveal 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
+.home-hero::before {
+  position: absolute;
+  z-index: 0;
+  inset: -1rem -2% 0;
+  pointer-events: none;
+  content: "";
+  background-image:
+    radial-gradient(
+      ellipse 68% 80% at 50% 0%,
+      color-mix(in oklab, var(--primary) 9%, transparent),
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 34% 66% at 94% 34%,
+      color-mix(in oklab, var(--accent) 5%, transparent),
+      transparent 82%
+    );
+  animation: hero-spotlight-drift 18s ease-in-out infinite alternate;
+}
+.hero-title-reveal {
+  animation: hero-title-reveal 480ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.property-card-cta {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-radius: 0.75rem;
+  background: var(--muted);
+  padding: 0.5rem 1rem;
+  color: var(--foreground);
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+.property-card-cta__icon {
+  display: grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex: none;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--primary);
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+.property-card-cta__icon svg {
+  transition: transform 180ms ease;
+}
+.group:hover .property-card-cta,
+.group:focus-within .property-card-cta {
+  transform: translateY(-1px);
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+.group:hover .property-card-cta__icon,
+.group:focus-within .property-card-cta__icon {
+  background: color-mix(in oklab, var(--primary-foreground) 14%, var(--primary));
+  color: var(--primary-foreground);
+}
+.group:hover .property-card-cta__icon svg,
+.group:focus-within .property-card-cta__icon svg {
+  transform: translate(2px, -2px);
+}
 @keyframes hero-reveal {
   from {
     opacity: 0;
@@ -164,6 +234,26 @@ textarea:focus-visible {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+@keyframes hero-title-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes hero-spotlight-drift {
+  from {
+    opacity: 0.68;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 5px, 0) scale(1.015);
   }
 }
 .architectural-art {
@@ -252,6 +342,16 @@ textarea:focus-visible {
   font-size: 0.875rem;
 }
 @media (prefers-reduced-motion: reduce) {
+  .home-hero::before,
+  .hero-title-reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .property-card-cta,
+  .property-card-cta__icon svg {
+    transform: none !important;
+  }
   *,
   *::before,
   *::after {

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { PublicPage } from "@/components/layout/public-page";
+import { PropertyCardAction } from "@/components/properties/property-card-action";
 import {
   publicPropertyIntents,
   propertyCategories,
@@ -395,7 +396,7 @@ export default async function PropertiesPage({
                   key={property.slug}
                 >
                   <Link
-                    className="block focus-visible:outline-none"
+                    className="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
                     href={"/properties/" + property.slug}
                   >
                     <div className="relative aspect-[4/3] overflow-hidden bg-muted">
@@ -443,15 +444,7 @@ export default async function PropertiesPage({
                             : formatInrMinorUnits(property.priceMinor)}
                         </span>
                       </div>
-                      <div className="mt-6 flex items-center justify-between border-t border-border pt-4">
-                        <span className="text-sm font-bold text-primary">
-                          View property
-                        </span>
-                        <ArrowUpRight
-                          aria-hidden="true"
-                          className="size-4 text-primary"
-                        />
-                      </div>
+                      <PropertyCardAction />
                     </div>
                   </Link>
                 </article>

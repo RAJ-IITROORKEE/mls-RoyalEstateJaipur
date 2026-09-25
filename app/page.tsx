@@ -12,6 +12,7 @@ import { HomeLocalitySection } from "@/components/home/home-locality-section";
 import { HomePropertySearch } from "@/components/home/home-property-search";
 import { PublicFooter } from "@/components/layout/public-footer";
 import { PublicHeader } from "@/components/layout/public-header";
+import { PropertyCardAction } from "@/components/properties/property-card-action";
 import { getPublishedBlogPosts } from "@/features/blog/service";
 import {
   publicPropertyIntents,
@@ -92,14 +93,14 @@ export default async function Home({
     <>
       <PublicHeader businessName={businessName} user={user} />
       <main className="flex-1">
-        <section className="border-b border-border bg-card">
-          <div className="mx-auto max-w-[1360px] px-5 pb-14 pt-14 sm:px-8 sm:pb-20 sm:pt-20">
-            <div className="hero-reveal mx-auto max-w-4xl text-center">
+        <section className="home-hero relative isolate overflow-hidden border-b border-border bg-card">
+          <div className="relative z-10 mx-auto max-w-[1360px] px-5 pb-14 pt-14 sm:px-8 sm:pb-20 sm:pt-20">
+            <div className="mx-auto max-w-4xl text-center">
               <p className="mx-auto inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-background px-4 text-xs font-semibold text-muted-foreground">
                 <MapPin aria-hidden="true" className="size-3.5 text-primary" />
                 Property search across Jaipur
               </p>
-              <h1 className="mx-auto mt-6 max-w-4xl text-balance font-sans text-4xl font-extrabold leading-[1.04] tracking-[-0.055em] sm:text-6xl lg:text-7xl">
+              <h1 className="hero-title-reveal mx-auto mt-6 max-w-4xl text-balance font-sans text-4xl font-extrabold leading-[1.12] tracking-[-0.04em] sm:text-6xl lg:text-7xl">
                 Find your next{" "}
                 <span className="text-primary">property in Jaipur</span>
               </h1>
@@ -209,7 +210,7 @@ export default async function Home({
                   key={property.slug}
                 >
                   <Link
-                    className="block focus-visible:outline-none"
+                    className="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
                     href={"/properties/" + property.slug}
                   >
                     <div className="relative aspect-[4/3] overflow-hidden bg-muted">
@@ -258,15 +259,7 @@ export default async function Home({
                             : formatInrMinorUnits(property.priceMinor)}
                         </span>
                       </div>
-                      <div className="mt-5 flex items-center justify-between gap-4 border-t border-border pt-4">
-                        <span className="text-sm font-bold text-foreground">
-                          View property
-                        </span>
-                        <ArrowUpRight
-                          aria-hidden="true"
-                          className="size-4 text-primary"
-                        />
-                      </div>
+                      <PropertyCardAction />
                     </div>
                   </Link>
                 </article>

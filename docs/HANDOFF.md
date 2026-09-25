@@ -166,6 +166,40 @@ The failed connectivity and dashboard-access findings above describe the initial
 - `tests/provider-availability.test.ts`, `tests/admin-settings-ui.test.tsx`
 - `docs/PLAN.md` and `docs/HANDOFF.md`
 
+### Follow-up — 2026-09-25 — Homepage motion and property-card actions
+
+**Status:** Implemented and verified in the local browser.
+
+- Relaxed the homepage headline line height and letter spacing so the two lines read more clearly.
+- Added a low-contrast, token-based spotlight drift behind the homepage content and a single headline entrance reveal. Reduced-motion users receive a static background and headline.
+- Replaced the plain “View property” footer on homepage and catalogue cards with one shared, full-width CTA treatment. Hover and keyboard focus change the CTA surface and move its arrow slightly; reduced-motion keeps the visual state change without movement.
+- Added visible inset keyboard focus on property-card links.
+- No Aceternity package was added; the effect is a small CSS implementation adapted to the existing theme tokens and accessibility rules.
+
+#### Verification
+
+| Check | Result |
+| --- | --- |
+| `npm run typecheck` | Pass |
+| `npm run lint` | Pass |
+| Vitest with system Node 20 | Runtime incompatibility: `ERR_REQUIRE_ESM` while loading `html-encoding-sniffer`; no tests started |
+| Vitest with bundled Node 24.19.0 | Pass — 52 tests across 12 files |
+| Next.js production build with bundled Node 24.19.0 | Pass |
+| `git diff --check` | Pass |
+| Browser: homepage, light theme | Pass — headline spacing, search, and updated homepage card actions rendered |
+| Browser: property catalogue, light theme | Pass — shared card action rendered on all six listings |
+| Browser: property catalogue, dark theme | Pass — slate surfaces, gold action states, and readable CTA text visible |
+| Browser: keyboard focus | Pass — focused listing link showed a visible card focus state and highlighted CTA |
+| Reduced-motion behavior | CSS fallback added; not manually toggled in browser |
+
+The dev server was restarted on its default host after the production build so the original `localhost:3000` origin remains available. A stale preview tab that had converted into a browser connection-error page could not be controlled; a fresh deliverable homepage tab is open instead.
+
+#### Changed in this follow-up
+
+- `app/page.tsx`, `app/properties/page.tsx`, `app/globals.css`
+- `components/properties/property-card-action.tsx`
+- `docs/PLAN.md`, `docs/HANDOFF.md`
+
 ### Follow-up — 2026-09-25 — Slate dark appearance
 
 **Status:** Implemented and verified in the local browser.
