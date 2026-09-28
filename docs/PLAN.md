@@ -156,7 +156,7 @@ Acceptance:
 
 ### Phase 7 — Automated and browser verification
 
-Status: in progress.
+Status: complete.
 
 - Run formatting/check, lint, typecheck, Vitest, Prisma generation/validation, safe migration status, production build, Playwright, and `git diff --check`.
 - Add Axe coverage to representative public/auth/admin pages and address serious/critical findings.
@@ -171,7 +171,7 @@ Acceptance:
 
 ### Phase 8 — Documentation, commit, and delivery
 
-Status: in progress.
+Status: complete.
 
 - Update `docs/HANDOFF.md` after every phase.
 - Update README and `.env.example` for current local, Supabase, Prisma, Storage, OAuth, test, deployment, rollback, and first-admin procedures.

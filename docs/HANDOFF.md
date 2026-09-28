@@ -30,6 +30,17 @@ This is the running record for `docs/PLAN.md`. Update it whenever a phase or mat
 
 - The Supabase public Auth settings endpoint still reports Google provider enabled: `false`. The Google client exists, and the application initiation/callback code is ready, but the client ID and secret still need to be saved directly in Supabase's Google provider panel. The secret was not read, logged, or committed.
 
+### Final verification and delivery
+
+- `npm run test:e2e`: pass, 12 Chromium tests in 1.3 minutes. Coverage includes public search and cards, footer theme placement, reduced motion, Axe checks, sign-up OTP, authenticated admin sign-in, owner photo flow, signed-out admin protection, and zero horizontal overflow on home/catalogue/journal at 320, 375, 768, 1024, 1440, and 1920 px.
+- `npm audit --omit=dev`: pass, zero production vulnerabilities. Full audit has five high development-only findings in Prisma 6.19.3's current CLI/config dependency chain; no breaking forced upgrade was applied.
+- `git diff --check`: pass. No environment file, Vercel directory, Playwright artifact, or secret was committed.
+- Git commit `b1854e1` was pushed to `origin/codex/real-estate-ui-auth-content`.
+- Vercel project `unfiltered-iit-ians/royalestatejaipur` was linked. `NEXT_PUBLIC_SITE_URL=https://royalestatejaipur.vercel.app` was added for production and this preview branch.
+- Vercel preview build completed successfully at `https://royalestatejaipur-fnbw3cuor-unfiltered-iit-ians.vercel.app` (deployment protection is enabled).
+- Vercel production build completed successfully and was aliased to `https://royalestatejaipur.vercel.app`.
+- Live browser verification passed on the production home, catalogue, and journal: current headings and cards render, the intent badge is in the top-right, the card action is visible, journal metadata/featured hierarchy is present, footer theme control exists, and no horizontal overflow was detected.
+
 ### Files and modules
 
 - Shared/public UI: `components/properties/property-card.tsx`, `components/ui/*`, `app/page.tsx`, `app/properties/*`, `app/blogs/*`, public metadata pages, footer, and global tokens.

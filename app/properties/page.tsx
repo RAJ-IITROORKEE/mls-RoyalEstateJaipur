@@ -1,4 +1,5 @@
 import { ArrowUpRight, Search } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { PublicPage } from "@/components/layout/public-page";
@@ -12,6 +13,12 @@ import {
   type PublicPropertySort,
 } from "@/features/properties/queries";
 import { getPublicLocalities } from "@/features/site-content/queries";
+
+export const metadata: Metadata = {
+  title: "Properties in Jaipur",
+  description: "Search published homes, plots, and commercial properties for sale or rent across Jaipur.",
+  alternates: { canonical: "/properties" },
+};
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
