@@ -2,6 +2,75 @@
 
 This is the running record for `docs/PLAN.md`. Update it whenever a phase or material change is completed. A phase is complete only after its implementation and applicable checks pass.
 
+## 2026-09-28 — Architecture, security, and shared UI completion
+
+### Outcome
+
+- Consolidated homepage and catalogue listings into one accessible `PropertyCard`, with a highlighted top-right intent badge, consistent facts, stronger focus and hover elevation, and the shared animated action.
+- Added public/auth metadata, noindex protection for account/auth areas, route-matched loading skeletons, and safe error recovery for public catalogue and journal routes.
+- Normalized button and form interaction feedback while retaining the ivory/navy/brass light theme and Slate 950 dark hierarchy.
+- Hid the placeholder WhatsApp action, removed demo language from the public footer, and kept the theme selector in the footer as requested.
+- Bounded the in-memory limiter, rate-limited avatar and submission media uploads, removed replaced avatar objects, verified file signatures for JPG/PNG/WebP/PDF uploads, and added five-minute duplicate enquiry suppression plus a supporting database index.
+- Applied migration `0008_enquiry_duplicate_index` successfully to the connected Supabase database.
+- Upgraded Next.js, Tiptap, Sharp, ESLint config, and Vitest to patched compatible versions. Production dependency audit is clean. Lighthouse CI was removed because its latest package currently contributes unresolved high-severity development-only advisories; the remaining development audit findings are in Prisma's current CLI/config chain.
+
+### Verification completed so far
+
+- `npm run lint`: pass with zero warnings after replacing internal `window.location` navigation with the Next router.
+- `npm run typecheck`: pass.
+- `npm test`: pass, 55 tests across 13 files.
+- `npm run prisma:validate` and `npm run prisma:generate`: pass; Prisma 6 reports its documented future config-file deprecation warning.
+- `npm run prisma:deploy`: pass; eight migrations are applied.
+- `npm run db:check`: pass; six site settings readable.
+- `npm run supabase:check-storage`: pass.
+- `npm run build`: pass on Next.js 16.3.6, 55 routes generated.
+- Playwright accessibility scan: pass on home, catalogue, journal, and sign-in with no serious or critical WCAG A/AA findings. A real light-theme contrast issue in homepage step numbers was found and fixed; reduced motion is enabled during automated contrast scans to avoid sampling translucent entrance frames.
+
+### External state
+
+- The Supabase public Auth settings endpoint still reports Google provider enabled: `false`. The Google client exists, and the application initiation/callback code is ready, but the client ID and secret still need to be saved directly in Supabase's Google provider panel. The secret was not read, logged, or committed.
+
+### Files and modules
+
+- Shared/public UI: `components/properties/property-card.tsx`, `components/ui/*`, `app/page.tsx`, `app/properties/*`, `app/blogs/*`, public metadata pages, footer, and global tokens.
+- Security/backend: `lib/security/*`, upload Route Handlers, enquiry schema/route, Prisma schema and migration `0008_enquiry_duplicate_index`.
+- Verification/docs: Vitest config/tests, Axe Playwright coverage, responsive Playwright coverage, package manifests, README, `.env.example`, `docs/PLAN.md`, and this log.
+
+## 2026-09-28 — Approved completion programme started
+
+### Outcome
+
+- Installed the approved local agent guidance: Vercel React performance, Vercel composition patterns, Vercel web design guidelines, frontend design, and Playwright best practices.
+- Added Supabase CLI, `@axe-core/playwright`, and Lighthouse CI to the development toolchain. The first npm process completed the downloads but stalled before writing the manifest; the dependency versions were recorded explicitly and the lockfile was regenerated successfully with scripts disabled.
+- Replaced the earlier feature-specific plan with a full route, architecture, UI, security, performance, verification, and delivery plan in `docs/PLAN.md`.
+- Began Phase 1 with a complete route/file inventory.
+
+### Verified service state
+
+- `npm run db:check`: pass; the configured Supabase database is reachable.
+- `npm run supabase:check-storage`: pass; required buckets and visibility match.
+- `npm run prisma:validate`: pass; Prisma emitted its existing Prisma 7 configuration deprecation warning.
+- Supabase Auth settings check: Google and email external-provider flags currently report disabled. Google OAuth remains an external dashboard credential step; no secret was read, printed, or stored.
+
+### Decisions
+
+- Preserve the current Next.js, Supabase, Prisma, Tailwind, Motion, Lucide, and next-themes stack.
+- Use Aceternity-inspired visuals as small local, token-based components rather than adding another broad component system.
+- Keep the public theme selector in the footer and the admin theme selector in the operational shell.
+- Treat Crossworld Properties as interaction and information-architecture inspiration only.
+
+### Changed files
+
+- `.agents/skills/*`, `skills-lock.json`
+- `package.json`, `package-lock.json`
+- `docs/PLAN.md`, `docs/HANDOFF.md`
+
+### Current status
+
+- Phase 0 complete.
+- Phase 1 repository/route/architecture audit in progress.
+- npm reports 51 resolved-tree advisories. They require scoped dependency triage in Phase 6; no forced breaking upgrade has been applied.
+
 ## 2026-09-25 — Phase 0: Discovery and planning
 
 **Status:** Complete. Implementation is in progress; see phase updates below.

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { PublicPage } from "@/components/layout/public-page";
@@ -5,10 +6,16 @@ import { SocialLinks } from "@/components/layout/social-links";
 import { Button } from "@/components/ui/button";
 import {
   createWhatsAppEnquiryMessage,
-  createWhatsAppUrl,
+  createOptionalWhatsAppUrl,
 } from "@/features/properties/domain";
 import { getPublishedPropertyByReference } from "@/features/properties/queries";
 import { getEnvironment } from "@/lib/env";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Ask about a published property or tell the Royal Estates Jaipur team what you are looking for.",
+  alternates: { canonical: "/contact" },
+};
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -47,10 +54,10 @@ export default async function ContactPage({
           <h1 className="mt-3 font-serif text-4xl">Get in touch</h1>
           <div className="mt-6">
             <SocialLinks
-              whatsappHref={createWhatsAppUrl(
+              whatsappHref={createOptionalWhatsAppUrl(
                 environment.NEXT_PUBLIC_BUSINESS_WHATSAPP,
                 whatsappMessage,
-              )}
+              ) ?? undefined}
             />
           </div>
           <p className="mt-8 text-sm leading-7 text-muted-foreground">

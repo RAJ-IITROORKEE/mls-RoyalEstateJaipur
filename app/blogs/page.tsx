@@ -1,9 +1,16 @@
 import { ArrowUpRight, BookOpenText, Clock3 } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 
 import { PublicPage } from "@/components/layout/public-page";
 import { getPublishedBlogPosts } from "@/features/blog/service";
+
+export const metadata: Metadata = {
+  title: "Property journal",
+  description: "Practical guidance for buying, renting, and presenting property in Jaipur.",
+  alternates: { canonical: "/blogs" },
+};
 
 export default async function BlogsPage() {
   const result = await getPublishedBlogPosts();

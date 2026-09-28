@@ -2,6 +2,10 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
+}));
+
 import { OwnerSubmissionMedia } from "@/components/forms/owner-submission-media";
 import {
   OwnerSubmissionWizard,

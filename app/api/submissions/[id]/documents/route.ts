@@ -7,6 +7,7 @@ import { getCurrentUserAccess } from "@/lib/auth/current-user";
 import { prisma } from "@/lib/db/prisma";
 import { checkRateLimit, getRequestIdentifier } from "@/lib/security/rate-limit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { hasExpectedUploadSignature } from "@/lib/security/upload-signature";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const rateLimit = checkRateLimit({ key: `submission-document:${getRequestIdentifier(request)}`, limit: 20, windowMs: 15 * 60 * 1000 });
@@ -21,6 +22,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const parsed = documentUploadSchema.safeParse({ documentType: formData.get("documentType") });
   if (!parsed.success || !(file instanceof File)) return NextResponse.json({ error: "Choose a document and document type." }, { status: 400 });
   if (!allowedDocumentTypes.includes(file.type as (typeof allowedDocumentTypes)[number]) || file.size <= 0 || file.size > maxDocumentBytes) return NextResponse.json({ error: "Use a PDF, JPG, or PNG file up to 10 MB." }, { status: 400 });
+  if (!(await hasExpectedUploadSignature(file))) return NextResponse.json({ error: "The document content does not match its file type." }, { status: 400 });
   const extension = getSafeDocumentExtension(file.name, file.type);
   if (!extension) return NextResponse.json({ error: "The file extension does not match its type." }, { status: 400 });
 

@@ -8,6 +8,21 @@ type RateLimitOptions = {
 type RateLimitEntry = { count: number; resetAt: number };
 
 const entries = new Map<string, RateLimitEntry>();
+const maxEntries = 5_000;
+
+function pruneEntries(now: number) {
+  if (entries.size < maxEntries) return;
+
+  for (const [key, entry] of entries) {
+    if (entry.resetAt <= now) entries.delete(key);
+  }
+
+  while (entries.size >= maxEntries) {
+    const oldestKey = entries.keys().next().value;
+    if (typeof oldestKey !== "string") break;
+    entries.delete(oldestKey);
+  }
+}
 
 export function getRequestIdentifier(request: Request) {
   const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
@@ -15,6 +30,7 @@ export function getRequestIdentifier(request: Request) {
 }
 
 export function checkRateLimit({ key, limit, windowMs, now = Date.now() }: RateLimitOptions) {
+  pruneEntries(now);
   const existing = entries.get(key);
   if (!existing || existing.resetAt <= now) {
     const next = { count: 1, resetAt: now + windowMs };

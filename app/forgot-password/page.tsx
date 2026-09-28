@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { PublicPage } from "@/components/layout/public-page";
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  title: "Reset password",
+  robots: { index: false, follow: false },
+};
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 

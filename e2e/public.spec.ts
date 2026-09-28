@@ -109,4 +109,23 @@ test.describe("public experience", () => {
       page.getByRole("combobox", { name: "Color theme" }),
     ).toHaveCount(0);
   });
+
+  test("core public pages stay within the viewport at required widths", async ({
+    page,
+  }) => {
+    test.setTimeout(120_000);
+    for (const width of [320, 375, 768, 1024, 1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const route of ["/", "/properties", "/blogs"]) {
+        await page.goto(route);
+        const dimensions = await page.evaluate(() => ({
+          clientWidth: document.documentElement.clientWidth,
+          scrollWidth: document.documentElement.scrollWidth,
+        }));
+        expect(dimensions.scrollWidth, `${route} at ${width}px`).toBeLessThanOrEqual(
+          dimensions.clientWidth,
+        );
+      }
+    }
+  });
 });

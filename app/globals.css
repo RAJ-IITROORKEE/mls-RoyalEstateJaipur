@@ -127,6 +127,26 @@ button,
 a {
   -webkit-tap-highlight-color: transparent;
 }
+input,
+select,
+textarea {
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    box-shadow 150ms ease;
+}
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: color-mix(in oklab, var(--primary) 34%, var(--border));
+}
+input::placeholder,
+textarea::placeholder {
+  opacity: 0.82;
+}
+select {
+  color-scheme: inherit;
+}
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,

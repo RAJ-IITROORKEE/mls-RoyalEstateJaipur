@@ -300,6 +300,7 @@ model Enquiry {
   @@index([status, createdAt])
   @@index([assignedAdminId, status])
   @@index([propertyId, createdAt])
+  @@index([email, createdAt])
 }
 
 model EnquiryActivity {

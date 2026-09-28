@@ -5,13 +5,13 @@ import { SocialLinks } from "@/components/layout/social-links";
 import { ThemeToggle } from "@/components/theme-toggle";
 import {
   createWhatsAppEnquiryMessage,
-  createWhatsAppUrl,
+  createOptionalWhatsAppUrl,
 } from "@/features/properties/domain";
 import { getEnvironment } from "@/lib/env";
 
 export function PublicFooter({ businessName }: { businessName: string }) {
   const environment = getEnvironment();
-  const whatsappHref = createWhatsAppUrl(
+  const whatsappHref = createOptionalWhatsAppUrl(
     environment.NEXT_PUBLIC_BUSINESS_WHATSAPP,
     createWhatsAppEnquiryMessage({ businessName }),
   );
@@ -38,7 +38,10 @@ export function PublicFooter({ businessName }: { businessName: string }) {
             A considered way to discover and present property across Jaipur.
             Every public listing is reviewed before it is published.
           </p>
-          <SocialLinks className="mt-6 gap-2" whatsappHref={whatsappHref} />
+          <SocialLinks
+            className="mt-6 gap-2"
+            whatsappHref={whatsappHref ?? undefined}
+          />
         </div>
         <div>
           <h2 className="text-sm font-bold">Explore</h2>
@@ -60,7 +63,7 @@ export function PublicFooter({ businessName }: { businessName: string }) {
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-[1360px] flex-col gap-2 px-5 py-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-8">
           <span>
-            © {new Date().getFullYear()} {businessName}. Demo foundation.
+            © {new Date().getFullYear()} {businessName}. Property discovery in Jaipur.
           </span>
           <div className="flex items-center gap-4">
             <span className="flex gap-4">

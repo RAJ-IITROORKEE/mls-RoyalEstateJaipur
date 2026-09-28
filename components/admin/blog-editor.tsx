@@ -2,6 +2,7 @@
 
 import { Eye, ImagePlus, Save, X } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { RichBlogEditor } from "@/components/admin/rich-blog-editor";
@@ -39,6 +40,7 @@ function createSlug(value: string) {
 }
 
 export function BlogEditor({ post }: { post?: BlogEditorPost }) {
+  const router = useRouter();
   const initialRich = toBlogRichContent(post?.content ?? emptyBlogRichContent);
   const initialAssets = post?.assets ?? [];
   const [title, setTitle] = useState(post?.title ?? "");
@@ -110,7 +112,7 @@ export function BlogEditor({ post }: { post?: BlogEditorPost }) {
     setDirty(false);
     setStatus("Draft saved.");
     if (!post && result.post?.id)
-      window.location.assign(`/admin/blog/${result.post.id}`);
+      router.push(`/admin/blog/${result.post.id}`);
   }
 
   async function changeStatus(nextStatus: "PUBLISHED" | "ARCHIVED" | "DRAFT") {
@@ -131,7 +133,7 @@ export function BlogEditor({ post }: { post?: BlogEditorPost }) {
     if (!response.ok)
       return setStatus(result.error ?? "Status could not be updated.");
     setStatus(`Post marked ${nextStatus.toLowerCase()}.`);
-    window.location.reload();
+    router.refresh();
   }
 
   async function uploadAsset(

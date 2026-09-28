@@ -4,10 +4,17 @@ import {
   Image as ImageIcon,
   LockKeyhole,
 } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { PublicPage } from "@/components/layout/public-page";
 import { getCurrentUserAccess } from "@/lib/auth/current-user";
+
+export const metadata: Metadata = {
+  title: "List your property",
+  description: "Submit a property for private review by the Royal Estates Jaipur team.",
+  alternates: { canonical: "/list-property" },
+};
 
 export default async function ListPropertyPage() {
   const access = await getCurrentUserAccess();

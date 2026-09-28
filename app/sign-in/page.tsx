@@ -1,9 +1,16 @@
 import { ArrowLeft, LockKeyhole } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { PasswordField } from "@/components/forms/password-field";
 import { GoogleSignInLink } from "@/components/forms/google-sign-in-link";
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  title: "Sign in",
+  description: "Sign in to manage your Royal Estates Jaipur property submissions.",
+  robots: { index: false, follow: false },
+};
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 

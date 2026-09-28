@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   createWhatsAppEnquiryMessage,
+  createOptionalWhatsAppUrl,
   createWhatsAppUrl,
   toPropertySlug,
 } from "@/features/properties/domain";
@@ -22,6 +23,13 @@ describe("property domain helpers", () => {
     ).toBe(
       "https://wa.me/919876543210?text=Hello%20from%20%2Fproperties%2Famber-01",
     );
+  });
+
+  it("hides placeholder WhatsApp numbers from public actions", () => {
+    expect(createOptionalWhatsAppUrl("910000000000", "Hello")).toBeNull();
+    expect(
+      createOptionalWhatsAppUrl("+91 98765 43210", "Hello"),
+    ).toBe("https://wa.me/919876543210?text=Hello");
   });
 
   it("creates contextual and general WhatsApp enquiry messages", () => {

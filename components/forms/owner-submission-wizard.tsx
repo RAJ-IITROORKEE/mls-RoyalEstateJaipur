@@ -2,6 +2,7 @@
 
 import { ArrowLeft, ArrowRight, Check, Save } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
@@ -60,6 +61,7 @@ export function OwnerSubmissionWizard({
   initialSubmissionId?: string;
   initialDraft?: SubmissionDraft;
 }) {
+  const router = useRouter();
   const [draft, setDraft] = useState<SubmissionDraft>({
     ...defaultDraft,
     ...initialDraft,
@@ -113,7 +115,7 @@ export function OwnerSubmissionWizard({
           action === "SUBMIT" ? "Submitted for review." : "Saved just now.",
         );
         if (action === "SUBMIT")
-          window.location.assign(`/account/submissions/${submission.id}`);
+          router.push(`/account/submissions/${submission.id}`);
         return submission.id;
       } catch (caught) {
         if (currentRequest === requestNumber.current) {
@@ -129,7 +131,7 @@ export function OwnerSubmissionWizard({
         if (currentRequest === requestNumber.current) setSaving(false);
       }
     },
-    [draft, submissionId],
+    [draft, router, submissionId],
   );
 
   useEffect(() => {

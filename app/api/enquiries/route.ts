@@ -30,6 +30,16 @@ export async function POST(request: Request) {
 
   try {
     const property = parsed.data.propertyReference ? await prisma.property.findFirst({ where: { referenceNumber: parsed.data.propertyReference, status: PropertyStatus.PUBLISHED }, select: { id: true } }) : null;
+    const recentDuplicate = await prisma.enquiry.findFirst({
+      where: {
+        email: parsed.data.email,
+        message: parsed.data.message,
+        propertyId: property?.id ?? null,
+        createdAt: { gte: new Date(Date.now() - 5 * 60 * 1000) },
+      },
+      select: { id: true },
+    });
+    if (recentDuplicate) return redirectWithMessage(request, "sent", "1");
     await prisma.enquiry.create({
       data: {
         contactName: parsed.data.contactName,

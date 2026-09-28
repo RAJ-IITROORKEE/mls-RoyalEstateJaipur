@@ -7,6 +7,9 @@ export default defineConfig({
   resolve: { tsconfigPaths: true },
   test: {
     environment: "jsdom",
+    fileParallelism: false,
+    maxWorkers: 1,
+    pool: "threads",
     setupFiles: [path.resolve(__dirname, "tests/setup.ts")],
     include: ["tests/**/*.test.{ts,tsx}"],
   },

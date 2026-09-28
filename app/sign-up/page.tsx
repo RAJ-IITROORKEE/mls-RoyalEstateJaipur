@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SignUpFlow } from "@/components/forms/signup-flow";
 import { GoogleSignInLink } from "@/components/forms/google-sign-in-link";
 import { PublicPage } from "@/components/layout/public-page";
+
+export const metadata: Metadata = {
+  title: "Create account",
+  description: "Create an owner account for property submissions and updates.",
+  robots: { index: false, follow: false },
+};
 
 export default function SignUpPage() {
   return (

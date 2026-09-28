@@ -1,7 +1,14 @@
 import { ArrowUpRight, FileCheck2, Handshake, SearchCheck } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { PublicPage } from "@/components/layout/public-page";
+
+export const metadata: Metadata = {
+  title: "Services",
+  description: "Property discovery, owner listing review, and direct enquiry support in Jaipur.",
+  alternates: { canonical: "/services" },
+};
 
 const services = [
   [SearchCheck, "Property discovery", "A focused way to narrow published inventory by intent, type, and locality."],

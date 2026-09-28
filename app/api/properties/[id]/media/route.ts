@@ -6,6 +6,7 @@ import { getCurrentUserAccess } from "@/lib/auth/current-user";
 import { mediaTypes, mediaUpdateSchema, mediaUploadSchema, maxMediaBytes, getSafeMediaExtension } from "@/features/properties/media";
 import { prisma } from "@/lib/db/prisma";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { hasExpectedUploadSignature } from "@/lib/security/upload-signature";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -30,6 +31,7 @@ export async function POST(request: Request, { params }: RouteContext) {
   const file = formData.get("file");
   const parsed = mediaUploadSchema.safeParse({ altText: formData.get("altText") });
   if (!parsed.success || !(file instanceof File) || !mediaTypes.includes(file.type as (typeof mediaTypes)[number]) || file.size <= 0 || file.size > maxMediaBytes || !getSafeMediaExtension(file.name, file.type)) return NextResponse.json({ error: "Upload a JPG, PNG, or WebP image up to 10 MB with matching file details." }, { status: 400 });
+  if (!(await hasExpectedUploadSignature(file))) return NextResponse.json({ error: "The image content does not match its file type." }, { status: 400 });
   const admin = createSupabaseAdminClient();
   if (!admin) return NextResponse.json({ error: "Media storage is not configured yet." }, { status: 503 });
   const extension = getSafeMediaExtension(file.name, file.type);

@@ -32,6 +32,23 @@ export function createWhatsAppUrl(phone: string, message: string) {
   return `https://wa.me/${normalizedPhone}?text=${encodeURIComponent(message)}`;
 }
 
+export function createOptionalWhatsAppUrl(
+  phone: string | undefined,
+  message: string,
+) {
+  const normalizedPhone = phone?.replace(/[^\d]/g, "") ?? "";
+  if (
+    normalizedPhone.length < 10 ||
+    normalizedPhone.length > 15 ||
+    /^0+$/.test(normalizedPhone) ||
+    /^91(?:0{10})$/.test(normalizedPhone)
+  ) {
+    return null;
+  }
+
+  return `https://wa.me/${normalizedPhone}?text=${encodeURIComponent(message)}`;
+}
+
 export function createWhatsAppEnquiryMessage({
   businessName,
   intent,

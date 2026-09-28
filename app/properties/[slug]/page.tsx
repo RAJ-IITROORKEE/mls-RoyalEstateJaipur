@@ -17,7 +17,7 @@ import { PublicPage } from "@/components/layout/public-page";
 import { WhatsAppIcon } from "@/components/icons/whatsapp-icon";
 import {
   createWhatsAppEnquiryMessage,
-  createWhatsAppUrl,
+  createOptionalWhatsAppUrl,
 } from "@/features/properties/domain";
 import {
   getPublishedProperties,
@@ -62,6 +62,17 @@ export default async function PropertyDetailPage({
     NEXT_PUBLIC_BUSINESS_WHATSAPP: whatsapp,
   } = getEnvironment();
   const property = result.property;
+  const whatsappHref = property
+    ? createOptionalWhatsAppUrl(
+        whatsapp,
+        createWhatsAppEnquiryMessage({
+          businessName,
+          intent: property.intent,
+          propertyTitle: property.title,
+          referenceNumber: property.referenceNumber,
+        }),
+      )
+    : null;
   const relatedResult = property
     ? await getPublishedProperties({ category: property.category, limit: 4 })
     : null;
@@ -347,22 +358,16 @@ export default async function PropertyDetailPage({
                     >
                       Send an enquiry
                     </Link>
-                    <a
-                      className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-primary-foreground/30 px-4 text-sm font-bold"
-                      href={createWhatsAppUrl(
-                        whatsapp,
-                        createWhatsAppEnquiryMessage({
-                          businessName,
-                          intent: property.intent,
-                          propertyTitle: property.title,
-                          referenceNumber: property.referenceNumber,
-                        }),
-                      )}
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      <WhatsAppIcon className="size-5" /> WhatsApp
-                    </a>
+                    {whatsappHref && (
+                      <a
+                        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-primary-foreground/30 px-4 text-sm font-bold"
+                        href={whatsappHref}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        <WhatsAppIcon className="size-5" /> WhatsApp
+                      </a>
+                    )}
                   </div>
                 </aside>
               </div>

@@ -13,7 +13,12 @@ import {
 } from "@/features/submissions/media";
 import { prisma } from "@/lib/db/prisma";
 import { getCurrentUserAccess } from "@/lib/auth/current-user";
+import {
+  checkRateLimit,
+  getRequestIdentifier,
+} from "@/lib/security/rate-limit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { hasExpectedUploadSignature } from "@/lib/security/upload-signature";
 
 export async function GET(
   _request: Request,
@@ -66,6 +71,23 @@ export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const limit = checkRateLimit({
+    key: `submission-media:${getRequestIdentifier(request)}`,
+    limit: 20,
+    windowMs: 15 * 60 * 1000,
+  });
+  if (!limit.allowed)
+    return NextResponse.json(
+      { error: "Too many image uploads. Try again shortly." },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(
+            Math.max(1, Math.ceil((limit.resetAt - Date.now()) / 1000)),
+          ),
+        },
+      },
+    );
   const access = await getCurrentUserAccess();
   const { id } = await params;
   if (access.mode !== "authorized")
@@ -104,10 +126,16 @@ export async function POST(
     !submissionMediaTypes.includes(
       file.type as (typeof submissionMediaTypes)[number],
     ) ||
+    file.size <= 0 ||
     file.size > maxSubmissionMediaBytes
   )
     return NextResponse.json(
       { error: "Use a JPG or PNG image up to 10 MB." },
+      { status: 400 },
+    );
+  if (!(await hasExpectedUploadSignature(file)))
+    return NextResponse.json(
+      { error: "The image content does not match its file type." },
       { status: 400 },
     );
   const extension = getSubmissionMediaExtension(file.name, file.type);
