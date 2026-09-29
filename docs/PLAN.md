@@ -1,6 +1,6 @@
 # Royal Estates Jaipur — Completion Plan
 
-Last updated: 2026-09-28
+Last updated: 2026-09-30
 
 ## Objective
 
@@ -178,6 +178,7 @@ Status: complete.
 - Review the final diff for unrelated changes, secrets, generated artifacts, and dead code.
 - Commit coherent changes on the current `codex/` branch.
 - Run Vercel preview/deployment checks when credentials and project linkage are available; attach or report any created pull request.
+- Recheck the canonical production alias and representative public routes after deployment; record external setup still required.
 
 Acceptance:
 

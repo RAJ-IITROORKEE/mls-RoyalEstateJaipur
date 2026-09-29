@@ -2,6 +2,26 @@
 
 This is the running record for `docs/PLAN.md`. Update it whenever a phase or material change is completed. A phase is complete only after its implementation and applicable checks pass.
 
+## 2026-09-30 — Final production browser confirmation
+
+### Outcome
+
+- Verified `https://royalestatejaipur.vercel.app` in the browser. The homepage shows the Buy/Rent search, locality and property-type selectors, latest listings, FAQs, and journal preview.
+- Verified the canonical `/properties` page title and live catalogue controls; six clearly marked preview listings render with Buy/Rent filters.
+- Verified `/blogs` page title and both original article cards, plus the redesigned `/about` page and its property-type/locality navigation.
+- `vercel inspect` reports the current production deployment as **Ready** and lists `https://royalestatejaipur.vercel.app` as its canonical alias.
+
+### Remaining external setup
+
+- Public property cards still include seeded preview/demo listings. Replace or unpublish them before presenting the catalogue as actual business inventory.
+- Google OAuth remains disabled in Supabase until the OAuth client ID and secret are entered directly in the project's Google provider settings. Do not put the client secret in source control or chat.
+
+### Checks
+
+- Live production browser review: pass for home, properties, blogs, and about.
+- Current production deployment inspection: pass — status Ready and canonical alias present.
+- No application code changed in this follow-up; the comprehensive automated test results remain recorded in the 2026-09-28 entry below.
+
 ## 2026-09-28 — Architecture, security, and shared UI completion
 
 ### Outcome
