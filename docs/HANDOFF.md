@@ -44,7 +44,8 @@ This is the running record for `docs/PLAN.md`. Update it whenever a phase or mat
 - Vercel inspect: production Ready, deployment `dpl_5DBiesRuihb9Lukdt2U6JfDbxCza`.
 - Browser reference and production evidence saved/reopened: pass.
 - Application lint/typecheck/build/test suite not rerun for docs and skill setup; September results below remain historical only.
-- Git diff/secret check and planning commit/push: pending final checkpoint below.
+- Documentation links/nonempty files, staged credential-path/pattern check, and `git diff --cached --check`: pass.
+- Planning checkpoint `9bbe476` pushed to `origin/codex/insforge-redesign-plan`; production remains the existing Ready deployment. This checkpoint contains the plan, audit, browser evidence and project-local skills.
 
 ### Next phase and required inputs
 

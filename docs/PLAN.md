@@ -236,7 +236,7 @@ Each phase must update HANDOFF with outcomes, files, commands/pass/fail, credent
 - [x] Verify direct Prisma connectivity without applying a migration.
 - [x] Inspect the voice-agent-app authentication reference without modifying it.
 - [x] Record current findings and the phased plan.
-- [ ] Commit/push the planning stage after diff/secret checks; record result in HANDOFF.
+- [x] Commit/push the planning stage after diff/secret checks; checkpoint `9bbe476` recorded in HANDOFF.
 
 ### Phase 1 — Packages, APIs and repository hygiene
 
