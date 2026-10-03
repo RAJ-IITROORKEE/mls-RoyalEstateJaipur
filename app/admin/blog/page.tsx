@@ -52,7 +52,15 @@ export default async function AdminBlogPage() {
             >
               <div className="flex items-center gap-4">
                 <div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-muted">
-                  {post.coverUrl && <Image alt={post.coverAsset?.altText ?? ""} className="object-cover" fill sizes="64px" src={post.coverUrl} />}
+                  {post.coverUrl && (
+                    <Image
+                      alt={post.coverAsset?.altText ?? ""}
+                      className="object-cover"
+                      fill
+                      sizes="64px"
+                      src={post.coverUrl}
+                    />
+                  )}
                 </div>
                 <div>
                   <p className="font-semibold">{post.title}</p>

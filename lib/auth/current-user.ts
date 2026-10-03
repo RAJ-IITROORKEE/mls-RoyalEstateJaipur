@@ -7,9 +7,8 @@ export async function getCurrentUserAccess() {
     return { mode: "setup" as const, user: null, profile: null };
   const supabase = await createSupabaseServerClient();
   if (!supabase) return { mode: "setup" as const, user: null, profile: null };
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const verified = await supabase.auth.getUser().catch(() => null);
+  const user = verified?.data.user;
   if (!user)
     return { mode: "unauthenticated" as const, user: null, profile: null };
   if (!hasDatabaseConfiguration())

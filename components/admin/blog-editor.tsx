@@ -111,8 +111,7 @@ export function BlogEditor({ post }: { post?: BlogEditorPost }) {
     }
     setDirty(false);
     setStatus("Draft saved.");
-    if (!post && result.post?.id)
-      router.push(`/admin/blog/${result.post.id}`);
+    if (!post && result.post?.id) router.push(`/admin/blog/${result.post.id}`);
   }
 
   async function changeStatus(nextStatus: "PUBLISHED" | "ARCHIVED" | "DRAFT") {

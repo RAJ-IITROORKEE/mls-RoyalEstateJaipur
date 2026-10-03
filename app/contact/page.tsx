@@ -13,7 +13,8 @@ import { getEnvironment } from "@/lib/env";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Ask about a published property or tell the Royal Estates Jaipur team what you are looking for.",
+  description:
+    "Ask about a published property or tell the Royal Estates Jaipur team what you are looking for.",
   alternates: { canonical: "/contact" },
 };
 
@@ -54,10 +55,12 @@ export default async function ContactPage({
           <h1 className="mt-3 font-serif text-4xl">Get in touch</h1>
           <div className="mt-6">
             <SocialLinks
-              whatsappHref={createOptionalWhatsAppUrl(
-                environment.NEXT_PUBLIC_BUSINESS_WHATSAPP,
-                whatsappMessage,
-              ) ?? undefined}
+              whatsappHref={
+                createOptionalWhatsAppUrl(
+                  environment.NEXT_PUBLIC_BUSINESS_WHATSAPP,
+                  whatsappMessage,
+                ) ?? undefined
+              }
             />
           </div>
           <p className="mt-8 text-sm leading-7 text-muted-foreground">

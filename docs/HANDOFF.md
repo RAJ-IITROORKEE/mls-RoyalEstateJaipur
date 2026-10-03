@@ -2,6 +2,37 @@
 
 This is the running record for `docs/PLAN.md`. Update it whenever a phase or material change is completed. A phase is complete only after its implementation and applicable checks pass.
 
+## 2026-10-03 — Phase 1 implementation and local verification
+
+Status: implemented and verified locally; remote CI and Vercel deployment gate in progress.
+
+### Outcome and decisions
+
+- Added shared request defenses to all 36 API mutation exports: exact same-origin checks, streamed body limits, UUID validation, safe errors/request IDs and private responses. Existing server roles, ownership and Zod domain checks remain required. Full inventory and assessed gaps: [PHASE1-SECURITY.md](PHASE1-SECURITY.md).
+- Added atomic database-backed rate limits, hashed identifiers and expiry cleanup; production fails closed on outages. Applied additive migration `0009_durable_rate_limits` successfully to the live Supabase database. The old application remains compatible with the private counter table.
+- Serialized duplicate enquiries and staff access changes with transaction locks. New sessions for suspended profiles/provisioning failures are ended; added Next 16 Proxy session refresh with cookie/header propagation.
+- Paginated the public journal with recovery for out-of-range pages, bounded published-only projections and page-specific canonical metadata. Home reads only two articles.
+- Aligned Node 24, pinned Prettier, compatible dependency repairs and a scoped Prisma config dependency override. Production audit is clean; five high development ESLint/glob findings are explicitly assessed with upstream links. No forced incompatible downgrade.
+- Established formatting across previously inconsistent owned source and added pinned GitHub Actions CI with disposable Postgres/synthetic fixtures. Most widespread source edits are formatting; behavioral changes are concentrated in APIs/security/auth/query code.
+
+### Verified checks
+
+- `npm run format:check`, `npm run lint`, `npm run typecheck`: pass.
+- `npm test`: 84 tests across 23 files pass, including mutation inventory, forged roles, refresh-cookie propagation, suspended sessions, last-admin protection, pagination, safe errors and durable limiter behavior.
+- Prisma generate/validate and production build: pass (55 generated routes plus Proxy). Prisma 6's future configuration deprecation remains visible.
+- Production audit: 0 vulnerabilities. Full audit: 5 high development findings, not hidden or skipped.
+- All nine migrations applied to an isolated random InsForge schema; eight concurrent limiter requests admitted exactly three; six identical enquiries created exactly one row; counter RLS verified. The schema was removed after the check. This is a compatibility rehearsal, not migrated production data.
+- Real enquiry contention exposed Prisma's five-second default transaction timeout; the dedicated transaction now allows 25 seconds and the concurrency check passed.
+- Essential Playwright: 11/11 pass, including hostile/missing origins, malformed/oversized requests, public pages, six viewport widths and Axe scans on home/catalogue/journal/sign-in (no serious/critical findings).
+- Real Supabase admin browser sign-in: 1/1 pass; authenticated admin dashboard and inventory rendered. This does not claim Google OAuth is configured.
+- Browser plugin verified journal page 2's empty state, previous-page action and footer theme control. Evidence recorded under `docs/audits/2026-10-03/phase1/`.
+
+### Files and follow-up
+
+Principal modules: `lib/security/`, `lib/supabase/proxy.ts`, root `proxy.ts`, all API mutations, auth guards, enquiry creation, staff transitions, journal queries/pages, Prisma migration, tests, CI and formatter configuration. README/environment example document runtime setup, rate limiting and safe rollback.
+
+Remote CI/deployment IDs and commit checkpoint will be appended after verification. Phase 2 then introduces the approved forest/Slate design system. Operational upload/reconciliation gaps remain tracked for Phase 4/6. Production still uses Supabase; real InsForge OAuth and data/storage migration remain Phase 5–7 work.
+
 ## 2026-10-03 — Redesign research and approved InsForge setup
 
 ### Outcome

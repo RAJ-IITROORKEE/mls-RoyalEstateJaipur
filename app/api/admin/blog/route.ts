@@ -1,9 +1,10 @@
+import { withMutationBoundary } from "@/lib/security/mutation-boundary";
 import { NextResponse } from "next/server";
 
 import { canManageBlog, saveBlogPost } from "@/features/blog/service";
 import { getCurrentUserAccess } from "@/lib/auth/current-user";
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const access = await getCurrentUserAccess();
   if (access.mode !== "authorized" || !canManageBlog(access.profile.role))
     return NextResponse.json(
@@ -17,15 +18,14 @@ export async function POST(request: Request) {
       await request.json(),
     );
     return NextResponse.json({ ok: true, post });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Blog post could not be saved.",
+        error: "Blog post could not be saved.",
       },
       { status: 400 },
     );
   }
 }
+
+export const POST = withMutationBoundary(handlePOST);

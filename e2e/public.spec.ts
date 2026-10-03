@@ -27,7 +27,9 @@ test.describe("public experience", () => {
     await expect(page.locator("html")).toHaveClass(/dark/);
   });
 
-  test("home page presents the animated search hero and accessible card actions", async ({ page }) => {
+  test("home page presents the animated search hero and accessible card actions", async ({
+    page,
+  }) => {
     await page.emulateMedia({ reducedMotion: "no-preference" });
     await page.goto("/");
     await expect(
@@ -55,7 +57,10 @@ test.describe("public experience", () => {
     await firstCard.focus();
     await expect
       .poll(
-        () => action.evaluate((element) => getComputedStyle(element).backgroundColor),
+        () =>
+          action.evaluate(
+            (element) => getComputedStyle(element).backgroundColor,
+          ),
         { timeout: 1_000 },
       )
       .not.toBe(restingBackground);
@@ -74,7 +79,9 @@ test.describe("public experience", () => {
   }) => {
     await page.goto("/blogs");
     await expect(
-      page.getByRole("heading", { name: "Notes for better property decisions." }),
+      page.getByRole("heading", {
+        name: "Notes for better property decisions.",
+      }),
     ).toBeVisible();
     const featuredArticle = page.locator('a[data-featured="true"]');
     await expect(featuredArticle).toBeVisible();
@@ -122,9 +129,10 @@ test.describe("public experience", () => {
           clientWidth: document.documentElement.clientWidth,
           scrollWidth: document.documentElement.scrollWidth,
         }));
-        expect(dimensions.scrollWidth, `${route} at ${width}px`).toBeLessThanOrEqual(
-          dimensions.clientWidth,
-        );
+        expect(
+          dimensions.scrollWidth,
+          `${route} at ${width}px`,
+        ).toBeLessThanOrEqual(dimensions.clientWidth);
       }
     }
   });

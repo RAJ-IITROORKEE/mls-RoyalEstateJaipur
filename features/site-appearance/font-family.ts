@@ -51,7 +51,8 @@ export const fontFamilyThemeClasses: Record<FontFamily, string> = {
 };
 
 export function parseFontFamily(value: unknown): FontFamily {
-  return typeof value === "string" && fontFamilyValues.includes(value as FontFamily)
-    ? value as FontFamily
+  return typeof value === "string" &&
+    fontFamilyValues.includes(value as FontFamily)
+    ? (value as FontFamily)
     : defaultFontFamily;
 }

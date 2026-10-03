@@ -79,14 +79,21 @@ export async function getAdminBlogPost(id: string) {
   return { ...post, assets };
 }
 
-export async function getPublishedBlogPosts() {
+export async function getPublishedBlogPosts({
+  page = 1,
+  limit = 12,
+}: { page?: number; limit?: number } = {}) {
+  const pageSize = Math.max(1, Math.min(12, Math.floor(limit) || 12));
+  const pageNumber = Math.max(1, Math.min(1000, Math.floor(page) || 1));
   if (!hasDatabaseConfiguration())
-    return { connected: false as const, posts: [] };
+    return { connected: false as const, posts: [], hasNextPage: false };
 
   try {
     const posts = await prisma.blogPost.findMany({
       where: { status: BlogStatus.PUBLISHED },
-      orderBy: { publishedAt: "desc" },
+      orderBy: [{ publishedAt: "desc" }, { id: "desc" }],
+      skip: (pageNumber - 1) * pageSize,
+      take: pageSize + 1,
       select: {
         id: true,
         title: true,
@@ -101,7 +108,8 @@ export async function getPublishedBlogPosts() {
     });
     return {
       connected: true as const,
-      posts: posts.map((post) => ({
+      hasNextPage: posts.length > pageSize,
+      posts: posts.slice(0, pageSize).map((post) => ({
         ...post,
         coverUrl:
           post.coverAsset?.bucket === publicBucket
@@ -110,7 +118,7 @@ export async function getPublishedBlogPosts() {
       })),
     };
   } catch {
-    return { connected: false as const, posts: [] };
+    return { connected: false as const, posts: [], hasNextPage: false };
   }
 }
 

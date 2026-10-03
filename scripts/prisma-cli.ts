@@ -19,7 +19,9 @@ if (fromEnvIndex >= 0) {
   const envName = args[fromEnvIndex + 1];
   const url = envName ? process.env[envName] : undefined;
   if (!url) {
-    console.error(`Missing database environment variable: ${envName ?? "unknown"}`);
+    console.error(
+      `Missing database environment variable: ${envName ?? "unknown"}`,
+    );
     process.exit(1);
   }
   args.splice(fromEnvIndex, 2, "--from-url", url);

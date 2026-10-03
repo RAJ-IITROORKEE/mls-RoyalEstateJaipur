@@ -35,7 +35,8 @@ describe("site content boundaries", () => {
     expect(
       faqInputSchema.safeParse({
         question: "How do I request a site visit?",
-        answer: "Send an enquiry from the property page to start a conversation.",
+        answer:
+          "Send an enquiry from the property page to start a conversation.",
         sortOrder: 1,
         isPublished: true,
       }).success,

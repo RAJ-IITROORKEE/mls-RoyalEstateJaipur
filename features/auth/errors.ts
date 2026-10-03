@@ -28,7 +28,11 @@ export function getSignUpErrorMessage(error: AuthErrorLike) {
     return "The verification email could not be sent. Check the Supabase SMTP sender settings and try again.";
   }
 
-  if (code.includes("weak_password") || message.includes("password should") || message.includes("weak password")) {
+  if (
+    code.includes("weak_password") ||
+    message.includes("password should") ||
+    message.includes("weak password")
+  ) {
     return "Use a stronger password with at least 8 characters.";
   }
 
@@ -42,11 +46,18 @@ export function getSignUpErrorMessage(error: AuthErrorLike) {
 export function getSignInErrorMessage(error: AuthErrorLike) {
   const message = error?.message?.toLowerCase() ?? "";
 
-  if (message.includes("email not confirmed") || message.includes("email_not_confirmed")) {
+  if (
+    message.includes("email not confirmed") ||
+    message.includes("email_not_confirmed")
+  ) {
     return "Confirm your email address before signing in.";
   }
 
-  if (error?.status === 429 || message.includes("too many") || message.includes("rate limit")) {
+  if (
+    error?.status === 429 ||
+    message.includes("too many") ||
+    message.includes("rate limit")
+  ) {
     return "Too many sign-in attempts. Wait a few minutes and try again.";
   }
 

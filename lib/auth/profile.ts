@@ -11,7 +11,8 @@ function getDisplayName(user: User) {
   if (!isRecord(metadata)) return null;
   for (const key of ["display_name", "full_name", "name"]) {
     const value = metadata[key];
-    if (typeof value === "string" && value.trim()) return value.trim().slice(0, 120);
+    if (typeof value === "string" && value.trim())
+      return value.trim().slice(0, 120);
   }
   return null;
 }

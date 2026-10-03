@@ -25,7 +25,10 @@ export function SocialLinks({ className, whatsappHref }: SocialLinksProps) {
   ];
 
   return (
-    <nav aria-label="Social links" className={cn("flex flex-wrap gap-3", className)}>
+    <nav
+      aria-label="Social links"
+      className={cn("flex flex-wrap gap-3", className)}
+    >
       {socialLinks.map(({ href, label, Icon }) => (
         <a
           className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-border px-3 text-sm font-semibold transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"

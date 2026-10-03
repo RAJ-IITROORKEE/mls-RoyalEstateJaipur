@@ -25,8 +25,16 @@ async function main() {
   const sourceEmail = process.env.ADMIN_BOOTSTRAP_EMAIL;
   const admin = createSupabaseAdminClient();
 
-  if (!configured(url) || !configured(key) || !configured(sourceEmail) || !admin || !sourceEmail?.includes("@")) {
-    throw new Error("Signup diagnostics require configured Supabase public, service-role, and bootstrap email values.");
+  if (
+    !configured(url) ||
+    !configured(key) ||
+    !configured(sourceEmail) ||
+    !admin ||
+    !sourceEmail?.includes("@")
+  ) {
+    throw new Error(
+      "Signup diagnostics require configured Supabase public, service-role, and bootstrap email values.",
+    );
   }
 
   const [localPart, domain] = sourceEmail.toLowerCase().split("@");
@@ -34,7 +42,11 @@ async function main() {
   const password = `Check-${randomBytes(18).toString("base64url")}`;
   try {
     const response = await fetch(`${url}/auth/v1/signup`, {
-      body: JSON.stringify({ data: { display_name: "Signup Diagnostic" }, email: testEmail, password }),
+      body: JSON.stringify({
+        data: { display_name: "Signup Diagnostic" },
+        email: testEmail,
+        password,
+      }),
       headers: {
         apikey: key!,
         Authorization: `Bearer ${key}`,
@@ -47,19 +59,30 @@ async function main() {
     if (!response.ok) {
       console.info("SUPABASE_SIGNUP: FAILED");
       console.info(`SUPABASE_SIGNUP_STATUS: ${response.status}`);
-      console.info(`SUPABASE_SIGNUP_PROVIDER_RESPONSE: ${sanitizeProviderMessage(responseText)}`);
+      console.info(
+        `SUPABASE_SIGNUP_PROVIDER_RESPONSE: ${sanitizeProviderMessage(responseText)}`,
+      );
       process.exitCode = 1;
       return;
     }
 
     const data: unknown = JSON.parse(responseText);
-    const record = data && typeof data === "object" ? (data as Record<string, unknown>) : null;
-    console.info(`SUPABASE_SIGNUP: ${record?.id ? "OK" : "INCOMPLETE_RESPONSE"}`);
-    console.info(`SUPABASE_SIGNUP_CONFIRMATION: ${record?.access_token ? "AUTO_CONFIRMED" : "EMAIL_VERIFICATION_REQUIRED"}`);
+    const record =
+      data && typeof data === "object"
+        ? (data as Record<string, unknown>)
+        : null;
+    console.info(
+      `SUPABASE_SIGNUP: ${record?.id ? "OK" : "INCOMPLETE_RESPONSE"}`,
+    );
+    console.info(
+      `SUPABASE_SIGNUP_CONFIRMATION: ${record?.access_token ? "AUTO_CONFIRMED" : "EMAIL_VERIFICATION_REQUIRED"}`,
+    );
     if (!record?.id) process.exitCode = 1;
   } finally {
     const users = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
-    const testUser = users.data.users.find((user) => user.email?.toLowerCase() === testEmail);
+    const testUser = users.data.users.find(
+      (user) => user.email?.toLowerCase() === testEmail,
+    );
     if (testUser) await admin.auth.admin.deleteUser(testUser.id);
     console.info("SUPABASE_SIGNUP_CLEANUP: COMPLETE");
   }

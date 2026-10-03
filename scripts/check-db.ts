@@ -8,7 +8,9 @@ config({ path: resolve(process.cwd(), ".env") });
 
 async function main() {
   const settingCount = await prisma.siteSetting.count();
-  console.info(`Database connection OK. Site settings available: ${settingCount}.`);
+  console.info(
+    `Database connection OK. Site settings available: ${settingCount}.`,
+  );
 }
 
 main()

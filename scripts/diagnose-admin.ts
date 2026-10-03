@@ -11,8 +11,15 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 const emailSchema = z.string().email();
 const urlSchema = z.string().url();
 
-function isConfigured(value: string | undefined, validator: (value: string) => boolean) {
-  return Boolean(value && !/[<\[]|replace-with|your-project|your-secret/i.test(value) && validator(value));
+function isConfigured(
+  value: string | undefined,
+  validator: (value: string) => boolean,
+) {
+  return Boolean(
+    value &&
+    !/[<\[]|replace-with|your-project|your-secret/i.test(value) &&
+    validator(value),
+  );
 }
 
 function report(name: string, valid: boolean) {
@@ -32,18 +39,68 @@ async function main() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
   let ready = true;
-  ready = report("NEXT_PUBLIC_SUPABASE_URL", isConfigured(publicUrl, (value) => urlSchema.safeParse(value).success)) && ready;
-  ready = report("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", Boolean(publicKey && publicKey.length >= 20 && !/[<\[]|replace-with|your-/i.test(publicKey))) && ready;
-  ready = report("SUPABASE_SERVICE_ROLE_KEY", Boolean(serviceKey && serviceKey.length >= 20 && !/[<\[]|replace-with|your-/i.test(serviceKey))) && ready;
-  ready = report("DATABASE_URL", Boolean(databaseUrl && !/[<\[]|replace-with|your-/i.test(databaseUrl))) && ready;
-  ready = report("DIRECT_URL", Boolean(directUrl && !/[<\[]|replace-with|your-/i.test(directUrl))) && ready;
-  ready = report("ADMIN_BOOTSTRAP_EMAIL", Boolean(bootstrapEmail && emailSchema.safeParse(bootstrapEmail).success)) && ready;
-  ready = report("ADMIN_BOOTSTRAP_PASSWORD", Boolean(bootstrapPassword && bootstrapPassword.length >= 8 && !/[<\[]|replace-with|your-/i.test(bootstrapPassword))) && ready;
-  ready = report("ADMIN_BOOTSTRAP_NAME", Boolean(bootstrapName && bootstrapName.trim().length >= 2 && bootstrapName.trim().length <= 120)) && ready;
+  ready =
+    report(
+      "NEXT_PUBLIC_SUPABASE_URL",
+      isConfigured(publicUrl, (value) => urlSchema.safeParse(value).success),
+    ) && ready;
+  ready =
+    report(
+      "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+      Boolean(
+        publicKey &&
+        publicKey.length >= 20 &&
+        !/[<\[]|replace-with|your-/i.test(publicKey),
+      ),
+    ) && ready;
+  ready =
+    report(
+      "SUPABASE_SERVICE_ROLE_KEY",
+      Boolean(
+        serviceKey &&
+        serviceKey.length >= 20 &&
+        !/[<\[]|replace-with|your-/i.test(serviceKey),
+      ),
+    ) && ready;
+  ready =
+    report(
+      "DATABASE_URL",
+      Boolean(databaseUrl && !/[<\[]|replace-with|your-/i.test(databaseUrl)),
+    ) && ready;
+  ready =
+    report(
+      "DIRECT_URL",
+      Boolean(directUrl && !/[<\[]|replace-with|your-/i.test(directUrl)),
+    ) && ready;
+  ready =
+    report(
+      "ADMIN_BOOTSTRAP_EMAIL",
+      Boolean(bootstrapEmail && emailSchema.safeParse(bootstrapEmail).success),
+    ) && ready;
+  ready =
+    report(
+      "ADMIN_BOOTSTRAP_PASSWORD",
+      Boolean(
+        bootstrapPassword &&
+        bootstrapPassword.length >= 8 &&
+        !/[<\[]|replace-with|your-/i.test(bootstrapPassword),
+      ),
+    ) && ready;
+  ready =
+    report(
+      "ADMIN_BOOTSTRAP_NAME",
+      Boolean(
+        bootstrapName &&
+        bootstrapName.trim().length >= 2 &&
+        bootstrapName.trim().length <= 120,
+      ),
+    ) && ready;
 
   if (publicUrl && publicKey && urlSchema.safeParse(publicUrl).success) {
     try {
-      const response = await fetch(`${publicUrl}/auth/v1/settings`, { headers: { apikey: publicKey } });
+      const response = await fetch(`${publicUrl}/auth/v1/settings`, {
+        headers: { apikey: publicKey },
+      });
       report("SUPABASE_AUTH_ENDPOINT", response.ok);
     } catch {
       report("SUPABASE_AUTH_ENDPOINT", false);
@@ -54,11 +111,17 @@ async function main() {
 
   if (publicUrl && publicKey && bootstrapEmail && bootstrapPassword) {
     try {
-      const response = await fetch(`${publicUrl}/auth/v1/token?grant_type=password`, {
-        body: JSON.stringify({ email: bootstrapEmail, password: bootstrapPassword }),
-        headers: { apikey: publicKey, "Content-Type": "application/json" },
-        method: "POST",
-      });
+      const response = await fetch(
+        `${publicUrl}/auth/v1/token?grant_type=password`,
+        {
+          body: JSON.stringify({
+            email: bootstrapEmail,
+            password: bootstrapPassword,
+          }),
+          headers: { apikey: publicKey, "Content-Type": "application/json" },
+          method: "POST",
+        },
+      );
       ready = report("BOOTSTRAP_PASSWORD_SIGN_IN", response.ok) && ready;
     } catch {
       ready = report("BOOTSTRAP_PASSWORD_SIGN_IN", false) && ready;
@@ -78,12 +141,23 @@ async function main() {
   const supabase = createSupabaseAdminClient();
   if (supabase && bootstrapEmail) {
     try {
-      const users = await supabase.auth.admin.listUsers({ page: 1, perPage: 1000 });
-      const authUser = users.data.users.find((user) => user.email?.toLowerCase() === bootstrapEmail.toLowerCase());
+      const users = await supabase.auth.admin.listUsers({
+        page: 1,
+        perPage: 1000,
+      });
+      const authUser = users.data.users.find(
+        (user) => user.email?.toLowerCase() === bootstrapEmail.toLowerCase(),
+      );
       report("BOOTSTRAP_AUTH_USER", !users.error && Boolean(authUser));
       if (authUser) {
-        const profile = await prisma.profile.findUnique({ where: { id: authUser.id }, select: { role: true, status: true } });
-        report("BOOTSTRAP_PROFILE", profile?.role === "SUPER_ADMIN" && profile.status === "ACTIVE");
+        const profile = await prisma.profile.findUnique({
+          where: { id: authUser.id },
+          select: { role: true, status: true },
+        });
+        report(
+          "BOOTSTRAP_PROFILE",
+          profile?.role === "SUPER_ADMIN" && profile.status === "ACTIVE",
+        );
       } else {
         report("BOOTSTRAP_PROFILE", false);
       }
@@ -96,7 +170,11 @@ async function main() {
     report("BOOTSTRAP_PROFILE", false);
   }
 
-  if (bootstrapEmail && bootstrapPassword && urlSchema.safeParse(siteUrl).success) {
+  if (
+    bootstrapEmail &&
+    bootstrapPassword &&
+    urlSchema.safeParse(siteUrl).success
+  ) {
     try {
       const signInResponse = await fetch(`${siteUrl}/api/auth/sign-in`, {
         body: new URLSearchParams({
@@ -112,13 +190,17 @@ async function main() {
         redirect: "manual",
       });
       const location = signInResponse.headers.get("location");
-      const signInWorked = signInResponse.status === 303 && location === `${siteUrl}/admin`;
+      const signInWorked =
+        signInResponse.status === 303 && location === `${siteUrl}/admin`;
       report("APPLICATION_SIGN_IN", signInWorked);
 
-      const cookieHeaders = (
-        signInResponse.headers as Headers & { getSetCookie?: () => string[] }
-      ).getSetCookie?.() ?? [];
-      const cookie = cookieHeaders.map((value) => value.split(";", 1)[0]).join("; ");
+      const cookieHeaders =
+        (
+          signInResponse.headers as Headers & { getSetCookie?: () => string[] }
+        ).getSetCookie?.() ?? [];
+      const cookie = cookieHeaders
+        .map((value) => value.split(";", 1)[0])
+        .join("; ");
       if (signInWorked && cookie) {
         const adminResponse = await fetch(`${siteUrl}/admin`, {
           headers: { Cookie: cookie },
@@ -137,7 +219,9 @@ async function main() {
   if (!ready) process.exitCode = 1;
 }
 
-main().catch(() => {
-  console.error("Admin diagnostics failed.");
-  process.exitCode = 1;
-}).finally(async () => prisma.$disconnect());
+main()
+  .catch(() => {
+    console.error("Admin diagnostics failed.");
+    process.exitCode = 1;
+  })
+  .finally(async () => prisma.$disconnect());

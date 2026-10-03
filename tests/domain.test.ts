@@ -27,9 +27,9 @@ describe("property domain helpers", () => {
 
   it("hides placeholder WhatsApp numbers from public actions", () => {
     expect(createOptionalWhatsAppUrl("910000000000", "Hello")).toBeNull();
-    expect(
-      createOptionalWhatsAppUrl("+91 98765 43210", "Hello"),
-    ).toBe("https://wa.me/919876543210?text=Hello");
+    expect(createOptionalWhatsAppUrl("+91 98765 43210", "Hello")).toBe(
+      "https://wa.me/919876543210?text=Hello",
+    );
   });
 
   it("creates contextual and general WhatsApp enquiry messages", () => {

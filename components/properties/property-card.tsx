@@ -37,7 +37,10 @@ export function PropertyCard({
               src={property.coverImage.publicUrl}
             />
           ) : (
-            <div aria-hidden="true" className="architectural-art h-full opacity-80" />
+            <div
+              aria-hidden="true"
+              className="architectural-art h-full opacity-80"
+            />
           )}
           <span className="absolute right-4 top-4 inline-flex min-h-9 items-center rounded-full border border-primary-foreground/30 bg-primary px-4 text-xs font-extrabold uppercase tracking-[0.14em] text-primary-foreground shadow-lg ring-2 ring-background">
             {propertyLabel(property.intent)}
@@ -56,7 +59,10 @@ export function PropertyCard({
             {property.title}
           </h3>
           <p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-            <MapPin aria-hidden="true" className="size-4 shrink-0 text-primary" />
+            <MapPin
+              aria-hidden="true"
+              className="size-4 shrink-0 text-primary"
+            />
             {property.localityName}, {property.city}
           </p>
           <div className="mt-5 flex flex-wrap gap-2 text-xs font-semibold text-muted-foreground">

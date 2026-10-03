@@ -285,7 +285,11 @@ textarea:focus-visible {
 }
 .group:hover .property-card-cta__icon,
 .group:focus-within .property-card-cta__icon {
-  background: color-mix(in oklab, var(--primary-foreground) 14%, var(--primary));
+  background: color-mix(
+    in oklab,
+    var(--primary-foreground) 14%,
+    var(--primary)
+  );
   color: var(--primary-foreground);
 }
 .group:hover .property-card-cta__icon svg,

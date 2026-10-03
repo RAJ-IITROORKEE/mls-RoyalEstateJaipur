@@ -12,9 +12,14 @@ const getServerSnapshot = () => false;
 
 export function ThemeToggle({ className }: { className?: string }) {
   const { theme, setTheme } = useTheme();
-  const mounted = useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot);
-  const selectedTheme = mounted ? theme ?? "system" : "system";
-  const ThemeIcon = selectedTheme === "dark" ? Moon : selectedTheme === "light" ? Sun : Monitor;
+  const mounted = useSyncExternalStore(
+    subscribe,
+    getClientSnapshot,
+    getServerSnapshot,
+  );
+  const selectedTheme = mounted ? (theme ?? "system") : "system";
+  const ThemeIcon =
+    selectedTheme === "dark" ? Moon : selectedTheme === "light" ? Sun : Monitor;
 
   return (
     <label

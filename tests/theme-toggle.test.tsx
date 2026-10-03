@@ -10,7 +10,10 @@ const themeState = vi.hoisted(() => ({
 }));
 
 vi.mock("next-themes", () => ({
-  useTheme: () => ({ theme: themeState.current, setTheme: themeState.setTheme }),
+  useTheme: () => ({
+    theme: themeState.current,
+    setTheme: themeState.setTheme,
+  }),
 }));
 
 afterEach(() => {
@@ -23,7 +26,9 @@ describe("theme control", () => {
   it("offers light, dark, and system appearance modes", () => {
     render(<ThemeToggle />);
 
-    expect(screen.getByRole("combobox", { name: "Color theme" })).toHaveValue("system");
+    expect(screen.getByRole("combobox", { name: "Color theme" })).toHaveValue(
+      "system",
+    );
     expect(screen.getByRole("option", { name: "Light" })).toBeInTheDocument();
     expect(screen.getByRole("option", { name: "Dark" })).toBeInTheDocument();
     expect(screen.getByRole("option", { name: "System" })).toBeInTheDocument();
@@ -33,7 +38,10 @@ describe("theme control", () => {
     const user = userEvent.setup();
     render(<ThemeToggle />);
 
-    await user.selectOptions(screen.getByRole("combobox", { name: "Color theme" }), "dark");
+    await user.selectOptions(
+      screen.getByRole("combobox", { name: "Color theme" }),
+      "dark",
+    );
 
     expect(themeState.setTheme).toHaveBeenCalledWith("dark");
   });

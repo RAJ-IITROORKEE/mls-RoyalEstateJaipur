@@ -68,7 +68,9 @@ export default async function NewSubmissionPage({
           initialDraft={initialDraft ?? defaultDraft}
           initialSubmissionId={existing?.id}
         />
-        {existing?.id && <OwnerSubmissionDocuments submissionId={existing.id} />}
+        {existing?.id && (
+          <OwnerSubmissionDocuments submissionId={existing.id} />
+        )}
       </section>
     </PublicPage>
   );

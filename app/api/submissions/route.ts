@@ -1,3 +1,4 @@
+import { withMutationBoundary } from "@/lib/security/mutation-boundary";
 import { NextResponse } from "next/server";
 
 import { saveOrSubmitOwnerSubmission } from "@/features/submissions/service";
@@ -10,8 +11,8 @@ import {
   getRequestIdentifier,
 } from "@/lib/security/rate-limit";
 
-export async function POST(request: Request) {
-  const rateLimit = checkRateLimit({
+async function handlePOST(request: Request) {
+  const rateLimit = await checkRateLimit({
     key: `submission:${getRequestIdentifier(request)}`,
     limit: 30,
     windowMs: 15 * 60 * 1000,
@@ -121,3 +122,5 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export const POST = withMutationBoundary(handlePOST);

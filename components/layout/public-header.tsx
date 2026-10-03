@@ -32,9 +32,7 @@ export function PublicHeader({
     <header className="sticky top-0 z-40 border-b border-border/80 bg-background/95 backdrop-blur">
       <div className="mx-auto flex h-18 max-w-[1360px] items-center justify-between gap-4 px-5 sm:px-8">
         <Link className="flex min-w-0 items-center gap-3" href="/">
-          <span
-            className="relative size-10 shrink-0 overflow-hidden rounded-full border-2 border-accent"
-          >
+          <span className="relative size-10 shrink-0 overflow-hidden rounded-full border-2 border-accent">
             <Image
               alt={businessName}
               className="object-cover"

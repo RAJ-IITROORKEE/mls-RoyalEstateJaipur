@@ -1,7 +1,7 @@
 # Royal Estates Jaipur — Redesign and InsForge migration plan
 
 Updated: 2026-10-03 (Asia/Calcutta)
-Status: discovery and connection setup complete; implementation phases planned.
+Status: Phase 1 implemented; final checks, CI and deployment verification in progress.
 Branch: `codex/insforge-redesign-plan`
 Baseline: `564595b` on `codex/real-estate-ui-auth-content`.
 Live application: https://royalestatejaipur.vercel.app/
@@ -216,7 +216,7 @@ Each phase must update HANDOFF with outcomes, files, commands/pass/fail, credent
 | Phase | Status | Owner / focus | Delivery |
 | --- | --- | --- | --- |
 | 0 | Complete for research/setup | Engineering + design audit | Plan, audit, linked backend, skills |
-| 1 | Planned — next | Engineering/security | Dependency repair, API boundaries, repeatable checks |
+| 1 | In progress — release checks | Engineering/security | Dependency repair, API boundaries, repeatable checks |
 | 2 | Planned | Design system | Tokens, type, accessible primitives, visual preview |
 | 3 | Planned | Public experience | Home, catalogue, detail, journal, about, contact/footer |
 | 4 | Planned | Owner/admin experience | Coherent forms, CRUD and operational workflows |

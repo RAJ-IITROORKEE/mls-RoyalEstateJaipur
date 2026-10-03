@@ -1,16 +1,21 @@
 import { prisma } from "@/lib/db/prisma";
 import { hasDatabaseConfiguration } from "@/lib/env";
-import { defaultFaqItems, defaultLocalities } from "@/features/site-content/default-content";
+import {
+  defaultFaqItems,
+  defaultLocalities,
+} from "@/features/site-content/default-content";
 
-const fallbackLocalities = defaultLocalities.map(({ name, slug, city, state, isFeatured, sortOrder }) => ({
-  id: `default-${slug}`,
-  name,
-  slug,
-  city,
-  state,
-  isFeatured,
-  sortOrder,
-}));
+const fallbackLocalities = defaultLocalities.map(
+  ({ name, slug, city, state, isFeatured, sortOrder }) => ({
+    id: `default-${slug}`,
+    name,
+    slug,
+    city,
+    state,
+    isFeatured,
+    sortOrder,
+  }),
+);
 
 export async function getPublicLocalities() {
   if (!hasDatabaseConfiguration())

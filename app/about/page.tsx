@@ -27,9 +27,8 @@ export default async function AboutPage() {
   const featuredLocalities = localityResult.localities.filter(
     (locality) => locality.isFeatured,
   );
-  const areasToShow = (featuredLocalities.length
-    ? featuredLocalities
-    : localityResult.localities
+  const areasToShow = (
+    featuredLocalities.length ? featuredLocalities : localityResult.localities
   ).slice(0, 10);
 
   return (
@@ -70,9 +69,9 @@ export default async function AboutPage() {
           </p>
           <p className="mt-5 text-base leading-8 text-muted-foreground">
             Online details are a starting point. Confirm availability, price,
-            measurements, terms, and supporting documents directly with the
-            team before making a decision. Sending an enquiry does not reserve
-            a property.
+            measurements, terms, and supporting documents directly with the team
+            before making a decision. Sending an enquiry does not reserve a
+            property.
           </p>
         </div>
       </section>
@@ -139,8 +138,12 @@ export default async function AboutPage() {
           </Link>
         </div>
         {!localityResult.connected && (
-          <p className="mt-6 rounded-xl border border-border bg-muted px-4 py-3 text-sm text-muted-foreground" role="status">
-            Showing the default locality list while updated location data is unavailable.
+          <p
+            className="mt-6 rounded-xl border border-border bg-muted px-4 py-3 text-sm text-muted-foreground"
+            role="status"
+          >
+            Showing the default locality list while updated location data is
+            unavailable.
           </p>
         )}
         {areasToShow.length ? (

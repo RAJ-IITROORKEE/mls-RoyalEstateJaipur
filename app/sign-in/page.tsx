@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Sign in",
-  description: "Sign in to manage your Royal Estates Jaipur property submissions.",
+  description:
+    "Sign in to manage your Royal Estates Jaipur property submissions.",
   robots: { index: false, follow: false },
 };
 
@@ -109,7 +110,10 @@ export default async function SignInPage({
           </form>
           <div className="relative my-5 text-center text-xs text-muted-foreground">
             <span className="relative z-10 bg-background px-3">or</span>
-            <span aria-hidden="true" className="absolute inset-x-0 top-1/2 border-t border-border" />
+            <span
+              aria-hidden="true"
+              className="absolute inset-x-0 top-1/2 border-t border-border"
+            />
           </div>
           <GoogleSignInLink next={redirectPath || undefined} />
           <div className="mt-6 flex justify-between gap-4 text-sm">

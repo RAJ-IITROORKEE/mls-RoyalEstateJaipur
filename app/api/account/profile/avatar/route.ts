@@ -1,3 +1,4 @@
+import { withMutationBoundary } from "@/lib/security/mutation-boundary";
 import { randomUUID } from "node:crypto";
 
 import { NextResponse } from "next/server";
@@ -13,8 +14,8 @@ import { hasExpectedUploadSignature } from "@/lib/security/upload-signature";
 
 const allowedTypes = ["image/jpeg", "image/png"] as const;
 
-export async function POST(request: Request) {
-  const limit = checkRateLimit({
+async function handlePOST(request: Request) {
+  const limit = await checkRateLimit({
     key: `profile-avatar:${getRequestIdentifier(request)}`,
     limit: 10,
     windowMs: 15 * 60 * 1000,
@@ -88,3 +89,7 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export const POST = withMutationBoundary(handlePOST, {
+  maxBodyBytes: 11 * 1024 * 1024,
+});

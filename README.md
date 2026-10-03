@@ -4,17 +4,18 @@ An India-first property marketplace foundation built with Next.js App Router, Su
 
 ## Prerequisites
 
-- Node.js 20.19 or newer, 22.12 or newer, or 24 or newer (the installed JSDOM toolchain uses the current ESM-capable runtime versions)
+- Node.js 24.x (`.node-version`, CI and Vercel use the same major)
 - npm
 - A Supabase project for Auth, Postgres, and Storage
 
 ## Local setup
 
 ```bash
-npm install
+npm ci
 copy .env.example .env.local
 npm run prisma:generate
 npm run dev
+npm run format:check
 ```
 
 Set the values in `.env.local` before using database-backed features. Never expose `SUPABASE_SERVICE_ROLE_KEY` through a `NEXT_PUBLIC_*` variable.
@@ -84,4 +85,18 @@ The public catalogue, content management, Supabase authentication, owner intake,
 
 ## Release checklist
 
-Run lint, typecheck, unit tests, accessibility tests, the complete Playwright suite, Prisma validation, database and Storage checks, the production build, and `git diff --check`. Confirm Google Auth reports enabled before advertising Google sign-in. Review seeded preview listings and unpublish or replace any content that is not verified business inventory.
+Run formatting, lint, typecheck, unit tests, accessibility tests, the complete Playwright suite, Prisma validation, database and Storage checks, the production build, and `git diff --check`. Confirm Google Auth reports enabled before advertising Google sign-in. Review seeded preview listings and unpublish or replace any content that is not verified business inventory.
+
+## Security foundations and CI
+
+- All 36 API mutation exports use a shared same-origin request boundary. Browser requests must send the exact initiating `Origin`; scripts must provide the configured site origin explicitly. Vercel aliases come from server environment variables, and forwarded-host input is ignored.
+- The boundary validates dynamic UUIDs, rejects malformed JSON/forms, bounds actual streamed bodies, returns safe errors with request IDs, and marks responses private/no-store. Default limit: 256 KiB; existing upload handlers: 11 MiB including multipart overhead. Domain identity, ownership, roles and schemas remain checked inside each handler.
+- Production rate limits use atomic Postgres counters in `RateLimitBucket`, with hashed identifiers and bounded expiry cleanup. Apply migration `0009_durable_rate_limits` before releasing this code. Database failure rejects limited mutations safely. `RATE_LIMIT_BACKEND=memory` is an explicit local/test option; production ignores it. Set `TRUST_PROXY_IP=true` only behind a proxy that overwrites incoming address headers. Vercel performs that overwrite automatically.
+- Public enquiries serialize identical submissions within a five-minute window. Staff changes acquire a transaction lock before checking actor status and last-super-admin protection. Session refresh runs in Next.js Proxy; protected server operations verify the user independently.
+- `.github/workflows/quality.yml` uses pinned actions, Node 24, disposable Postgres and synthetic CI fixtures. It runs install/generate, format, lint, typecheck, unit tests, production dependency audit, migration validation, build and essential public/API browser flows. CI fixtures are refused outside a local database named `test` with `CI=true`.
+- `scripts/validate-phase1-db.ts` rehearses all application migrations, counter/enquiry concurrency and RLS in a randomly named disposable schema using the ignored private InsForge connection file. It drops only its own validated schema. This is a compatibility check, not a completed provider/data migration.
+- The current production dependency audit is clean. Five high development findings remain in Next ESLint's unpatched `braces` glob chain; assessed details and scoped dependency decisions are in `docs/PHASE1-SECURITY.md`.
+
+Vercel's function request limits can reject larger existing uploads before our handler. Phase 4/6 must introduce direct, validated storage upload flows; an 11 MiB application bound does not increase a hosting platform limit.
+
+Rollback for Phase 1: revert to the prior verified application deployment and keep the additive private counter table. Do not drop shared data or reverse migrations destructively. The staged InsForge migration is approved in `docs/PLAN.md`; production still uses Supabase until its auth/data/cutover gates pass.

@@ -24,7 +24,9 @@
     "supabase:configure": "tsx scripts/prisma-cli.ts db execute --schema prisma/schema.prisma --file supabase/migrations/0001_storage_and_rls.sql",
     "supabase:check-storage": "tsx scripts/check-storage.ts",
     "supabase:auth-config": "tsx scripts/configure-supabase-auth.ts",
-    "admin:bootstrap": "tsx scripts/bootstrap-admin.ts"
+    "admin:bootstrap": "tsx scripts/bootstrap-admin.ts",
+    "format:check": "prettier --check app components features lib scripts tests e2e \"*.ts\" \"*.mts\" \"*.mjs\" package.json .prettierrc.json .github/workflows",
+    "format": "prettier --write app components features lib scripts tests e2e \"*.ts\" \"*.mts\" \"*.mjs\" package.json .prettierrc.json .github/workflows"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
@@ -62,13 +64,14 @@
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
-    "@types/node": "^20",
+    "@types/node": "24.19.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.0.4",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
     "jsdom": "^30.0.1",
+    "prettier": "3.9.9",
     "prisma": "6.19.3",
     "supabase": "^2.118.0",
     "tailwindcss": "^4",
@@ -80,6 +83,12 @@
     "seed": "tsx prisma/seed.ts"
   },
   "overrides": {
-    "nanoid": "3.3.18"
+    "nanoid": "3.3.18",
+    "@prisma/config": {
+      "deepmerge-ts": "8.0.0"
+    }
+  },
+  "engines": {
+    "node": "24.x"
   }
 }

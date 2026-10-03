@@ -36,7 +36,9 @@ test("configured admin can sign in through the browser form", async ({
   await expect(
     page.getByRole("heading", { name: "Property management" }),
   ).toBeVisible();
-  await expect(page.getByText("Total inventory", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("Total inventory", { exact: true }),
+  ).toBeVisible();
   await expect(page.getByLabel("Search")).toBeVisible();
   await expect(page.getByLabel("Sort")).toBeVisible();
 });

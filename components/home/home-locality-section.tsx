@@ -2,8 +2,14 @@ import Link from "next/link";
 
 type Locality = { name: string; slug: string; isFeatured: boolean };
 
-export function HomeLocalitySection({ localities }: { localities: Locality[] }) {
-  const featuredLocalities = localities.filter((locality) => locality.isFeatured).slice(0, 8);
+export function HomeLocalitySection({
+  localities,
+}: {
+  localities: Locality[];
+}) {
+  const featuredLocalities = localities
+    .filter((locality) => locality.isFeatured)
+    .slice(0, 8);
   if (!featuredLocalities.length) return null;
 
   return (

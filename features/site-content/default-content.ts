@@ -36,19 +36,21 @@ export const defaultLocalityNames = [
   "Tonk Road",
 ] as const;
 
-export const defaultLocalities = defaultLocalityNames.map((name, sortOrder) => ({
-  slug: name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, ""),
-  name,
-  city: "Jaipur",
-  state: "Rajasthan",
-  summary: "",
-  isFeatured: sortOrder < 8,
-  isActive: true,
-  sortOrder,
-}));
+export const defaultLocalities = defaultLocalityNames.map(
+  (name, sortOrder) => ({
+    slug: name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, ""),
+    name,
+    city: "Jaipur",
+    state: "Rajasthan",
+    summary: "",
+    isFeatured: sortOrder < 8,
+    isActive: true,
+    sortOrder,
+  }),
+);
 
 export const defaultFaqItems = [
   {

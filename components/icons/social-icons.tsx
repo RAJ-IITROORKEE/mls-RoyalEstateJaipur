@@ -11,7 +11,15 @@ export function FacebookIcon(props: SVGProps<SVGSVGElement>) {
 export function InstagramIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" {...props}>
-      <rect height="19" rx="5" stroke="currentColor" strokeWidth="2" width="19" x="2.5" y="2.5" />
+      <rect
+        height="19"
+        rx="5"
+        stroke="currentColor"
+        strokeWidth="2"
+        width="19"
+        x="2.5"
+        y="2.5"
+      />
       <circle cx="12" cy="12" r="4.25" stroke="currentColor" strokeWidth="2" />
       <circle cx="17.5" cy="6.5" fill="currentColor" r="1.25" />
     </svg>

@@ -60,7 +60,13 @@ describe("blog content boundaries", () => {
           {
             type: "heading",
             attrs: { level: 2, textAlign: "left" },
-            content: [{ type: "text", text: "A clearer property decision", marks: [{ type: "bold" }] }],
+            content: [
+              {
+                type: "text",
+                text: "A clearer property decision",
+                marks: [{ type: "bold" }],
+              },
+            ],
           },
           {
             type: "managedImage",
@@ -104,7 +110,9 @@ describe("blog content boundaries", () => {
                 {
                   type: "text",
                   text: "Unsafe link",
-                  marks: [{ type: "link", attrs: { href: "javascript:alert(1)" } }],
+                  marks: [
+                    { type: "link", attrs: { href: "javascript:alert(1)" } },
+                  ],
                 },
               ],
             },
@@ -125,6 +133,7 @@ describe("public blog database failures", () => {
     await expect(getPublishedBlogPosts()).resolves.toEqual({
       connected: false,
       posts: [],
+      hasNextPage: false,
     });
   });
 

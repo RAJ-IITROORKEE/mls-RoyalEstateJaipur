@@ -23,7 +23,10 @@ export function SubmissionReviewActions({
   const [pending, setPending] = useState(false);
 
   async function submit(action: Action) {
-    if ((action === "REQUEST_CHANGES" || action === "REJECT") && !reason.trim()) {
+    if (
+      (action === "REQUEST_CHANGES" || action === "REJECT") &&
+      !reason.trim()
+    ) {
       setError("Add a reason before requesting changes or rejecting.");
       return;
     }
@@ -43,10 +46,20 @@ export function SubmissionReviewActions({
     const formData = new FormData();
     formData.set("action", action);
     formData.set("reason", reason);
-    const response = await fetch(`/api/admin/submissions/${submissionId}`, { method: "POST", body: formData });
+    const response = await fetch(`/api/admin/submissions/${submissionId}`, {
+      method: "POST",
+      body: formData,
+    });
     const result: unknown = await response.json();
     if (!response.ok) {
-      setError(typeof result === "object" && result !== null && "error" in result && typeof result.error === "string" ? result.error : "The review action failed.");
+      setError(
+        typeof result === "object" &&
+          result !== null &&
+          "error" in result &&
+          typeof result.error === "string"
+          ? result.error
+          : "The review action failed.",
+      );
       setPending(false);
       return;
     }

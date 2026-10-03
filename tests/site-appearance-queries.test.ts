@@ -5,7 +5,8 @@ const { findFirst } = vi.hoisted(() => ({
 }));
 
 vi.mock("next/cache", () => ({
-  unstable_cache: <T extends (...args: never[]) => unknown>(callback: T) => callback,
+  unstable_cache: <T extends (...args: never[]) => unknown>(callback: T) =>
+    callback,
 }));
 
 vi.mock("@/lib/db/prisma", () => ({

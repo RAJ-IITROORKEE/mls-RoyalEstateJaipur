@@ -9,7 +9,9 @@ function upload(bytes: number[], type: string) {
 describe("upload signatures", () => {
   it("accepts matching image and PDF headers", async () => {
     await expect(
-      hasExpectedUploadSignature(upload([0xff, 0xd8, 0xff, 0xe0], "image/jpeg")),
+      hasExpectedUploadSignature(
+        upload([0xff, 0xd8, 0xff, 0xe0], "image/jpeg"),
+      ),
     ).resolves.toBe(true);
     await expect(
       hasExpectedUploadSignature(

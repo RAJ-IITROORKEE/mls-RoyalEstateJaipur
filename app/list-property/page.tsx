@@ -12,7 +12,8 @@ import { getCurrentUserAccess } from "@/lib/auth/current-user";
 
 export const metadata: Metadata = {
   title: "List your property",
-  description: "Submit a property for private review by the Royal Estates Jaipur team.",
+  description:
+    "Submit a property for private review by the Royal Estates Jaipur team.",
   alternates: { canonical: "/list-property" },
 };
 

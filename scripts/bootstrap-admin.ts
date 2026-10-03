@@ -25,21 +25,32 @@ async function main() {
     ADMIN_BOOTSTRAP_PASSWORD: process.env.ADMIN_BOOTSTRAP_PASSWORD,
     ADMIN_BOOTSTRAP_NAME: process.env.ADMIN_BOOTSTRAP_NAME,
   });
-  if (!environment.success) throw new Error("Admin bootstrap requires valid Supabase, database, and ADMIN_BOOTSTRAP_* environment values.");
+  if (!environment.success)
+    throw new Error(
+      "Admin bootstrap requires valid Supabase, database, and ADMIN_BOOTSTRAP_* environment values.",
+    );
 
   const supabase = createSupabaseAdminClient();
-  if (!supabase) throw new Error("Admin bootstrap requires the server-only Supabase service-role key.");
+  if (!supabase)
+    throw new Error(
+      "Admin bootstrap requires the server-only Supabase service-role key.",
+    );
 
   const email = environment.data.ADMIN_BOOTSTRAP_EMAIL.toLowerCase();
   const users = await supabase.auth.admin.listUsers({ page: 1, perPage: 1000 });
   if (users.error) throw new Error("Could not inspect Supabase Auth users.");
-  const existing = users.data.users.find((user) => user.email?.toLowerCase() === email);
+  const existing = users.data.users.find(
+    (user) => user.email?.toLowerCase() === email,
+  );
   const authResult = existing
     ? await supabase.auth.admin.updateUserById(existing.id, {
         email,
         password: environment.data.ADMIN_BOOTSTRAP_PASSWORD,
         email_confirm: true,
-        user_metadata: { ...existing.user_metadata, display_name: environment.data.ADMIN_BOOTSTRAP_NAME },
+        user_metadata: {
+          ...existing.user_metadata,
+          display_name: environment.data.ADMIN_BOOTSTRAP_NAME,
+        },
       })
     : await supabase.auth.admin.createUser({
         email,
@@ -47,24 +58,46 @@ async function main() {
         email_confirm: true,
         user_metadata: { display_name: environment.data.ADMIN_BOOTSTRAP_NAME },
       });
-  if (authResult.error || !authResult.data.user) throw new Error("Could not create or update the bootstrap Auth user.");
+  if (authResult.error || !authResult.data.user)
+    throw new Error("Could not create or update the bootstrap Auth user.");
 
   const user = authResult.data.user;
   await prisma.$transaction(async (transaction) => {
     await transaction.profile.upsert({
       where: { id: user.id },
-      create: { id: user.id, email, displayName: environment.data.ADMIN_BOOTSTRAP_NAME, role: "SUPER_ADMIN", status: "ACTIVE" },
-      update: { email, displayName: environment.data.ADMIN_BOOTSTRAP_NAME, role: "SUPER_ADMIN", status: "ACTIVE" },
+      create: {
+        id: user.id,
+        email,
+        displayName: environment.data.ADMIN_BOOTSTRAP_NAME,
+        role: "SUPER_ADMIN",
+        status: "ACTIVE",
+      },
+      update: {
+        email,
+        displayName: environment.data.ADMIN_BOOTSTRAP_NAME,
+        role: "SUPER_ADMIN",
+        status: "ACTIVE",
+      },
     });
     await transaction.auditLog.create({
-      data: { actorId: user.id, action: "BOOTSTRAP_SUPER_ADMIN", entityType: "Profile", entityId: user.id, summary: "Initial super-admin bootstrap completed." },
+      data: {
+        actorId: user.id,
+        action: "BOOTSTRAP_SUPER_ADMIN",
+        entityType: "Profile",
+        entityId: user.id,
+        summary: "Initial super-admin bootstrap completed.",
+      },
     });
   });
 
   console.info("Admin bootstrap completed.");
 }
 
-main().catch((error: unknown) => {
-  console.error(error instanceof Error ? error.message : "Admin bootstrap failed.");
-  process.exitCode = 1;
-}).finally(async () => prisma.$disconnect());
+main()
+  .catch((error: unknown) => {
+    console.error(
+      error instanceof Error ? error.message : "Admin bootstrap failed.",
+    );
+    process.exitCode = 1;
+  })
+  .finally(async () => prisma.$disconnect());

@@ -2,7 +2,12 @@ import { z } from "zod";
 
 export const enquirySchema = z.object({
   contactName: z.string().trim().min(2).max(120),
-  email: z.string().trim().email().max(320).transform((value) => value.toLowerCase()),
+  email: z
+    .string()
+    .trim()
+    .email()
+    .max(320)
+    .transform((value) => value.toLowerCase()),
   phone: z.string().trim().max(30).optional(),
   message: z.string().trim().min(10).max(3000),
   propertyReference: z.string().trim().max(32).optional(),

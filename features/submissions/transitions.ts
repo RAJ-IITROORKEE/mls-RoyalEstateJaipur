@@ -1,4 +1,14 @@
-export const submissionStatuses = ["DRAFT", "SUBMITTED", "UNDER_REVIEW", "NEEDS_CHANGES", "RESUBMITTED", "APPROVED", "REJECTED", "WITHDRAWN", "ARCHIVED"] as const;
+export const submissionStatuses = [
+  "DRAFT",
+  "SUBMITTED",
+  "UNDER_REVIEW",
+  "NEEDS_CHANGES",
+  "RESUBMITTED",
+  "APPROVED",
+  "REJECTED",
+  "WITHDRAWN",
+  "ARCHIVED",
+] as const;
 export type SubmissionStatus = (typeof submissionStatuses)[number];
 
 const transitions: Record<SubmissionStatus, readonly SubmissionStatus[]> = {
@@ -13,15 +23,24 @@ const transitions: Record<SubmissionStatus, readonly SubmissionStatus[]> = {
   ARCHIVED: [],
 };
 
-export function canTransitionSubmission(from: SubmissionStatus, to: SubmissionStatus) {
+export function canTransitionSubmission(
+  from: SubmissionStatus,
+  to: SubmissionStatus,
+) {
   return transitions[from].includes(to);
 }
 
-export function assertSubmissionTransition(from: SubmissionStatus, to: SubmissionStatus) {
-  if (!canTransitionSubmission(from, to)) throw new Error(`Cannot move a submission from ${from} to ${to}`);
+export function assertSubmissionTransition(
+  from: SubmissionStatus,
+  to: SubmissionStatus,
+) {
+  if (!canTransitionSubmission(from, to))
+    throw new Error(`Cannot move a submission from ${from} to ${to}`);
 }
 
-export function getSubmittedStatus(current: SubmissionStatus): "SUBMITTED" | "RESUBMITTED" {
+export function getSubmittedStatus(
+  current: SubmissionStatus,
+): "SUBMITTED" | "RESUBMITTED" {
   if (current === "DRAFT") return "SUBMITTED";
   if (current === "NEEDS_CHANGES") return "RESUBMITTED";
   throw new Error(`Cannot submit a submission from ${current}`);

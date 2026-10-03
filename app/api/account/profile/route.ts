@@ -1,10 +1,11 @@
+import { withMutationBoundary } from "@/lib/security/mutation-boundary";
 import { NextResponse } from "next/server";
 
 import { profileUpdateSchema } from "@/features/auth/profile-schema";
 import { updateOwnProfile } from "@/lib/auth/profile";
 import { getCurrentUserAccess } from "@/lib/auth/current-user";
 
-export async function PATCH(request: Request) {
+async function handlePATCH(request: Request) {
   const access = await getCurrentUserAccess();
   if (access.mode !== "authorized")
     return NextResponse.json(
@@ -31,3 +32,5 @@ export async function PATCH(request: Request) {
     );
   }
 }
+
+export const PATCH = withMutationBoundary(handlePATCH);

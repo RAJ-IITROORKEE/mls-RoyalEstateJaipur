@@ -63,7 +63,8 @@ export function PublicFooter({ businessName }: { businessName: string }) {
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-[1360px] flex-col gap-2 px-5 py-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-8">
           <span>
-            © {new Date().getFullYear()} {businessName}. Property discovery in Jaipur.
+            © {new Date().getFullYear()} {businessName}. Property discovery in
+            Jaipur.
           </span>
           <div className="flex items-center gap-4">
             <span className="flex gap-4">

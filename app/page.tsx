@@ -70,7 +70,7 @@ export default async function Home({
       getPublishedProperties({ category, sort, limit: 6 }),
       getPublicLocalities(),
       getPublicFaqItems(),
-      getPublishedBlogPosts(),
+      getPublishedBlogPosts({ limit: 2 }),
     ]);
   const user =
     access.mode === "authorized"
@@ -240,9 +240,21 @@ export default async function Home({
             </div>
             <div className="grid gap-0 sm:grid-cols-3">
               {[
-                ["01", "Explore", "Compare the property facts that matter to you."],
-                ["02", "Ask", "Send an enquiry with your preferred contact details."],
-                ["03", "Visit", "Arrange a site visit after the team confirms availability."],
+                [
+                  "01",
+                  "Explore",
+                  "Compare the property facts that matter to you.",
+                ],
+                [
+                  "02",
+                  "Ask",
+                  "Send an enquiry with your preferred contact details.",
+                ],
+                [
+                  "03",
+                  "Visit",
+                  "Arrange a site visit after the team confirms availability.",
+                ],
               ].map(([number, title, description]) => (
                 <article
                   className="border-l border-border px-5 py-4 first:border-l-0 sm:px-6"
@@ -282,7 +294,8 @@ export default async function Home({
                     <span className="text-primary"> your next move.</span>
                   </h2>
                   <p className="mt-4 text-sm leading-7 text-muted-foreground">
-                    Straightforward guides for comparing homes and planning a visit.
+                    Straightforward guides for comparing homes and planning a
+                    visit.
                   </p>
                 </div>
                 <Link
@@ -311,7 +324,10 @@ export default async function Home({
                           className={`inline-flex min-h-9 items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] ${index === 0 ? "text-accent" : "text-primary"}`}
                         >
                           {index === 0 ? (
-                            <BookOpenText aria-hidden="true" className="size-4" />
+                            <BookOpenText
+                              aria-hidden="true"
+                              className="size-4"
+                            />
                           ) : (
                             <span className="font-sans text-lg tabular-nums tracking-normal">
                               {String(index + 1).padStart(2, "0")}
@@ -334,11 +350,15 @@ export default async function Home({
                       <p
                         className={`mt-3 flex-1 text-sm leading-7 ${index === 0 ? "text-spotlight-foreground/75" : "text-muted-foreground"}`}
                       >
-                        {post.excerpt || "Practical notes for your property search."}
+                        {post.excerpt ||
+                          "Practical notes for your property search."}
                       </p>
                       <span className="mt-7 inline-flex min-h-11 items-center justify-between gap-3 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground transition-colors group-hover:bg-primary-hover group-hover:text-primary-hover-foreground">
                         Read the guide
-                        <ArrowUpRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                        <ArrowUpRight
+                          aria-hidden="true"
+                          className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                        />
                       </span>
                     </Link>
                   </article>
@@ -352,10 +372,7 @@ export default async function Home({
         <section className="mx-auto max-w-[1360px] px-5 pb-16 sm:px-8 sm:pb-20">
           <div className="grid gap-6 rounded-[2rem] bg-spotlight p-7 text-spotlight-foreground ring-1 ring-border sm:p-10 lg:grid-cols-[1fr_auto] lg:items-end lg:p-12">
             <div className="max-w-2xl">
-              <ShieldCheck
-                aria-hidden="true"
-                className="size-7 text-accent"
-              />
+              <ShieldCheck aria-hidden="true" className="size-7 text-accent" />
               <p className="mt-7 text-xs font-bold uppercase tracking-[0.18em] text-accent">
                 For buyers, renters, and owners
               </p>

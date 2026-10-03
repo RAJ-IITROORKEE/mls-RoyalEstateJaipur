@@ -1,3 +1,4 @@
+import { withMutationBoundary } from "@/lib/security/mutation-boundary";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
@@ -30,7 +31,7 @@ function safeMutationError(error: unknown) {
   return "The property could not be updated.";
 }
 
-export async function PATCH(request: Request, { params }: RouteContext) {
+async function handlePATCH(request: Request, { params }: RouteContext) {
   const access = await getCurrentUserAccess();
   if (access.mode !== "authorized" || !access.profile) {
     return NextResponse.json(
@@ -87,3 +88,5 @@ export async function PATCH(request: Request, { params }: RouteContext) {
     );
   }
 }
+
+export const PATCH = withMutationBoundary(handlePATCH);

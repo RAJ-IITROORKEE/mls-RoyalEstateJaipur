@@ -1,5 +1,7 @@
+import { withMutationBoundary } from "@/lib/security/mutation-boundary";
 import { NextResponse } from "next/server";
 import { BlogStatus } from "@prisma/client";
+import { z } from "zod";
 
 import { blogStatusSchema } from "@/features/blog/schemas";
 import {
@@ -9,7 +11,7 @@ import {
 } from "@/features/blog/service";
 import { getCurrentUserAccess } from "@/lib/auth/current-user";
 
-export async function PATCH(
+async function handlePATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
@@ -21,10 +23,7 @@ export async function PATCH(
     );
   const id = (await params).id;
   try {
-    const body = (await request.json()) as {
-      status?: unknown;
-      content?: unknown;
-    };
+    const body = z.record(z.string(), z.unknown()).parse(await request.json());
     if (body.status !== undefined) {
       const parsed = blogStatusSchema.parse({ status: body.status });
       const post = await updateBlogStatus(
@@ -36,15 +35,14 @@ export async function PATCH(
     }
     const post = await saveBlogPost(access.profile.id, id, body);
     return NextResponse.json({ ok: true, post });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Blog post could not be updated.",
+        error: "Blog post could not be updated.",
       },
       { status: 400 },
     );
   }
 }
+
+export const PATCH = withMutationBoundary(handlePATCH);

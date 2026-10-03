@@ -164,7 +164,15 @@ export async function updateLocality(
     await requireContentManager(transaction, actorId);
     const previous = await transaction.locality.findUnique({
       where: { id: localityId },
-      select: { id: true, name: true, city: true, state: true, isActive: true, isFeatured: true, sortOrder: true },
+      select: {
+        id: true,
+        name: true,
+        city: true,
+        state: true,
+        isActive: true,
+        isFeatured: true,
+        sortOrder: true,
+      },
     });
     if (!previous) throw new Error("Locality not found.");
     const slug =

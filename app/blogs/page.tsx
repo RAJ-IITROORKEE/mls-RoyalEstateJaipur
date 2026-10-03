@@ -5,15 +5,26 @@ import Image from "next/image";
 
 import { PublicPage } from "@/components/layout/public-page";
 import { getPublishedBlogPosts } from "@/features/blog/service";
+import { parseJournalPage } from "@/features/blog/pagination";
 
-export const metadata: Metadata = {
-  title: "Property journal",
-  description: "Practical guidance for buying, renting, and presenting property in Jaipur.",
-  alternates: { canonical: "/blogs" },
-};
+type JournalPageProps = { searchParams: Promise<{ page?: string | string[] }> };
 
-export default async function BlogsPage() {
-  const result = await getPublishedBlogPosts();
+export async function generateMetadata({
+  searchParams,
+}: JournalPageProps): Promise<Metadata> {
+  const page = parseJournalPage((await searchParams).page);
+  return {
+    title: page > 1 ? `Property journal — page ${page}` : "Property journal",
+    description:
+      "Practical guidance for buying, renting, and presenting property in Jaipur.",
+    alternates: { canonical: page > 1 ? `/blogs?page=${page}` : "/blogs" },
+  };
+}
+
+export default async function BlogsPage({ searchParams }: JournalPageProps) {
+  const params = await searchParams;
+  const page = parseJournalPage(params.page);
+  const result = await getPublishedBlogPosts({ page });
   return (
     <PublicPage>
       <section className="mx-auto max-w-[1120px] px-5 py-16 sm:px-8 sm:py-24">
@@ -24,9 +35,7 @@ export default async function BlogsPage() {
           </p>
           <h1 className="mt-6 max-w-4xl text-balance font-serif text-5xl leading-[1.06] sm:text-6xl lg:text-7xl">
             Notes for better
-            <span className="mt-1 block text-primary">
-              property decisions.
-            </span>
+            <span className="mt-1 block text-primary">property decisions.</span>
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
             Practical guidance for buying, renting, and presenting a property in
@@ -58,9 +67,15 @@ export default async function BlogsPage() {
           </div>
         ) : result.posts.length === 0 ? (
           <div className="mt-12 rounded-2xl border border-dashed border-border p-8">
-            <h2 className="font-serif text-3xl">Stories are on the way.</h2>
+            <h2 className="font-serif text-3xl">
+              {page > 1
+                ? "No more articles on this page."
+                : "Stories are on the way."}
+            </h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              Our editorial team is preparing the first guides.
+              {page > 1
+                ? "Return to the previous page to browse the published guides."
+                : "Our editorial team is preparing the first guides."}
             </p>
           </div>
         ) : (
@@ -115,17 +130,49 @@ export default async function BlogsPage() {
                   <p
                     className={`mt-3 flex-1 text-sm leading-7 ${index === 0 ? "text-spotlight-foreground/75" : "text-muted-foreground"}`}
                   >
-                    {post.excerpt || "A practical note from Royal Estates Jaipur."}
+                    {post.excerpt ||
+                      "A practical note from Royal Estates Jaipur."}
                   </p>
                   <span className="mt-7 inline-flex min-h-11 items-center justify-between gap-3 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground transition-colors group-hover:bg-primary-hover group-hover:text-primary-hover-foreground">
                     Read article
-                    <ArrowUpRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <ArrowUpRight
+                      aria-hidden="true"
+                      className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    />
                   </span>
                 </div>
               </Link>
             ))}
           </div>
         )}
+        {result.connected && (page > 1 || result.hasNextPage) ? (
+          <nav
+            aria-label="Journal pagination"
+            className="mt-10 flex flex-wrap items-center justify-between gap-4"
+          >
+            {page > 1 ? (
+              <Link
+                className="inline-flex min-h-11 items-center rounded-xl border border-border px-4 font-semibold hover:bg-muted"
+                href={page === 2 ? "/blogs" : `/blogs?page=${page - 1}`}
+              >
+                Previous articles
+              </Link>
+            ) : (
+              <span />
+            )}
+            <span className="text-sm text-muted-foreground">Page {page}</span>
+            {result.hasNextPage && page < 1000 ? (
+              <Link
+                className="inline-flex min-h-11 items-center rounded-xl bg-primary px-4 font-semibold text-primary-foreground"
+                href={`/blogs?page=${page + 1}`}
+              >
+                More articles
+              </Link>
+            ) : (
+              <span />
+            )}
+          </nav>
+        ) : null}
       </section>
     </PublicPage>
   );

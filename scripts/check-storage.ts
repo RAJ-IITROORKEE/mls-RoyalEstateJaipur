@@ -44,7 +44,9 @@ async function main() {
     process.exit(1);
   }
 
-  console.log("Storage configuration OK. Required buckets and visibility match.");
+  console.log(
+    "Storage configuration OK. Required buckets and visibility match.",
+  );
 }
 
 void main();

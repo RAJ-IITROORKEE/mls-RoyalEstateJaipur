@@ -41,7 +41,8 @@ export function getSafeRedirectPath(
     !value ||
     !value.startsWith("/") ||
     value.startsWith("//") ||
-    value.includes("\\")
+    value.includes("\\") ||
+    /[\u0000-\u0020\u007f]/.test(value)
   )
     return fallback;
   return value;

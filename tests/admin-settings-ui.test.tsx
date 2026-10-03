@@ -29,7 +29,9 @@ describe("site font setting control", () => {
 
     const select = screen.getByRole("combobox", { name: "Site font family" });
     expect(select).toHaveValue("current");
-    expect(screen.getByRole("option", { name: /Current.*Plus Jakarta Sans/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("option", { name: /Current.*Plus Jakarta Sans/i }),
+    ).toBeInTheDocument();
 
     await user.selectOptions(select, "dm-serif");
     expect(select).toHaveValue("dm-serif");
@@ -61,9 +63,13 @@ describe("site font setting control", () => {
     ).toHaveFocus();
 
     await user.keyboard("{Escape}");
-    expect(screen.queryByRole("dialog", { name: "Font preview" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("dialog", { name: "Font preview" }),
+    ).not.toBeInTheDocument();
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: "Preview font" })).toHaveFocus();
+      expect(
+        screen.getByRole("button", { name: "Preview font" }),
+      ).toHaveFocus();
     });
 
     await user.click(screen.getByRole("button", { name: "Save and apply" }));
@@ -73,7 +79,10 @@ describe("site font setting control", () => {
         "/api/admin/settings",
         expect.objectContaining({
           method: "POST",
-          body: JSON.stringify({ key: "appearance.fontFamily", value: "dm-serif" }),
+          body: JSON.stringify({
+            key: "appearance.fontFamily",
+            value: "dm-serif",
+          }),
         }),
       );
     });

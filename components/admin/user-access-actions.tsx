@@ -21,13 +21,19 @@ export function UserAccessActions({
   const [state, setState] = useState("");
 
   async function save(statusOverride = nextStatus) {
-    if (!window.confirm("Apply this access change? The action will be audited."))
+    if (
+      !window.confirm("Apply this access change? The action will be audited.")
+    )
       return;
     setState("Saving...");
     const response = await fetch("/api/admin/users", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ profileId, role: nextRole, status: statusOverride }),
+      body: JSON.stringify({
+        profileId,
+        role: nextRole,
+        status: statusOverride,
+      }),
     });
     const result = (await response.json()) as { error?: string };
     setState(response.ok ? "Saved" : (result.error ?? "Could not save"));

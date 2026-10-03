@@ -256,10 +256,14 @@ export function collectBlogAssetIds(content: BlogContent) {
 }
 
 export function hasMeaningfulBlogContent(content: BlogContent) {
-  if (content.version === 1) return content.blocks.some((block) => block.text.trim().length > 0);
+  if (content.version === 1)
+    return content.blocks.some((block) => block.text.trim().length > 0);
   let meaningful = false;
   const visit = (node: BlogRichNode) => {
-    if (node.type === "managedImage" || (node.type === "text" && node.text?.trim()))
+    if (
+      node.type === "managedImage" ||
+      (node.type === "text" && node.text?.trim())
+    )
       meaningful = true;
     node.content?.forEach(visit);
   };

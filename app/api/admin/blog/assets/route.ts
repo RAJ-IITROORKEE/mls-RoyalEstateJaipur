@@ -1,3 +1,4 @@
+import { withMutationBoundary } from "@/lib/security/mutation-boundary";
 import { randomUUID } from "node:crypto";
 
 import { BlogStatus } from "@prisma/client";
@@ -22,8 +23,8 @@ const assetMetadataSchema = z.object({
   purpose: z.enum(["inline", "cover"]).default("inline"),
 });
 
-export async function POST(request: Request) {
-  const rate = checkRateLimit({
+async function handlePOST(request: Request) {
+  const rate = await checkRateLimit({
     key: `blog-media:${getRequestIdentifier(request)}`,
     limit: 30,
     windowMs: 15 * 60 * 1000,
@@ -169,3 +170,7 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export const POST = withMutationBoundary(handlePOST, {
+  maxBodyBytes: 11 * 1024 * 1024,
+});

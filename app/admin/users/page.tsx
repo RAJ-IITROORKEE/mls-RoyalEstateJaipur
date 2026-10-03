@@ -67,7 +67,9 @@ export default async function AdminUsersPage({
       </header>
       {!result.connected ? (
         <div className="rounded-2xl border border-dashed border-border p-8">
-          <h2 className="font-serif text-3xl">Connect the workspace database.</h2>
+          <h2 className="font-serif text-3xl">
+            Connect the workspace database.
+          </h2>
           <Link
             className="mt-6 inline-flex min-h-11 items-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground"
             href="/admin/settings"
@@ -173,7 +175,10 @@ export default async function AdminUsersPage({
             </div>
           )}
           {pageCount > 1 && (
-            <nav aria-label="User pages" className="flex items-center justify-between gap-4">
+            <nav
+              aria-label="User pages"
+              className="flex items-center justify-between gap-4"
+            >
               <span className="text-sm text-muted-foreground">
                 Page {result.page} of {pageCount}
               </span>

@@ -1,6 +1,9 @@
 import { Search } from "lucide-react";
 
-import { publicPropertyIntents, propertyCategories } from "@/features/properties/domain";
+import {
+  publicPropertyIntents,
+  propertyCategories,
+} from "@/features/properties/domain";
 
 type HomePropertySearchProps = {
   localities: { name: string }[];

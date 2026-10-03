@@ -33,7 +33,13 @@ export async function getManageableProfiles(query = "", page = 1) {
       }),
       prisma.profile.count({ where }),
     ]);
-    return { connected: true as const, profiles, total, page: safePage, pageSize };
+    return {
+      connected: true as const,
+      profiles,
+      total,
+      page: safePage,
+      pageSize,
+    };
   } catch {
     return {
       connected: false as const,
@@ -52,6 +58,8 @@ export async function updateProfileAccess(
   status: ProfileStatus,
 ) {
   return prisma.$transaction(async (transaction) => {
+    // Serialize staff changes before reading actor/target to protect the final admin.
+    await transaction.$queryRaw`SELECT pg_advisory_xact_lock(790023114)::text`;
     const actor = await transaction.profile.findUnique({
       where: { id: actorId },
       select: { role: true, status: true },

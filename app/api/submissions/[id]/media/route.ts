@@ -1,3 +1,5 @@
+import { withMutationBoundary } from "@/lib/security/mutation-boundary";
+import { z } from "zod";
 import { randomUUID } from "node:crypto";
 
 import { NextResponse } from "next/server";
@@ -67,11 +69,11 @@ export async function GET(
   return NextResponse.json({ media: withUrls });
 }
 
-export async function POST(
+async function handlePOST(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const limit = checkRateLimit({
+  const limit = await checkRateLimit({
     key: `submission-media:${getRequestIdentifier(request)}`,
     limit: 20,
     windowMs: 15 * 60 * 1000,
@@ -205,7 +207,7 @@ export async function POST(
   }
 }
 
-export async function PATCH(
+async function handlePATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
@@ -233,7 +235,7 @@ export async function PATCH(
     );
 
   const mediaId = new URL(request.url).searchParams.get("mediaId");
-  if (!mediaId)
+  if (!mediaId || !z.string().uuid().safeParse(mediaId).success)
     return NextResponse.json(
       { error: "Image identifier is required." },
       { status: 400 },
@@ -281,7 +283,7 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
+async function handleDELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
@@ -309,7 +311,7 @@ export async function DELETE(
     );
 
   const mediaId = new URL(request.url).searchParams.get("mediaId");
-  if (!mediaId)
+  if (!mediaId || !z.string().uuid().safeParse(mediaId).success)
     return NextResponse.json(
       { error: "Image identifier is required." },
       { status: 400 },
@@ -350,3 +352,11 @@ export async function DELETE(
   }
   return NextResponse.json({ ok: true });
 }
+
+export const POST = withMutationBoundary(handlePOST, {
+  maxBodyBytes: 11 * 1024 * 1024,
+});
+
+export const PATCH = withMutationBoundary(handlePATCH);
+
+export const DELETE = withMutationBoundary(handleDELETE);

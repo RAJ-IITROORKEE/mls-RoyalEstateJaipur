@@ -48,7 +48,9 @@ export default async function LocalitiesPage() {
               <li key={locality.slug}>
                 <Link
                   className="group flex min-h-20 items-center justify-between gap-4 rounded-xl border border-border bg-card px-5 py-4 transition-colors hover:border-primary/45 hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-                  href={"/properties?locality=" + encodeURIComponent(locality.name)}
+                  href={
+                    "/properties?locality=" + encodeURIComponent(locality.name)
+                  }
                 >
                   <span>
                     <span className="block font-semibold">{locality.name}</span>
@@ -66,7 +68,9 @@ export default async function LocalitiesPage() {
           </ul>
         ) : (
           <div className="rounded-2xl border border-dashed border-border p-8">
-            <h2 className="font-serif text-3xl">No locations are published yet.</h2>
+            <h2 className="font-serif text-3xl">
+              No locations are published yet.
+            </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
               Try the full property search or contact the team for help.
             </p>

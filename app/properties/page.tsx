@@ -16,7 +16,8 @@ import { getPublicLocalities } from "@/features/site-content/queries";
 
 export const metadata: Metadata = {
   title: "Properties in Jaipur",
-  description: "Search published homes, plots, and commercial properties for sale or rent across Jaipur.",
+  description:
+    "Search published homes, plots, and commercial properties for sale or rent across Jaipur.",
   alternates: { canonical: "/properties" },
 };
 
@@ -145,9 +146,14 @@ export default async function PropertiesPage({
                 Properties in Jaipur
               </h1>
             </div>
-            <p className="text-sm font-semibold text-muted-foreground" aria-live="polite">
+            <p
+              className="text-sm font-semibold text-muted-foreground"
+              aria-live="polite"
+            >
               {result.connected
-                ? result.totalCount + (result.totalCount === 1 ? " property" : " properties") + " found"
+                ? result.totalCount +
+                  (result.totalCount === 1 ? " property" : " properties") +
+                  " found"
                 : "Catalogue temporarily unavailable"}
             </p>
           </div>
@@ -299,11 +305,13 @@ export default async function PropertiesPage({
                     name="furnishing"
                   >
                     <option value="">Any furnishing</option>
-                    {["Furnished", "Semi-furnished", "Unfurnished"].map((value) => (
-                      <option key={value} value={value}>
-                        {value}
-                      </option>
-                    ))}
+                    {["Furnished", "Semi-furnished", "Unfurnished"].map(
+                      (value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ),
+                    )}
                   </select>
                 </label>
                 <label className="grid gap-1.5 text-xs font-semibold text-muted-foreground">
@@ -349,8 +357,13 @@ export default async function PropertiesPage({
 
       <section className="mx-auto max-w-[1360px] px-5 py-12 sm:px-8 sm:py-16">
         {!result.connected ? (
-          <div className="rounded-2xl border border-dashed border-border p-8 sm:p-10" role="status">
-            <h2 className="font-serif text-3xl">The catalogue is temporarily unavailable.</h2>
+          <div
+            className="rounded-2xl border border-dashed border-border p-8 sm:p-10"
+            role="status"
+          >
+            <h2 className="font-serif text-3xl">
+              The catalogue is temporarily unavailable.
+            </h2>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
               Please try again shortly. Your filters are still in the address
               bar, so you can return to this search later.

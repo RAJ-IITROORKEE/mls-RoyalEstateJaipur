@@ -1,10 +1,11 @@
+import { withMutationBoundary } from "@/lib/security/mutation-boundary";
 import { NextResponse } from "next/server";
 
 import { archiveAuditEntry } from "@/features/admin/audit";
 import { auditArchiveSchema } from "@/features/admin/audit-schema";
 import { getCurrentUserAccess } from "@/lib/auth/current-user";
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   const access = await getCurrentUserAccess();
   if (access.mode !== "authorized" || access.profile.role !== "SUPER_ADMIN")
     return NextResponse.json(
@@ -24,15 +25,14 @@ export async function POST(request: Request) {
       parsed.data.reason,
     );
     return NextResponse.json({ ok: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Audit entry could not be archived.",
+        error: "Audit entry could not be archived.",
       },
       { status: 400 },
     );
   }
 }
+
+export const POST = withMutationBoundary(handlePOST);

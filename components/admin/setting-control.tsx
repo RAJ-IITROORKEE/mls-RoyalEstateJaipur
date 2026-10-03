@@ -65,9 +65,10 @@ export function SettingControl({
         return;
       }
 
-      const focusableElements = dialogRef.current?.querySelectorAll<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-      );
+      const focusableElements =
+        dialogRef.current?.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
       if (!focusableElements?.length) {
         event.preventDefault();
         return;
@@ -122,10 +123,7 @@ export function SettingControl({
           void save();
         }}
       >
-        <label
-          className="grid gap-2 text-sm font-semibold"
-          htmlFor={controlId}
-        >
+        <label className="grid gap-2 text-sm font-semibold" htmlFor={controlId}>
           {isFontFamily ? "Site font family" : settingKey}
           <select
             className="min-h-12 rounded-xl border border-border bg-background px-3 font-normal outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -238,9 +236,15 @@ export function SettingControl({
                 comfortable reading rhythm in the selected font pair.
               </p>
               <div className="flex flex-wrap gap-3 pt-2 text-sm font-semibold">
-                <span className="rounded-full bg-muted px-3 py-2">3 bedrooms</span>
-                <span className="rounded-full bg-muted px-3 py-2">2,400 sq ft</span>
-                <span className="rounded-full bg-muted px-3 py-2">Vaishali Nagar</span>
+                <span className="rounded-full bg-muted px-3 py-2">
+                  3 bedrooms
+                </span>
+                <span className="rounded-full bg-muted px-3 py-2">
+                  2,400 sq ft
+                </span>
+                <span className="rounded-full bg-muted px-3 py-2">
+                  Vaishali Nagar
+                </span>
               </div>
             </div>
           </article>
