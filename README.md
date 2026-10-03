@@ -81,6 +81,10 @@ The checked-in Storage policy separates public `property-media`, `profile-avatar
 
 ## Current checkpoint
 
+Shared appearance uses Plus Jakarta Sans, forest action tokens and Slate 950 dark surfaces. The homepage has a customized architectural spotlight with pause/resume, offscreen suspension and static reduced motion. The effect uses existing Motion visibility observation and CSS transforms; no canvas/WebGL dependency is required.
+
+Staff can open **Settings → Review shared design controls**, or `/admin/design-system`, to review accessible shadcn/Radix primitives in both themes. The preview is protected and never changes application data. Component provenance, token contrast and acceptance checks are documented in `docs/PHASE2-DESIGN.md`. Google OAuth and the approved InsForge migration remain separate gates in `docs/PLAN.md`.
+
 The public catalogue, content management, Supabase authentication, owner intake, moderation, and administrator operations are implemented. Provider status and connectivity can change independently of this checkout; verify the database and Storage buckets before each release. Hosted email templates, Google OAuth credentials, and allowed callback URLs are managed in the Supabase Dashboard.
 
 ## Release checklist

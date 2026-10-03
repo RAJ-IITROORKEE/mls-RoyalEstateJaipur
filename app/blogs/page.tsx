@@ -104,7 +104,7 @@ export default async function BlogsPage({ searchParams }: JournalPageProps) {
                     className={`flex items-center justify-between gap-4 border-b pb-4 ${index === 0 ? "border-spotlight-foreground/20" : "border-border"}`}
                   >
                     <span
-                      className={`inline-flex min-h-9 items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] ${index === 0 ? "text-accent" : "text-primary"}`}
+                      className={`inline-flex min-h-9 items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] ${index === 0 ? "text-spotlight-accent" : "text-primary"}`}
                     >
                       {index === 0 ? (
                         <BookOpenText aria-hidden="true" className="size-4" />
@@ -123,7 +123,7 @@ export default async function BlogsPage({ searchParams }: JournalPageProps) {
                     </span>
                   </div>
                   <h2
-                    className={`mt-5 font-serif text-2xl leading-snug sm:text-3xl ${index === 0 ? "text-spotlight-foreground group-hover:text-accent" : "text-foreground group-hover:text-primary"}`}
+                    className={`mt-5 font-serif text-2xl leading-snug sm:text-3xl ${index === 0 ? "text-spotlight-foreground group-hover:text-spotlight-accent" : "text-foreground group-hover:text-primary"}`}
                   >
                     {post.title}
                   </h2>

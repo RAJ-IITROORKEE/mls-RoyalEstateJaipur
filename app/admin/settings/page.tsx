@@ -1,6 +1,8 @@
+import { fontFamilyVariables } from "@/features/site-appearance/fonts";
 import Link from "next/link";
 
 import { SettingControl } from "@/components/admin/setting-control";
+import { Button } from "@/components/ui/button";
 import { getAdminSettings } from "@/features/admin/settings";
 import { hasDatabaseConfiguration } from "@/lib/env";
 
@@ -23,6 +25,9 @@ export default async function AdminSettingsPage() {
           Choose the body and display-font pair used across the entire site.
           Preview a selection before applying it.
         </p>
+        <Button asChild variant="outline" className="mt-4">
+          <Link href="/admin/design-system">Review shared design controls</Link>
+        </Button>
       </header>
       {!result.connected ? (
         <div className="rounded-2xl border border-dashed border-border p-8">
@@ -40,6 +45,7 @@ export default async function AdminSettingsPage() {
         </div>
       ) : fontFamilySetting ? (
         <SettingControl
+          previewFontVariables={fontFamilyVariables}
           description={fontFamilySetting.description}
           initialValue={String(fontFamilySetting.value)}
           settingKey={fontFamilySetting.key}

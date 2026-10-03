@@ -1,4 +1,7 @@
 import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
 
 import {
   publicPropertyIntents,
@@ -52,7 +55,7 @@ export function HomePropertySearch({
                 type="radio"
                 value={intent}
               />
-              <span className="inline-flex min-h-10 items-center rounded-lg border border-border px-4 text-sm font-semibold text-muted-foreground transition-colors peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring">
+              <span className="inline-flex min-h-11 items-center rounded-lg border border-input px-4 text-sm font-semibold text-muted-foreground transition-colors peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring">
                 {optionLabel(intent)}
               </span>
             </label>
@@ -62,18 +65,19 @@ export function HomePropertySearch({
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1.45fr_1fr_1fr_auto] lg:items-end">
           <label className="grid min-w-0 gap-1.5 text-xs font-semibold text-muted-foreground">
             Search by title, area, locality
-            <input
-              className="min-h-12 w-full rounded-xl border border-border bg-background px-3 text-sm font-normal text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            <Input
+              className="font-normal"
+              autoComplete="off"
               defaultValue={initialQuery}
               name="q"
-              placeholder="e.g. courtyard home, Jagatpura"
+              placeholder="e.g. courtyard home, Jagatpura…"
               type="search"
             />
           </label>
           <label className="grid min-w-0 gap-1.5 text-xs font-semibold text-muted-foreground">
             Location
-            <select
-              className="min-h-12 w-full rounded-xl border border-border bg-background px-3 text-sm font-normal text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            <NativeSelect
+              className="w-full font-normal"
               defaultValue={initialLocality}
               name="locality"
             >
@@ -83,12 +87,12 @@ export function HomePropertySearch({
                   {name}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </label>
           <label className="grid min-w-0 gap-1.5 text-xs font-semibold text-muted-foreground">
             Property type
-            <select
-              className="min-h-12 w-full rounded-xl border border-border bg-background px-3 text-sm font-normal text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            <NativeSelect
+              className="w-full font-normal"
               defaultValue={initialCategory}
               name="category"
             >
@@ -98,15 +102,12 @@ export function HomePropertySearch({
                   {optionLabel(category)}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </label>
-          <button
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary-hover hover:text-primary-hover-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-            type="submit"
-          >
+          <Button className="min-h-12 px-6" type="submit">
             <Search aria-hidden="true" className="size-4" />
             Search
-          </button>
+          </Button>
         </div>
       </form>
     </section>

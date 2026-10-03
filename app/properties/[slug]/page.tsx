@@ -332,7 +332,7 @@ export default async function PropertyDetailPage({
                   )}
                 </article>
                 <aside className="h-fit rounded-2xl bg-spotlight p-6 text-spotlight-foreground ring-1 ring-border sm:p-8">
-                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-accent">
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-spotlight-accent">
                     Next step
                   </p>
                   <h2 className="mt-4 font-serif text-4xl">

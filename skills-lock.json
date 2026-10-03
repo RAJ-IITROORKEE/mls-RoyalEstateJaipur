@@ -54,6 +54,20 @@
       "sourceType": "github",
       "skillPath": "skills/web-design-guidelines/SKILL.md",
       "computedHash": "d8e7d3afe37dcc8a97b99ffb5afdb4d0919ae0092ea8b68f44eb201f035e33ac"
+    },
+    "shadcn": {
+      "source": "shadcn-ui/ui",
+      "sourceType": "github",
+      "skillPath": "skills/shadcn/SKILL.md",
+      "ref": "295a1f114a138f23b5dfee0e0c6812394dfeb90c",
+      "computedHash": "e39871b64b1ba34f1aefc50ffea1b162c5a0750bc42a9ba54282ac503534429b"
+    },
+    "ui-ux-pro-max": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/ui-ux-pro-max/SKILL.md",
+      "ref": "09170eec67eefd46a7ae85de61b40c194020f997",
+      "computedHash": "88aadd21220542083a455e373bd162ffe7843266a71f06f4d837bb3b34f9c9c7"
     }
   }
 }

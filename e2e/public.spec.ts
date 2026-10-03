@@ -12,6 +12,29 @@ function readHeroAnimations(element: Element) {
 }
 
 test.describe("public experience", () => {
+  test("shared hero controls preserve URL-backed property search", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const search = page.getByRole("search");
+    const rent = search.getByRole("radio", { name: "Rent" });
+    await rent.focus();
+    await rent.press("Space");
+    await expect(rent).toBeChecked();
+    await search
+      .getByRole("searchbox", { name: "Search by title, area, locality" })
+      .fill("Jaipur");
+    await search
+      .getByRole("combobox", { name: "Property type" })
+      .selectOption("RESIDENTIAL");
+    await search.getByRole("button", { name: "Search", exact: true }).click();
+    await expect(page).toHaveURL(/\/properties\?/);
+    const query = new URL(page.url()).searchParams;
+    expect(query.get("intent")).toBe("RENT");
+    expect(query.get("q")).toBe("Jaipur");
+    expect(query.get("category")).toBe("RESIDENTIAL");
+  });
+
   test("public theme control is in the footer", async ({ page }) => {
     await page.goto("/");
 
@@ -24,6 +47,16 @@ test.describe("public experience", () => {
     ).toBeVisible();
 
     await themeControl.selectOption("dark");
+    await expect(page.locator("html")).toHaveClass(/dark/);
+    await expect(
+      page.locator('meta[name="theme-color"]').first(),
+    ).toHaveAttribute("content", "#020617");
+    await page.reload();
+    await expect(page.locator("html")).toHaveClass(/dark/);
+    await page.emulateMedia({ colorScheme: "light" });
+    await themeControl.selectOption("system");
+    await expect(page.locator("html")).toHaveClass(/light/);
+    await page.emulateMedia({ colorScheme: "dark" });
     await expect(page.locator("html")).toHaveClass(/dark/);
   });
 
@@ -45,6 +78,49 @@ test.describe("public experience", () => {
       backdrop: "true",
       title: "hero-title-reveal",
     });
+    const lights = hero.locator("[data-spotlight-moving]");
+    const firstTransform = await lights
+      .first()
+      .evaluate((element) => getComputedStyle(element).transform);
+    await expect
+      .poll(() =>
+        lights
+          .first()
+          .evaluate((element) => getComputedStyle(element).transform),
+      )
+      .not.toBe(firstTransform);
+    await page
+      .getByRole("button", { name: "Pause background animation" })
+      .click();
+    await expect(hero.locator("[data-hero-backdrop]")).toHaveAttribute(
+      "data-motion-enabled",
+      "false",
+    );
+    await expect(lights.first()).toHaveCSS("animation-play-state", "paused");
+    const pausedTransform = await lights
+      .first()
+      .evaluate((element) => getComputedStyle(element).transform);
+    await expect(
+      page.getByRole("button", { name: "Resume background animation" }),
+    ).toBeFocused();
+    await expect(lights.first()).toHaveCSS("transform", pausedTransform);
+    await page
+      .getByRole("button", { name: "Resume background animation" })
+      .click();
+    await expect(hero.locator("[data-hero-backdrop]")).toHaveAttribute(
+      "data-motion-enabled",
+      "true",
+    );
+    await page.locator("footer").scrollIntoViewIfNeeded();
+    await expect(hero.locator("[data-hero-backdrop]")).toHaveAttribute(
+      "data-motion-enabled",
+      "false",
+    );
+    await hero.scrollIntoViewIfNeeded();
+    await expect(hero.locator("[data-hero-backdrop]")).toHaveAttribute(
+      "data-motion-enabled",
+      "true",
+    );
     await expect(page.getByRole("radio", { name: "Buy" })).toBeVisible();
     await expect(page.getByRole("radio", { name: "Rent" })).toBeVisible();
 
@@ -72,6 +148,10 @@ test.describe("public experience", () => {
     );
     const reducedMotion = await hero.evaluate(readHeroAnimations);
     expect(reducedMotion).toEqual({ backdrop: "false", title: "none" });
+    await expect(lights.first()).toHaveCSS("animation-name", "none");
+    await expect(
+      page.getByRole("button", { name: "Pause background animation" }),
+    ).toHaveCount(0);
   });
 
   test("catalogue and contact pages expose labelled controls", async ({

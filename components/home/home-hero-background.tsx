@@ -1,8 +1,11 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
+import { Pause, Play } from "lucide-react";
+import { useInView } from "motion/react";
 
-import { motion, MotionConfig } from "motion/react";
+import { ArchitecturalSpotlight } from "@/components/ui/architectural-spotlight";
+import { Button } from "@/components/ui/button";
 
 const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
 
@@ -21,39 +24,50 @@ function getServerMotionPreference() {
 }
 
 export function HomeHeroBackground() {
-  const motionEnabled = !useSyncExternalStore(
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const [paused, setPaused] = useState(false);
+  const reducedMotion = useSyncExternalStore(
     subscribeToMotionPreference,
     getMotionPreference,
     getServerMotionPreference,
   );
-  const primaryMotion = motionEnabled
-    ? { x: ["-3%", "4%", "-3%"], y: ["0%", "-3%", "0%"], scale: [1, 1.06, 1] }
-    : { x: 0, y: 0, scale: 1 };
-  const accentMotion = motionEnabled
-    ? { x: ["2%", "-5%", "2%"], y: ["0%", "3%", "0%"], scale: [1, 1.1, 1] }
-    : { x: 0, y: 0, scale: 1 };
+  const inView = useInView(backdropRef, { amount: 0.05 });
+  const motionEnabled = !reducedMotion && !paused && inView;
 
   return (
-    <MotionConfig reducedMotion="user">
+    <>
       <div
+        ref={backdropRef}
         aria-hidden="true"
         className="home-hero__backdrop"
         data-hero-backdrop
         data-motion-enabled={motionEnabled ? "true" : "false"}
       >
         <div className="home-hero__grid" />
-        <div className="home-hero__frame" />
-        <motion.div
-          animate={primaryMotion}
-          className="home-hero__glow home-hero__glow--primary"
-          transition={{ duration: 18, ease: "easeInOut", repeat: Infinity }}
-        />
-        <motion.div
-          animate={accentMotion}
-          className="home-hero__glow home-hero__glow--accent"
-          transition={{ duration: 23, ease: "easeInOut", repeat: Infinity }}
-        />
+        <ArchitecturalSpotlight running={motionEnabled} />
       </div>
-    </MotionConfig>
+      {!reducedMotion ? (
+        <Button
+          variant="outline"
+          size="small"
+          className="absolute bottom-3 right-5 z-20 sm:right-8"
+          aria-label={
+            paused
+              ? "Resume background animation"
+              : "Pause background animation"
+          }
+          onClick={() => setPaused((value) => !value)}
+        >
+          {paused ? (
+            <Play aria-hidden="true" data-icon="inline-start" />
+          ) : (
+            <Pause aria-hidden="true" data-icon="inline-start" />
+          )}
+          <span className="hidden sm:inline">
+            {paused ? "Resume motion" : "Pause motion"}
+          </span>
+        </Button>
+      ) : null}
+    </>
   );
 }

@@ -2,6 +2,34 @@
 
 This is the running record for `docs/PLAN.md`. Update it whenever a phase or material change is completed. A phase is complete only after its implementation and applicable checks pass.
 
+## 2026-10-03 — Phase 2 shared UI and hero animation
+
+Status: verified locally; release checkpoint pending.
+
+### Outcome and decisions
+
+- Implemented the approved forest / Slate 950 semantic palette and Plus Jakarta Sans default. Only selected font variables apply globally; the browser verified one default font preload. Existing administrator font pairs remain available with an accessible Radix preview dialog.
+- Added project-local shadcn/UI UX Pro Max skills, pinned provenance and upstream license notices. Added reviewed direct Radix primitives, cmdk and shared controls through the existing aliases/Tailwind 4 setup; preserved the existing Button contract.
+- Protected `/admin/design-system` previews fields/validation, intent, searchable locality, tabs, accordion, dialogs/sheet, confirmation, alerts, empty/loading states and a responsive table. Settings links to it; sample actions never mutate stored data.
+- Latest user steering replaced the settling beam prototype with an original architectural light-ray composition inspired by free Aceternity Spotlight New. Four token-colored rays animate on two ten-second CSS transform layers, using existing MIT Motion for visibility. Pause/resume works with keyboard, offscreen movement suspends and reduced motion stays static. Search remains opaque and server-rendered.
+- Homepage search now uses shared Input, NativeSelect and Button controls; Buy/Rent targets are at least 44 px and input outlines use measured essential-control tokens. URL-backed GET search is preserved.
+- Fixed dark spotlight text and account hover contrast, synchronized browser theme color with actual root classes, removed unused hero framing and limited reduced-motion pulse loops to one iteration. Provider/auth/database behavior remains the existing Supabase implementation pending Phases 5–7.
+
+### Checks
+
+- Formatter, lint, typecheck: pass. Unit/domain/component suite: 116 tests across 24 files pass, including 32 semantic contrast cases.
+- Production build: pass, 56 generated routes plus Proxy. No application database migration changes in this phase; Phase 1's migration rehearsal remains the relevant baseline.
+- Essential Playwright public/API/accessibility/real admin component preview: 18/18 pass. Scans include light and dark home/catalogue/journal/sign-in and the preview/overlays, with no selected WCAG violations. Keyboard-only search, persisted/system theme, pause/resume, offscreen/reduced motion, six widths and 200% CSS zoom pass. A final two-test focused run after semantic/reduced-motion adjustments also passes.
+- Browser plugin: light/dark hero visually inspected; running transforms and keyboard pause/resume confirmed; fresh load has no captured runtime/hydration errors. Local PNG evidence: `docs/audits/2026-10-03/phase2/hero-light.png` and `hero-dark.png`.
+- Production dependency audit: zero findings. Full dependency audit: the same five high development findings assessed in PHASE1-SECURITY.md remain visible. GitHub hosted CI still cannot start because of the previously recorded account billing lock.
+- Vercel React/current interface-guideline review: server-rendered search, a small visibility/control client boundary, scoped fonts, transform-only decorative layers, visible focus, actual overlay semantics, interruption controls and no disabled contrast rules. Native screen-reader testing and field performance measurements are not claimed.
+
+### Changed modules and next work
+
+Principal files: `app/globals.css`, `app/layout.tsx`, selected spotlight page accents, `features/site-appearance/fonts.ts`, shared `components/ui/` primitives, homepage background/search, theme provider, font preview, protected design-system route, tests, component/skill configuration and documentation. `.vercelignore` explicitly excludes private environment/linkage files from deployment uploads.
+
+Next: finish the preview/live checkpoint, then Phase 3 public card/catalogue/detail/journal/lower-page compositions. InsForge real OAuth, identity/data/Storage rehearsal and cutover are still pending their separate gates; Google provider metadata is not accepted as auth proof.
+
 ## 2026-10-03 — Phase 1 implementation and local verification
 
 Status: verified locally and live; hosted CI could not start due to an external GitHub account billing lock.

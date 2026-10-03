@@ -45,7 +45,7 @@ export default async function SignInPage({
           ROYALESTATEJAIPUR
         </Link>
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-spotlight-accent">
             Owner workspace
           </p>
           <h1 className="mt-5 max-w-md font-serif text-6xl leading-[0.95]">

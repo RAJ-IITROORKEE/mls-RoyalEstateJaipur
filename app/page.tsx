@@ -102,11 +102,11 @@ export default async function Home({
                 <MapPin aria-hidden="true" className="size-3.5 text-primary" />
                 Property search across Jaipur
               </p>
-              <h1 className="hero-title-reveal mx-auto mt-6 max-w-4xl text-balance font-sans text-4xl font-extrabold leading-[1.12] tracking-[-0.04em] sm:text-6xl lg:text-7xl">
+              <h1 className="hero-title-reveal mx-auto mt-6 max-w-4xl text-balance font-sans text-4xl font-extrabold leading-[1.16] tracking-[-0.02em] sm:text-6xl lg:text-[4rem]">
                 Find your next{" "}
                 <span className="text-primary">property in Jaipur</span>
               </h1>
-              <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
+              <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-foreground sm:text-lg">
                 Compare homes, plots, and commercial spaces for sale or rent,
                 then contact the team to confirm the details.
               </p>
@@ -321,7 +321,7 @@ export default async function Home({
                         className={`flex items-center justify-between gap-4 border-b pb-4 ${index === 0 ? "border-spotlight-foreground/20" : "border-border"}`}
                       >
                         <span
-                          className={`inline-flex min-h-9 items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] ${index === 0 ? "text-accent" : "text-primary"}`}
+                          className={`inline-flex min-h-9 items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] ${index === 0 ? "text-spotlight-accent" : "text-primary"}`}
                         >
                           {index === 0 ? (
                             <BookOpenText
@@ -343,7 +343,7 @@ export default async function Home({
                         </span>
                       </div>
                       <h3
-                        className={`mt-5 font-serif text-2xl leading-snug sm:text-3xl ${index === 0 ? "text-spotlight-foreground group-hover:text-accent" : "text-foreground group-hover:text-primary"}`}
+                        className={`mt-5 font-serif text-2xl leading-snug sm:text-3xl ${index === 0 ? "text-spotlight-foreground group-hover:text-spotlight-accent" : "text-foreground group-hover:text-primary"}`}
                       >
                         {post.title}
                       </h3>
@@ -372,8 +372,11 @@ export default async function Home({
         <section className="mx-auto max-w-[1360px] px-5 pb-16 sm:px-8 sm:pb-20">
           <div className="grid gap-6 rounded-[2rem] bg-spotlight p-7 text-spotlight-foreground ring-1 ring-border sm:p-10 lg:grid-cols-[1fr_auto] lg:items-end lg:p-12">
             <div className="max-w-2xl">
-              <ShieldCheck aria-hidden="true" className="size-7 text-accent" />
-              <p className="mt-7 text-xs font-bold uppercase tracking-[0.18em] text-accent">
+              <ShieldCheck
+                aria-hidden="true"
+                className="size-7 text-spotlight-accent"
+              />
+              <p className="mt-7 text-xs font-bold uppercase tracking-[0.18em] text-spotlight-accent">
                 For buyers, renters, and owners
               </p>
               <h2 className="mt-3 font-serif text-4xl leading-tight sm:text-5xl">
@@ -381,11 +384,17 @@ export default async function Home({
               </h2>
               <div className="mt-6 grid gap-2 text-sm text-spotlight-foreground/85 sm:grid-cols-2">
                 <p className="flex items-center gap-2">
-                  <Check aria-hidden="true" className="size-4 text-accent" />
+                  <Check
+                    aria-hidden="true"
+                    className="size-4 text-spotlight-accent"
+                  />
                   Published listings only
                 </p>
                 <p className="flex items-center gap-2">
-                  <Check aria-hidden="true" className="size-4 text-accent" />
+                  <Check
+                    aria-hidden="true"
+                    className="size-4 text-spotlight-accent"
+                  />
                   Enquiry does not reserve a property
                 </p>
               </div>

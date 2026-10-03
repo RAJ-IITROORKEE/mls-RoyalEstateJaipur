@@ -51,15 +51,15 @@ describe("site font setting control", () => {
     ).toBeInTheDocument();
 
     expect(
-      within(previewDialog).getByRole("button", { name: "Close preview" }),
+      within(previewDialog).getByRole("button", { name: "Close" }),
     ).toHaveFocus();
     await user.keyboard("{Tab}");
     expect(
-      within(previewDialog).getByRole("button", { name: "Close preview" }),
+      within(previewDialog).getByRole("button", { name: "Close" }),
     ).toHaveFocus();
     await user.keyboard("{Shift>}{Tab}{/Shift}");
     expect(
-      within(previewDialog).getByRole("button", { name: "Close preview" }),
+      within(previewDialog).getByRole("button", { name: "Close" }),
     ).toHaveFocus();
 
     await user.keyboard("{Escape}");

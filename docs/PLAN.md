@@ -1,7 +1,7 @@
 # Royal Estates Jaipur — Redesign and InsForge migration plan
 
 Updated: 2026-10-03 (Asia/Calcutta)
-Status: Phase 1 verified locally and live; GitHub Actions cannot start due to account billing lock. Phase 2 in progress.
+Status: Phase 1 verified locally and live; GitHub Actions cannot start due to account billing lock. Phase 2 verified locally; preview/release checkpoint pending.
 Branch: `codex/insforge-redesign-plan`
 Baseline: `564595b` on `codex/real-estate-ui-auth-content`.
 Live application: https://royalestatejaipur.vercel.app/
@@ -147,7 +147,7 @@ These are candidates; contrast must be measured for text, disabled state, focus 
 - Main section headings: concise 28–40 px; card titles around 20–24 px. Keep price more prominent than category metadata.
 - Controls: 44–48 px targets; cards about 16 px radius; consistent gaps, borders, icon sizing and focus ring.
 - Use a visible, adapted beam/spotlight moment behind the centered hero and an opaque search surface. Text/search remain usable before JS loads.
-- Hero text reveal up to 500 ms; decorative backdrop settles within 5 seconds, with no infinite loop. If later adding longer autoplay motion, expose pause/stop and disable it under reduced motion.
+- Hero text reveal up to 500 ms. Latest user steering requests visible ongoing background animation: use an adapted architectural spotlight with pause/resume, offscreen suspension and a static reduced-motion equivalent.
 - Button feedback uses short color/transform/opacity changes and a small arrow movement. Pending labels/spinners communicate actual request state.
 - Motion does not reveal essential content only after scroll. Disable movement under reduced motion and while effects are offscreen.
 - Honor system mode and footer preference; set native `color-scheme`, select colors and matching browser theme color. [Motion accessibility](https://motion.dev/docs/react-accessibility)
@@ -257,14 +257,14 @@ Gate: production dependency audit clean; unresolved development findings explici
 
 ### Phase 2 — Theme, typography and shared controls
 
-- [ ] Add the reviewed shadcn skill/upstream UI UX Pro Max search bundle locally and record provenance.
-- [ ] Use upstream palette/type exploration to compare the proposed theme; record selected tokens and update DESIGN.md.
-- [ ] Configure components.json matching current aliases and Tailwind 4; inspect dry-run/diffs before adding each component.
-- [ ] Build a component preview covering buttons, fields, tabs, combobox, sheet/dialog, accordion, badges, empty/loading/error states, tables and destructive confirmations.
-- [ ] Apply one active default font with responsive line-height/tracking; retain admin font selection only if it can avoid unnecessary global loads and inconsistency.
-- [ ] Check all tokens in light/dark/system and native Windows form controls.
-- [ ] Provide the finite visible hero motion prototype and reduced-motion equivalent.
-- [ ] Test keyboard focus/traps/restoration, 200% zoom, touch targets and six viewport widths.
+- [x] Add the reviewed shadcn skill/upstream UI UX Pro Max search bundle locally and record provenance.
+- [x] Use upstream palette/type exploration to compare the proposed theme; record selected tokens and update DESIGN.md.
+- [x] Configure components.json matching current aliases and Tailwind 4; inspect dry-run/diffs before adding each component.
+- [x] Build a component preview covering buttons, fields, tabs, combobox, sheet/dialog, accordion, badges, empty/loading/error states, tables and destructive confirmations.
+- [x] Apply one active default font with responsive line-height/tracking; retain admin font selection only if it can avoid unnecessary global loads and inconsistency.
+- [x] Check all tokens in light/dark/system and native Windows form controls.
+- [x] Provide the customized architectural spotlight with visible motion, pause/resume, offscreen suspension and reduced-motion equivalent.
+- [x] Test keyboard focus/traps/restoration, 200% zoom, touch targets and six viewport widths.
 - [ ] Commit; deploy and visually compare the preview before rolling tokens through public pages.
 
 Gate: clear hierarchy, measured contrast, consistent controls, no hydration warnings, visible animation without content obstruction.

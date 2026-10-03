@@ -143,7 +143,7 @@ export default async function AdminDashboardPage() {
           </Link>
         </section>
         <section className="rounded-2xl border border-border bg-spotlight p-5 text-spotlight-foreground sm:p-6">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-accent">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-spotlight-accent">
             Review principle
           </p>
           <h2 className="mt-8 font-serif text-3xl leading-tight">
@@ -154,7 +154,7 @@ export default async function AdminDashboardPage() {
             an unverified legal claim about the property.
           </p>
           <Link
-            className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-accent"
+            className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-spotlight-accent"
             href="/admin/submissions"
           >
             Open submission queue{" "}

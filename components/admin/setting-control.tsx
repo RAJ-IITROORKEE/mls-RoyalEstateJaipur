@@ -1,9 +1,17 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, useTransition } from "react";
-import { X } from "lucide-react";
+import { useId, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger,
+  DialogHeader,
+} from "@/components/ui/dialog";
+import type { FontFamily } from "@/features/site-appearance/font-family";
 import { Button } from "@/components/ui/button";
 import {
   fontFamilyOptions,
@@ -15,12 +23,14 @@ type SettingControlProps = {
   settingKey: string;
   initialValue: string;
   description: string | null;
+  previewFontVariables?: Record<FontFamily, string>;
 };
 
 export function SettingControl({
   settingKey,
   initialValue,
   description,
+  previewFontVariables,
 }: SettingControlProps) {
   const [value, setValue] = useState(initialValue);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -29,8 +39,6 @@ export function SettingControl({
   );
   const [isRefreshing, startTransition] = useTransition();
   const controlId = useId();
-  const dialogRef = useRef<HTMLDivElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previewButtonId = useId();
   const router = useRouter();
   const isFontFamily = settingKey === "appearance.fontFamily";
@@ -40,60 +48,12 @@ export function SettingControl({
   );
   const status =
     state === "saving" || isRefreshing
-      ? "Saving..."
+      ? "Saving…"
       : state === "saved"
         ? "Saved"
         : state === "error"
           ? "Could not save. Try again."
           : "";
-
-  useEffect(() => {
-    if (!isPreviewOpen) {
-      return;
-    }
-
-    closeButtonRef.current?.focus();
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsPreviewOpen(false);
-        requestAnimationFrame(() => {
-          document.getElementById(previewButtonId)?.focus();
-        });
-        return;
-      }
-      if (event.key !== "Tab") {
-        return;
-      }
-
-      const focusableElements =
-        dialogRef.current?.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        );
-      if (!focusableElements?.length) {
-        event.preventDefault();
-        return;
-      }
-
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-      if (event.shiftKey && document.activeElement === firstElement) {
-        event.preventDefault();
-        lastElement.focus();
-      } else if (!event.shiftKey && document.activeElement === lastElement) {
-        event.preventDefault();
-        firstElement.focus();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isPreviewOpen, previewButtonId]);
-
-  function closePreview() {
-    setIsPreviewOpen(false);
-    requestAnimationFrame(() => {
-      document.getElementById(previewButtonId)?.focus();
-    });
-  }
 
   async function save() {
     setState("saving");
@@ -115,7 +75,7 @@ export function SettingControl({
   }
 
   return (
-    <>
+    <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
       <form
         className="rounded-2xl border border-border bg-card p-5 sm:p-6"
         onSubmit={(event) => {
@@ -164,14 +124,11 @@ export function SettingControl({
           </p>
         </div>
         <div className="mt-5 flex flex-wrap items-center gap-3">
-          <Button
-            id={previewButtonId}
-            onClick={() => setIsPreviewOpen(true)}
-            type="button"
-            variant="outline"
-          >
-            Preview font
-          </Button>
+          <DialogTrigger asChild>
+            <Button id={previewButtonId} type="button" variant="outline">
+              Preview font
+            </Button>
+          </DialogTrigger>
           <Button disabled={state === "saving" || isRefreshing} type="submit">
             Save and apply
           </Button>
@@ -180,76 +137,45 @@ export function SettingControl({
           </span>
         </div>
       </form>
-      {isPreviewOpen ? (
-        <div
-          aria-label="Font preview"
-          aria-modal="true"
-          className="fixed inset-0 z-50 grid place-items-center bg-black/55 p-4"
-          onMouseDown={(event) => {
-            if (event.currentTarget === event.target) closePreview();
-          }}
-          role="dialog"
-        >
-          <article
-            className={`${fontFamilyThemeClasses[selectedFontFamily]} font-sans max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-border bg-background p-6 text-foreground shadow-2xl sm:p-10`}
-            ref={dialogRef}
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
-                  Font preview
-                </p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {selectedOption?.label}
-                </p>
-              </div>
-              <button
-                aria-label="Close preview"
-                className="grid size-11 shrink-0 place-items-center rounded-xl border border-border transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                onClick={closePreview}
-                ref={closeButtonRef}
-                type="button"
-              >
-                <X aria-hidden="true" className="size-5" />
-              </button>
-            </div>
-            <div className="mt-10 border-y border-border py-8 sm:py-12">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
-                Property journal · Jaipur
-              </p>
-              <h2 className="mt-4 font-serif text-5xl leading-[0.95] sm:text-7xl">
-                A home shaped by light
-              </h2>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
-                How a quieter plan, careful proportions, and a courtyard can
-                make a home feel more considered from the first visit.
-              </p>
-            </div>
-            <div className="mt-8 max-w-2xl space-y-5 text-base leading-8">
-              <p>
-                Good property decisions begin with what the space makes easy:
-                where daylight lands, how rooms connect, and whether daily life
-                has room to unfold without friction.
-              </p>
-              <p>
-                This preview shows display headings, body copy, labels, and
-                comfortable reading rhythm in the selected font pair.
-              </p>
-              <div className="flex flex-wrap gap-3 pt-2 text-sm font-semibold">
-                <span className="rounded-full bg-muted px-3 py-2">
-                  3 bedrooms
-                </span>
-                <span className="rounded-full bg-muted px-3 py-2">
-                  2,400 sq ft
-                </span>
-                <span className="rounded-full bg-muted px-3 py-2">
-                  Vaishali Nagar
-                </span>
-              </div>
-            </div>
-          </article>
+      <DialogContent
+        aria-label="Font preview"
+        className={`${previewFontVariables?.[selectedFontFamily] ?? ""} ${fontFamilyThemeClasses[selectedFontFamily]} max-w-3xl font-sans sm:max-w-3xl`}
+      >
+        <DialogHeader>
+          <DialogTitle>Font preview</DialogTitle>
+          <DialogDescription>{selectedOption?.label}</DialogDescription>
+        </DialogHeader>
+        <div className="mt-10 border-y border-border py-8 sm:py-12">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+            Property journal · Jaipur
+          </p>
+          <h2 className="mt-4 font-serif text-5xl leading-[0.95] sm:text-7xl">
+            A home shaped by light
+          </h2>
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
+            How a quieter plan, careful proportions, and a courtyard can make a
+            home feel more considered from the first visit.
+          </p>
         </div>
-      ) : null}
-    </>
+        <div className="mt-8 flex max-w-2xl flex-col gap-5 text-base leading-8">
+          <p>
+            Good property decisions begin with what the space makes easy: where
+            daylight lands, how rooms connect, and whether daily life has room
+            to unfold without friction.
+          </p>
+          <p>
+            This preview shows display headings, body copy, labels, and
+            comfortable reading rhythm in the selected font pair.
+          </p>
+          <div className="flex flex-wrap gap-3 pt-2 text-sm font-semibold">
+            <span className="rounded-full bg-muted px-3 py-2">3 bedrooms</span>
+            <span className="rounded-full bg-muted px-3 py-2">2,400 sq ft</span>
+            <span className="rounded-full bg-muted px-3 py-2">
+              Vaishali Nagar
+            </span>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

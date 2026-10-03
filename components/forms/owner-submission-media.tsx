@@ -278,7 +278,7 @@ export function OwnerSubmissionMedia({
                     type="button"
                   >
                     <Star
-                      className={`size-3 ${item.isCover ? "fill-current text-accent" : ""}`}
+                      className={`size-3 ${item.isCover ? "fill-current text-primary" : ""}`}
                     />
                     {item.isCover ? "Cover image" : "Make cover"}
                   </button>

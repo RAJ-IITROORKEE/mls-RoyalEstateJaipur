@@ -28,9 +28,9 @@ Use **architectural framing** as the unifying idea:
 - Fine keylines that resemble floor-plan structure
 - Generous image windows with consistent aspect ratios
 - Layered but restrained panels
-- An editorial serif for high-impact property/marketing headings paired with a highly legible sans-serif for UI and body text
+- Plus Jakarta Sans for headings, UI and body text, with weight and spacing establishing hierarchy
 
-One premium accent color signals important actions and selected states. A muted warm metallic accent may support small labels and editorial details; it must not dominate buttons or reduce contrast.
+Forest green is the single action accent; dark mode uses a pale green counterpart. Status colors serve semantics only. The approved 2026-10-03 theme supersedes the earlier navy/gold suggestions below; exact tokens are documented in `docs/PHASE2-DESIGN.md` and `app/globals.css`.
 
 ## 3. Color system
 
@@ -40,15 +40,15 @@ Implement colors as semantic CSS variables using OKLCH where supported by the pr
 
 | Token | Intent | Suggested visual |
 | --- | --- | --- |
-| `--background` | Main canvas | Warm ivory, not pure white |
-| `--foreground` | Primary text | Deep charcoal |
+| `--background` | Main canvas | Neutral green-white (`#f8faf9`) |
+| `--foreground` | Primary text | Deep forest (`#102a22`) |
 | `--card` | Cards/surfaces | Soft white |
-| `--muted` | Quiet surfaces | Warm light stone |
+| `--muted` | Quiet surfaces | Neutral green surface (`#edf3ef`) |
 | `--muted-foreground` | Secondary text | Medium neutral |
-| `--border` | Dividers | Low-contrast warm grey |
+| `--border` | Dividers | Decorative grey-green (`#d9e2dc`); essential controls use `--input` (`#7b8d82`) |
 | `--primary` | Main CTA/selected | Deep forest or architectural teal |
 | `--primary-foreground` | Text on primary | Near white |
-| `--accent` | Editorial highlight | Restrained brass/sand |
+| `--accent` | Editorial highlight | Quiet forest surface (`#e2eee6`) |
 | `--destructive` | Dangerous action | Accessible deep red |
 
 ### Dark theme
@@ -59,11 +59,11 @@ Implement colors as semantic CSS variables using OKLCH where supported by the pr
 | `--foreground` | Primary text | Slate 100 (`#f1f5f9`) |
 | `--card` | Cards/surfaces | Slate 900 (`#0f172a`) |
 | `--muted` | Quiet surfaces | Slate 800 (`#1e293b`) |
-| `--muted-foreground` | Secondary text | Soft slate (`#a8b3c4`) |
+| `--muted-foreground` | Secondary text | Slate 400 (`#94a3b8`) |
 | `--border` | Dividers | Slate 700 (`#334155`) |
-| `--primary` | Main CTA/selected | Warm gold with dark readable text |
-| `--primary-foreground` | Text on primary | Deep slate |
-| `--accent` | Editorial highlight | Restrained warm gold |
+| `--primary` | Main CTA/selected | Pale forest green (`#a3d9b7`) with dark green text |
+| `--primary-foreground` | Text on primary | Deep green (`#092419`) |
+| `--accent` | Editorial highlight | Restrained forest surface |
 | `--destructive` | Dangerous action | Accessible coral-red |
 
 Rules:
@@ -78,12 +78,7 @@ Rules:
 
 Use locally optimized `next/font` fonts with no layout shift.
 
-Suggested pairing:
-
-- Display/editorial: `Cormorant Garamond`, `DM Serif Display`, or a similarly refined serif.
-- Interface/body: `Manrope`, `Geist`, or `Inter`.
-
-Choose one pairing and use it consistently.
+Default: **Plus Jakarta Sans**, self-hosted through `next/font`, for the entire interface. Only selected font variables apply globally. Alternate administrator-selected pairs remain supported and are not globally preloaded; an explicit preview loads its requested pair. The default Latin subset is preloaded.
 
 Type scale:
 
@@ -99,7 +94,7 @@ Rules:
 - Keep body line length around 60–75 characters.
 - Use sentence case for UI labels.
 - Use tabular numerals for prices, metrics, IDs, and admin tables.
-- Use the serif for marketing/property storytelling, not form fields, tables, or long admin copy.
+- Use intentional weights in the default sans family; any explicitly selected editorial pairing applies consistently.
 - Do not render paragraphs in uppercase. Use modest tracking only for short eyebrow labels.
 
 ## 5. Spacing, grid, and shape
@@ -133,13 +128,13 @@ Desktop header:
 
 - Logo/wordmark left.
 - Primary links: Properties, List Property, Services, About, Contact.
-- Compact theme control.
+- Public theme selection appears in the footer only.
 - Account/sign-in action.
 - One visually clear CTA: “List your property”.
 
 Mobile:
 
-- Logo, theme, and menu trigger in a compact top bar.
+- Logo and menu trigger in a compact top bar.
 - Full-height or large drawer with clear focus handling.
 - Primary CTA remains obvious without crowding.
 - Do not hide contact access behind several layers.
@@ -154,12 +149,12 @@ Header behavior:
 
 ### Hero
 
-- Use one excellent architectural/property image or restrained collage.
+- Center the headline and concise copy above the search surface, following the approved reference product pattern. Keep the removed landmark carousel removed.
 - Place value proposition and search where both remain readable.
-- Search has Buy/Rent/Lease intent tabs and high-value fields only.
+- Search has Buy/Rent intent controls and high-value fields only.
 - Primary CTA: explore properties.
 - Secondary CTA: list a property.
-- A subtle Aceternity spotlight/grid effect may appear behind text, but never compete with photography or reduce performance.
+- A visible adapted Aceternity-style beam/grid effect sits behind readable text. Per the latest user request, architectural light rays animate while visible, with keyboard-accessible pause/resume; offscreen and reduced-motion states are static.
 
 ### Featured properties
 
@@ -188,8 +183,8 @@ Header behavior:
 
 Every standard card includes:
 
-- Fixed-aspect image with graceful fallback
-- Intent/status badge
+- Fixed-aspect real image or honest “Photo coming soon” fallback
+- Prominent intent/status badge in the top-right media corner
 - Optional verified/moderated indicator only when backed by data
 - Price or “Price on request”
 - Descriptive title

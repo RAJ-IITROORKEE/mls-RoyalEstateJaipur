@@ -173,7 +173,7 @@ export function OwnerSubmissionWizard({
   return (
     <div className="grid gap-8 lg:grid-cols-[0.35fr_0.65fr]">
       <aside className="h-fit rounded-2xl bg-spotlight p-6 text-spotlight-foreground ring-1 ring-border lg:sticky lg:top-24">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-spotlight-accent">
           Owner workspace
         </p>
         <h1 className="mt-4 font-serif text-4xl">
@@ -182,7 +182,7 @@ export function OwnerSubmissionWizard({
         <ol className="mt-10 grid gap-3">
           {steps.map((label, index) => (
             <li
-              className={`flex items-center gap-3 text-sm ${index === step ? "font-bold text-primary" : "text-spotlight-foreground/70"}`}
+              className={`flex items-center gap-3 text-sm ${index === step ? "font-bold text-spotlight-accent" : "text-spotlight-foreground/70"}`}
               key={label}
             >
               <span className="grid size-7 place-items-center rounded-full border border-current text-xs">

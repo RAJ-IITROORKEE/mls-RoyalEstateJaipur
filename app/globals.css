@@ -1,29 +1,47 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   color-scheme: light;
-  --background: #faf8f4;
-  --foreground: #222222;
+  --background: #f8faf9;
+  --foreground: #102a22;
   --card: #ffffff;
-  --muted: #f3f4f6;
-  --muted-foreground: #666666;
-  --border: #e5e7eb;
-  --primary: #0b1f3a;
+  --card-foreground: #102a22;
+  --popover: #ffffff;
+  --popover-foreground: #102a22;
+  --muted: #edf3ef;
+  --muted-foreground: #52635c;
+  --border: #d9e2dc;
+  --input: #7b8d82;
+  --primary: #174b3a;
   --primary-foreground: #ffffff;
-  --primary-hover: #b8860b;
-  --primary-hover-foreground: #222222;
-  --spotlight: #0b1f3a;
+  --primary-hover: #123c2e;
+  --primary-hover-foreground: #ffffff;
+  --spotlight: #102a22;
   --spotlight-foreground: #ffffff;
-  --secondary: #d4a017;
-  --secondary-foreground: #222222;
-  --accent: #d4a017;
-  --accent-foreground: #222222;
-  --success: #16a34a;
-  --destructive: #dc2626;
-  --ring: #0b1f3a;
+  --secondary: #edf3ef;
+  --secondary-foreground: #174b3a;
+  --accent: #e2eee6;
+  --accent-foreground: #174b3a;
+  --spotlight-accent: #a3d9b7;
+  --success: #166534;
+  --destructive: #b42332;
+  --destructive-foreground: #ffffff;
+  --destructive-hover: #901c29;
+  --ring: #174b3a;
+  --radius: 0.75rem;
 }
 
 @theme inline {
+  --color-spotlight-accent: var(--spotlight-accent);
+  --color-destructive-hover: var(--destructive-hover);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-input: var(--input);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -43,8 +61,8 @@
   --color-success: var(--success);
   --color-destructive: var(--destructive);
   --color-ring: var(--ring);
-  --site-font-sans: var(--font-manrope);
-  --site-font-serif: var(--font-cormorant);
+  --site-font-sans: var(--font-plus-jakarta);
+  --site-font-serif: var(--font-plus-jakarta);
   --font-sans: var(--site-font-sans);
   --font-serif: var(--site-font-serif);
 }
@@ -79,22 +97,29 @@
   --background: #020617;
   --foreground: #f1f5f9;
   --card: #0f172a;
+  --card-foreground: #f1f5f9;
+  --popover: #0f172a;
+  --popover-foreground: #f1f5f9;
   --muted: #1e293b;
-  --muted-foreground: #a8b3c4;
+  --muted-foreground: #94a3b8;
   --border: #334155;
-  --primary: #f2c66d;
-  --primary-foreground: #111827;
-  --primary-hover: #ffda8e;
-  --primary-hover-foreground: #111827;
+  --input: #64748b;
+  --primary: #a3d9b7;
+  --primary-foreground: #092419;
+  --primary-hover: #bfe7c9;
+  --primary-hover-foreground: #092419;
   --spotlight: #0f172a;
   --spotlight-foreground: #f1f5f9;
-  --secondary: #263449;
-  --secondary-foreground: #e2e8f0;
-  --accent: #f2c66d;
-  --accent-foreground: #111827;
-  --success: #4ade80;
-  --destructive: #f87171;
-  --ring: #f2c66d;
+  --secondary: #1e293b;
+  --secondary-foreground: #f1f5f9;
+  --accent: #203d32;
+  --accent-foreground: #c8ead3;
+  --spotlight-accent: #a3d9b7;
+  --success: #86efac;
+  --destructive: #fda4af;
+  --destructive-foreground: #450a0a;
+  --destructive-hover: #fecdd3;
+  --ring: #a3d9b7;
 }
 
 .dark body {
@@ -110,8 +135,13 @@
   color: var(--foreground);
 }
 
-* {
-  border-color: var(--border);
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  :where(input, select, textarea) {
+    border-color: var(--input);
+  }
 }
 html {
   background: var(--background);
@@ -123,8 +153,15 @@ body {
   font-family: var(--site-font-sans), Arial, Helvetica, sans-serif;
 }
 
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
 button,
 a {
+  touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
 input,
@@ -138,14 +175,17 @@ textarea {
 input:hover,
 select:hover,
 textarea:hover {
-  border-color: color-mix(in oklab, var(--primary) 34%, var(--border));
+  border-color: color-mix(in oklab, var(--primary) 34%, var(--input));
 }
 input::placeholder,
 textarea::placeholder {
-  opacity: 0.82;
+  opacity: 1;
+  color: var(--muted-foreground);
 }
 select {
   color-scheme: inherit;
+  background-color: var(--card);
+  color: var(--foreground);
 }
 a:focus-visible,
 button:focus-visible,
@@ -190,50 +230,92 @@ textarea:focus-visible {
   background-image:
     linear-gradient(
       to right,
-      color-mix(in oklab, var(--border) 82%, transparent) 1px,
+      color-mix(in oklab, var(--primary) 15%, transparent) 1px,
       transparent 1px
     ),
     linear-gradient(
       to bottom,
-      color-mix(in oklab, var(--border) 82%, transparent) 1px,
+      color-mix(in oklab, var(--primary) 15%, transparent) 1px,
       transparent 1px
     );
   background-size: 72px 72px;
   mask-image: linear-gradient(to bottom, black 0%, black 42%, transparent 96%);
 }
-.home-hero__frame {
+.architectural-spotlight {
   position: absolute;
-  inset: 2rem 5% 2rem;
-  border-right: 1px solid color-mix(in oklab, var(--border) 72%, transparent);
-  border-left: 1px solid color-mix(in oklab, var(--border) 72%, transparent);
-}
-.home-hero__glow {
-  position: absolute;
-  aspect-ratio: 1;
-  border-radius: 9999px;
-  filter: blur(48px);
+  inset: 0;
+  overflow: hidden;
   pointer-events: none;
-  will-change: transform;
+  --spotlight-light: color-mix(in oklab, var(--primary) 18%, transparent);
+  mask-image: linear-gradient(to bottom, black 0%, black 58%, transparent 98%);
 }
-.home-hero__glow--primary {
-  top: -68%;
-  left: 14%;
-  width: min(76vw, 64rem);
-  background: radial-gradient(
-    ellipse at center,
-    color-mix(in oklab, var(--primary) 24%, transparent),
-    transparent 68%
-  );
+.dark .architectural-spotlight {
+  --spotlight-light: color-mix(in oklab, var(--primary) 21%, transparent);
 }
-.home-hero__glow--accent {
-  top: -40%;
-  right: -16%;
-  width: min(55vw, 46rem);
+.architectural-spotlight__side {
+  position: absolute;
+  inset: -12rem 0 0;
+  animation: architectural-light-sweep 10s ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+.architectural-spotlight[data-running="true"] .architectural-spotlight__side {
+  animation-play-state: running;
+}
+.architectural-spotlight__side--right {
+  transform: scaleX(-1);
+  animation-name: architectural-light-sweep-right;
+  animation-delay: -5s;
+}
+.architectural-spotlight__ray {
+  position: absolute;
+  top: -8rem;
+  left: -8rem;
+  width: clamp(20rem, 48vw, 44rem);
+  height: 80rem;
+  transform: rotate(-35deg);
+  transform-origin: top center;
   background: radial-gradient(
-    ellipse at center,
-    color-mix(in oklab, var(--accent) 19%, transparent),
+    ellipse at 50% 35%,
+    var(--spotlight-light),
     transparent 70%
   );
+}
+.architectural-spotlight__ray--narrow {
+  left: -4rem;
+  width: clamp(8rem, 20vw, 18rem);
+  transform: rotate(-40deg);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--spotlight-light),
+    transparent
+  );
+  opacity: 0.65;
+}
+@keyframes architectural-light-sweep {
+  from {
+    transform: translateX(-5%) rotate(-8deg);
+  }
+  to {
+    transform: translateX(16%) rotate(8deg);
+  }
+}
+@keyframes architectural-light-sweep-right {
+  from {
+    transform: scaleX(-1) translateX(-4%) rotate(-6deg);
+  }
+  to {
+    transform: scaleX(-1) translateX(14%) rotate(7deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .architectural-spotlight__side {
+    animation: none;
+    transform: none;
+  }
+  .architectural-spotlight__side--right {
+    transform: scaleX(-1);
+  }
 }
 .hero-title-reveal {
   animation: hero-title-reveal 480ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
@@ -422,6 +504,7 @@ textarea:focus-visible {
   *::after {
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }

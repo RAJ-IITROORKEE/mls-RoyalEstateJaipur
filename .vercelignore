@@ -1,0 +1,10 @@
+.env*
+!.env.example
+.insforge/
+.agents/
+.git/
+.next/
+node_modules/
+playwright-report/
+test-results/
+docs/audits/
