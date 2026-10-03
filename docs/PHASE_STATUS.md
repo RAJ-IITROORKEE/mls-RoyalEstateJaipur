@@ -7,8 +7,8 @@ The entries below this section are historical Supabase implementation records. T
 | Phase | Status |
 | --- | --- |
 | 0 — Research, audit and authorized InsForge linkage | Complete; planning commit checkpoint recorded in HANDOFF |
-| 1 — Package/API/security foundations | Implemented; final checks, CI and deployment verification in progress |
-| 2 — Shared theme and accessible design system | Planned |
+| 1 — Package/API/security foundations | Complete locally/live; hosted CI cannot start (account billing lock) |
+| 2 — Shared theme and accessible design system | In progress |
 | 3 — Public pages and lower-page polish | Planned |
 | 4 — Owner/admin workflows and guarded CRUD | Planned |
 | 5 — InsForge auth vertical slice | Planned |

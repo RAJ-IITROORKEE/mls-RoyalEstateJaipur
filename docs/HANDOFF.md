@@ -4,7 +4,7 @@ This is the running record for `docs/PLAN.md`. Update it whenever a phase or mat
 
 ## 2026-10-03 — Phase 1 implementation and local verification
 
-Status: implemented and verified locally; remote CI and Vercel deployment gate in progress.
+Status: verified locally and live; hosted CI could not start due to an external GitHub account billing lock.
 
 ### Outcome and decisions
 
@@ -31,7 +31,14 @@ Status: implemented and verified locally; remote CI and Vercel deployment gate i
 
 Principal modules: `lib/security/`, `lib/supabase/proxy.ts`, root `proxy.ts`, all API mutations, auth guards, enquiry creation, staff transitions, journal queries/pages, Prisma migration, tests, CI and formatter configuration. README/environment example document runtime setup, rate limiting and safe rollback.
 
-Remote CI/deployment IDs and commit checkpoint will be appended after verification. Phase 2 then introduces the approved forest/Slate design system. Operational upload/reconciliation gaps remain tracked for Phase 4/6. Production still uses Supabase; real InsForge OAuth and data/storage migration remain Phase 5–7 work.
+Commit/push checkpoint: `6f7403a9d5f2ec432a9adc3b4e2066f1e12349ec` on `codex/insforge-redesign-plan`.
+
+- Vercel preview `dpl_HJb7AAQ1wk53XkBLhzroj8Fe555X`: Ready; https://royalestatejaipur-9l1ugsgv3-unfiltered-iit-ians.vercel.app . Vercel login protects the preview. Authenticated CLI checks verified journal HTTP 200/recovery, hostile Origin HTTP 403 and same-origin anonymous staff mutation HTTP 401.
+- Promoting that reviewed preview created production deployment `dpl_3DRSEEgGHsudewWZDc6C3hJsAzur`, Ready, https://royalestatejaipur-oionoqg4d-unfiltered-iit-ians.vercel.app ; canonical live alias remains https://royalestatejaipur.vercel.app . Browser plugin opened the live page-specific journal state.
+- Rollback deployment: `dpl_5DBiesRuihb9Lukdt2U6JfDbxCza`. Keep the additive private limiter table when reverting application code.
+- [GitHub Actions run 37107533238](https://github.com/RAJ-IITROORKEE/mls-RoyalEstateJaipur/actions/runs/37107533238) failed before any step started. The check annotation states the account is locked due to a billing issue. Hosted CI is **unverified**, not a code-test failure or a claimed pass. The account owner must resolve the GitHub restriction before remote CI can run; no billing change was made.
+
+Phase 2 introduces the approved forest/Slate design system. Operational collection pagination/control consolidation are assigned to their complete Phase 2/4 UI slices rather than silently truncating existing lists. Upload/reconciliation gaps remain tracked for Phase 4/6. Production still uses Supabase; real InsForge OAuth and data/storage migration remain Phase 5–7 work.
 
 ## 2026-10-03 — Redesign research and approved InsForge setup
 

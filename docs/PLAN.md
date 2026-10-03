@@ -1,7 +1,7 @@
 # Royal Estates Jaipur — Redesign and InsForge migration plan
 
 Updated: 2026-10-03 (Asia/Calcutta)
-Status: Phase 1 implemented; final checks, CI and deployment verification in progress.
+Status: Phase 1 verified locally and live; GitHub Actions cannot start due to account billing lock. Phase 2 in progress.
 Branch: `codex/insforge-redesign-plan`
 Baseline: `564595b` on `codex/real-estate-ui-auth-content`.
 Live application: https://royalestatejaipur.vercel.app/
@@ -216,8 +216,8 @@ Each phase must update HANDOFF with outcomes, files, commands/pass/fail, credent
 | Phase | Status | Owner / focus | Delivery |
 | --- | --- | --- | --- |
 | 0 | Complete for research/setup | Engineering + design audit | Plan, audit, linked backend, skills |
-| 1 | In progress — release checks | Engineering/security | Dependency repair, API boundaries, repeatable checks |
-| 2 | Planned | Design system | Tokens, type, accessible primitives, visual preview |
+| 1 | Complete locally/live; hosted CI blocked externally | Engineering/security | Dependency repair, API boundaries, repeatable checks |
+| 2 | In progress | Design system | Tokens, type, accessible primitives, visual preview |
 | 3 | Planned | Public experience | Home, catalogue, detail, journal, about, contact/footer |
 | 4 | Planned | Owner/admin experience | Coherent forms, CRUD and operational workflows |
 | 5 | Planned | Backend/auth | InsForge session/auth vertical slice in isolation |
@@ -240,18 +240,18 @@ Each phase must update HANDOFF with outcomes, files, commands/pass/fail, credent
 
 ### Phase 1 — Packages, APIs and repository hygiene
 
-- [ ] Add a formatter check and deterministic CI: npm ci, formatting, lint, typecheck, unit tests, build and scoped browser checks.
-- [ ] Address current `brace-expansion`, `braces`, `micromatch`, `fast-glob`, `js-yaml`, `undici`, and `deepmerge-ts` dependency chains. Evaluate patched leaf versions within actual compatible ranges.
-- [ ] Review Next/eslint-config-next and Prisma/CLI parents together. Reject npm's suggested incompatible downgrades; record any remaining upstream issue with reachability and next review.
-- [ ] Keep lockfile/source versions coherent and select a supported Node LTS for local/CI/Vercel; align types without opportunistic major upgrades.
-- [ ] Inventory every mutation's identity, record permission, Zod schema, rate limit, audit and error behavior.
-- [ ] Add centralized same-origin/CSRF defenses for cookie-auth Route Handler mutations; reject malformed/oversized inputs with safe responses. Verify forwarded-header trust on Vercel.
-- [ ] Add a durable free-tier-compatible limiter and atomic duplicate protection; retain bounded local fallback only where its limits are explicit.
-- [ ] Repair password/OAuth suspended-profile consistency and session refresh on the current provider where required for safe interim release.
-- [ ] Paginate public journal and other unbounded reads; ensure personalized/admin/draft data is never publicly cached.
-- [ ] Remove actual dead code/dependencies and consolidate duplicated controls, without moving unrelated modules just for cleanliness.
-- [ ] Test auth failures, direct API invocation, forged ownership/roles, redirects, invalid inputs and public PII exposure.
-- [ ] Commit and deploy a Vercel preview; promote only passing release-safe changes.
+- [x] Add a formatter check and deterministic CI: npm ci, formatting, lint, typecheck, unit tests, build and scoped browser checks.
+- [x] Address current `brace-expansion`, `braces`, `micromatch`, `fast-glob`, `js-yaml`, `undici`, and `deepmerge-ts` dependency chains. Evaluate patched leaf versions within actual compatible ranges.
+- [x] Review Next/eslint-config-next and Prisma/CLI parents together. Reject npm's suggested incompatible downgrades; record any remaining upstream issue with reachability and next review.
+- [x] Keep lockfile/source versions coherent and select a supported Node LTS for local/CI/Vercel; align types without opportunistic major upgrades.
+- [x] Inventory every mutation's identity, record permission, Zod schema, rate limit, audit and error behavior.
+- [x] Add centralized same-origin/CSRF defenses for cookie-auth Route Handler mutations; reject malformed/oversized inputs with safe responses. Verify forwarded-header trust on Vercel.
+- [x] Add a durable free-tier-compatible limiter and atomic duplicate protection; retain bounded local fallback only where its limits are explicit.
+- [x] Repair password/OAuth suspended-profile consistency and session refresh on the current provider where required for safe interim release.
+- [x] Paginate the public journal and bound its home read; ensure personalized/admin/draft data is never publicly cached. Operational collection pagination follows with its complete UI in Phase 4; recorded in PHASE1-SECURITY.md.
+- [x] Review dead code/dependencies without moving unrelated modules; shared-control consolidation is implemented with the Phase 2 design system.
+- [x] Test auth failures, direct API invocation, forged ownership/roles, redirects, invalid inputs and public PII exposure.
+- [x] Commit and deploy a Vercel preview; promote only passing release-safe changes.
 
 Gate: production dependency audit clean; unresolved development findings explicitly assessed; relevant checks pass; API regressions prevented.
 
