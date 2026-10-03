@@ -313,3 +313,26 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+<!-- INSFORGE:START -->
+## Approved InsForge migration
+
+The user approved migration to [InsForge](https://insforge.dev) on 2026-10-03. The live application still uses Supabase until the staged migration in `docs/PLAN.md` passes its cutover checks. Sections 4, 8, 9, and 19 describe the existing Supabase implementation; their provider choice is superseded for the approved migration, while their security and data-integrity requirements remain applicable. Do not add payments in this release.
+
+- **Project:** **RealEstate-MLS** (API base `https://t5gi2y6m.us-east.insforge.app`)
+- **Skills:** use the installed InsForge skills before implementing an InsForge feature:
+  - `insforge`: app code with the `@insforge/sdk` client (database CRUD, auth, storage, edge functions, realtime, AI, email, and Stripe payments).
+  - `insforge-cli`: backend and infrastructure via the `insforge` CLI (projects, SQL, migrations, RLS policies, storage buckets, functions, secrets, payment setup, schedules, deploys).
+  - `insforge-debug`: diagnosing failures (SDK/HTTP errors, RLS denials, auth and OAuth issues) and running security or performance audits.
+  - `insforge-integrations`: wiring external auth providers (Clerk, Auth0, WorkOS, Better Auth, etc.) for JWT-based RLS, or the OKX x402 payment facilitator.
+  - `find-skills`: discovering additional skills on demand.
+- **Credentials:** app code reads keys from `.env.local`; the CLI reads `.insforge/project.json`. Never hardcode or commit keys.
+
+Key patterns:
+
+- Database inserts take an array: `insert([{ ... }])`.
+- Reference InsForge identity using `auth.users(id)` and `auth.uid()` in RLS policies; preserve existing application relationships through the documented identity mapping during migration.
+- Persist storage keys and metadata. Keep private document URLs short-lived and never store a signed URL as a durable reference.
+- Use the SDK's documented SSR auth helpers and refresh Proxy. Keep administrative credentials server-only.
+- Preserve the existing Tailwind CSS 4 setup; do not apply a starter template or SPA rewrite to this Next.js App Router application.
+<!-- INSFORGE:END -->

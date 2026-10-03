@@ -2,6 +2,56 @@
 
 This is the running record for `docs/PLAN.md`. Update it whenever a phase or material change is completed. A phase is complete only after its implementation and applicable checks pass.
 
+## 2026-10-03 — Redesign research and approved InsForge setup
+
+### Outcome
+
+- Prepared a new phased redesign and InsForge migration plan in `docs/PLAN.md`; preserved the previous plan at `docs/archive/PLAN-2026-09-30.md`.
+- Added `docs/AUDIT-2026-10-03.md` with source findings, current service checks and three locally inspected live-browser screenshots for home/footer/journal.
+- Confirmed the user meant InsForge, authenticated its CLI and linked **RealEstate-MLS**, project `e37d17ef-599d-470b-b821-4304da8015aa`, us-east. Project is active and billing reports free.
+- Installed the four official InsForge skills project-locally and recorded their source hashes in `skills-lock.json`. They are available to Codex on the next turn.
+- Updated the generated InsForge section in AGENTS.md to state the migration is approved but production still uses Supabase; preserved SSR, privacy, stable identities and no-payments requirements.
+- Ensured `.insforge/` is ignored. Removed CLI-generated broad agent-directory ignores so project skills remain reviewable.
+- Inspected `E:/c++/Arduino/AI-VoiceAssitant/voice-agent-app` read-only. It demonstrates browser SDK auth and owner RLS; this site's admin requires server sessions/permissions and the SDK SSR helpers.
+- Proposed Plus Jakarta Sans, one forest-green accent, neutral light surfaces and Slate 950 dark surfaces. Shared shadcn controls, Motion and one adapted free Aceternity effect are the recommended UI kit.
+
+### Decisions and boundaries
+
+- Latest user approval supersedes the old Supabase provider choice. Keep Prisma and the existing domain transactions pending full migration validation.
+- Direct Prisma `SELECT 1` against InsForge passed. This confirms connectivity only; schema/pooling/load/permission compatibility needs Phase 5–6 checks.
+- The InsForge target has zero public application tables and zero buckets. Google/GitHub are listed in auth metadata, but allowed app redirects are empty and real OAuth callback success is unverified.
+- Current Supabase password authentication, Profile and database probes pass. Local application server was unreachable, so this run did not verify application admin access.
+- Full npm audit now reports 11 high findings in development dependency chains; production audit is clean. No forced downgrade or package modification was applied.
+- GitHub and Vercel CLIs are authenticated. Dedicated GitHub/Vercel/InsForge MCP tools were not exposed in this session.
+- Full redesign, provider migration and new production deployment have not been performed in this planning stage.
+
+### Files changed
+
+- `.gitignore`, AGENTS.md, skills-lock.json.
+- Four `.agents/skills/insforge*` directories.
+- docs/PLAN.md, docs/AUDIT-2026-10-03.md, this log, docs/PHASE_STATUS.md.
+- Archived September plan; docs/audits/2026-10-03 browser PNGs.
+
+### Checks
+
+- InsForge CLI 0.2.8 login/link: pass.
+- Project/billing/metadata/table/bucket read-only inspection: pass.
+- InsForge memory list: pass, no entries.
+- Existing Prisma 6.19.3 read-only query against target: pass.
+- `npm audit --omit=dev --json`: pass, zero.
+- `npm audit --json`: 11 high development findings, scheduled in Phase 1.
+- `npm run diagnose:admin`: Supabase/password/profile/DB pass; local app not reachable; admin browser path not tested.
+- Vercel inspect: production Ready, deployment `dpl_5DBiesRuihb9Lukdt2U6JfDbxCza`.
+- Browser reference and production evidence saved/reopened: pass.
+- Application lint/typecheck/build/test suite not rerun for docs and skill setup; September results below remain historical only.
+- Git diff/secret check and planning commit/push: pending final checkpoint below.
+
+### Next phase and required inputs
+
+Start Phase 1 with compatible package-chain repair, API origin/input/rate-limit checks and auth session consistency. Then implement the shared theme and public/admin redesign before the final migration.
+
+For launch, obtain real listing photos/content and approved business contacts; verify Google OAuth with a real account and exact app callbacks; validate free branch/rehearsal entitlement, identity mapping and source backup/reconciliation. Keep user data exports and keys out of git. No paid upgrade is authorized.
+
 ## 2026-09-30 — Final production browser confirmation
 
 ### Outcome

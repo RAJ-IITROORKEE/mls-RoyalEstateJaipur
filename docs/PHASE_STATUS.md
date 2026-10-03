@@ -1,5 +1,23 @@
 # Phase Status
 
+## Current plan — 2026-10-03
+
+The entries below this section are historical Supabase implementation records. The current source of truth is `docs/PLAN.md`, which supersedes the former completion plan.
+
+| Phase | Status |
+| --- | --- |
+| 0 — Research, audit and authorized InsForge linkage | Complete; planning commit checkpoint recorded in HANDOFF |
+| 1 — Package/API/security foundations | Planned, next |
+| 2 — Shared theme and accessible design system | Planned |
+| 3 — Public pages and lower-page polish | Planned |
+| 4 — Owner/admin workflows and guarded CRUD | Planned |
+| 5 — InsForge auth vertical slice | Planned |
+| 6 — Database/Storage migration rehearsal | Planned |
+| 7 — Verified production cutover | Planned |
+| 8 — Release QA and operations | Planned |
+
+Production still runs Supabase. InsForge linkage, an empty target and a passing direct database probe are preparation, not a completed migration.
+
 ## Phase 0 — Discovery and decisions
 
 Status: complete.
