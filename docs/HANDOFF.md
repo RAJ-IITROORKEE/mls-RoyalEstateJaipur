@@ -4,7 +4,7 @@ This is the running record for `docs/PLAN.md`. Update it whenever a phase or mat
 
 ## 2026-10-03 — Phase 2 shared UI and hero animation
 
-Status: verified locally; release checkpoint pending.
+Status: complete locally and live; hosted CI remains externally blocked.
 
 ### Outcome and decisions
 
@@ -28,7 +28,16 @@ Status: verified locally; release checkpoint pending.
 
 Principal files: `app/globals.css`, `app/layout.tsx`, selected spotlight page accents, `features/site-appearance/fonts.ts`, shared `components/ui/` primitives, homepage background/search, theme provider, font preview, protected design-system route, tests, component/skill configuration and documentation. `.vercelignore` explicitly excludes private environment/linkage files from deployment uploads.
 
-Next: finish the preview/live checkpoint, then Phase 3 public card/catalogue/detail/journal/lower-page compositions. InsForge real OAuth, identity/data/Storage rehearsal and cutover are still pending their separate gates; Google provider metadata is not accepted as auth proof.
+### Release checkpoint
+
+- Source commit `1100df970e02b88747991fc9fb46509c0affeb51` pushed to `origin/codex/insforge-redesign-plan`; staged credential-path/private-value checks and whitespace check pass. Local Python caches are ignored, not committed.
+- Vercel preview `dpl_3S1JBga4Qsu4mLwWmKuahsm2skmu`, Ready: https://royalestatejaipur-knsqbxtzh-unfiltered-iit-ians.vercel.app . Authorized CLI verified HTTP 200, static-safe SSR light-ray layers, shared search and no raw database error. Browser access requires Vercel login; that protection remains enabled.
+- Promotion rebuilt with production environment: `dpl_8C3cuJFBYKLwFDuc6WRhBX5KaRh6`, Ready: https://royalestatejaipur-qmhi2lkgh-unfiltered-iit-ians.vercel.app ; public alias https://royalestatejaipur.vercel.app . Browser visually verified the released light/dark hero against the local composition, running matrices, keyboard pause/resume and one font preload. Fresh production reload captured no new runtime/hydration errors.
+- Production Playwright: 3/3 pass for real GET search, persisted/system theme and complete hero pause/resume/offscreen/reduced-motion behavior. Evidence: `docs/audits/2026-10-03/phase2/hero-production-light.png` and `hero-production-dark.png`.
+- Rollback: prior verified production `dpl_3DRSEEgGHsudewWZDc6C3hJsAzur`; there are no provider/environment/database changes in this UI release.
+- [GitHub Actions run 37111210693](https://github.com/RAJ-IITROORKEE/mls-RoyalEstateJaipur/actions/runs/37111210693) has zero steps and repeats the account billing-lock annotation. This remote CI run is unverified; local checks and Vercel builds actually passed.
+
+Next: Phase 3 public card/catalogue/detail/journal/lower-page compositions. InsForge real OAuth, identity/data/Storage rehearsal and cutover are still pending their separate gates; Google provider metadata is not accepted as auth proof.
 
 ## 2026-10-03 — Phase 1 implementation and local verification
 

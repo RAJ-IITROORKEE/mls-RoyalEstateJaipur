@@ -1,6 +1,6 @@
 # Phase 2 — Design system decisions
 
-Status: verified locally; deployment checkpoint pending.
+Status: verified locally and on the public production release; checkpoint in HANDOFF.
 
 ## Approved direction
 
@@ -51,3 +51,6 @@ Verify both themes, system persistence, native selects, six widths, 200% zoom, k
 - Real admin browser checks cover searchable locality, tabs, accordion, dialog/sheet focus trapping/restoration, confirmation cancellation, six widths and **200% CSS zoom**. This is a CSS zoom/reflow check; no native screen-reader certification is claimed.
 - The default homepage loads one font preload and no inactive family variables. Alternate administrator previews remain explicit.
 - Skill/component upstream MIT notices are retained locally. Vercel upload ignores private environment/linkage files, skills, dependency caches and local browser evidence.
+
+- The protected Vercel preview returns HTTP 200 and the expected hero/search payload through authorized CLI access. Its browser page requires Vercel login; production was visually compared against local screenshots after promotion, with three real production browser tests passing. No preview protection was removed.
+- The pinned UI UX Pro Max Python helper was normalized only for trailing whitespace; SKILL.md hashes and upstream license notices are preserved.

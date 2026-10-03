@@ -1,7 +1,7 @@
 # Royal Estates Jaipur — Redesign and InsForge migration plan
 
 Updated: 2026-10-03 (Asia/Calcutta)
-Status: Phase 1 verified locally and live; GitHub Actions cannot start due to account billing lock. Phase 2 verified locally; preview/release checkpoint pending.
+Status: Phase 1 verified locally and live; GitHub Actions cannot start due to account billing lock. Phase 2 complete locally/live; Phase 3 next.
 Branch: `codex/insforge-redesign-plan`
 Baseline: `564595b` on `codex/real-estate-ui-auth-content`.
 Live application: https://royalestatejaipur.vercel.app/
@@ -265,7 +265,7 @@ Gate: production dependency audit clean; unresolved development findings explici
 - [x] Check all tokens in light/dark/system and native Windows form controls.
 - [x] Provide the customized architectural spotlight with visible motion, pause/resume, offscreen suspension and reduced-motion equivalent.
 - [x] Test keyboard focus/traps/restoration, 200% zoom, touch targets and six viewport widths.
-- [ ] Commit; deploy and visually compare the preview before rolling tokens through public pages.
+- [x] Commit; deploy and verify the protected preview payload, then visually verify the public release. Browser access to the protected preview requires Vercel login; local and public production browser evidence is recorded in HANDOFF.
 
 Gate: clear hierarchy, measured contrast, consistent controls, no hydration warnings, visible animation without content obstruction.
 
