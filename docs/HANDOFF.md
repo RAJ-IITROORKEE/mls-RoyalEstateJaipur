@@ -1,6 +1,6 @@
 # Implementation Handoff Log
 
-## 2026-10-04 — Public and admin follow-up (verified locally; release pending)
+## 2026-10-04 — Public and admin follow-up (verified locally and live)
 
 Requested: improve About's introduction; fill five preview listing image gaps with licensed illustrative photographs; remove admin preview chrome; move collapse to the top and Settings/profile to the bottom; simplify moderation filters; move locations into a searchable Settings table with add/edit/delete.
 
@@ -23,7 +23,19 @@ Design: forest/slate tokens and Plus Jakarta Sans with existing shadcn controls.
 - Initial admin browser runs exposed missing JSON request headers and a remote transaction timeout; corrected both and audited exact inactive test-record cleanup. Readiness assertions wait for streamed routes, and the empty title now has heading semantics. Final admin run: 2/2 pass, including real inactive create/edit/delete cleanup, search/sort, no matches, both-theme WCAG scans, desktop collapse, all six widths, unsaved-exit confirmation, mobile drawer Escape/focus restoration and submission filter selection. The 18 existing public/API/design-system regressions also pass: 22 passing browser tests in total. A read-only check confirmed no disposable location records remain.
 - Review follows Vercel React and web-interface guidance: server-only bounded location reads, minimal serializable profile DTO, no personalized public cache, shared theme tokens, real accessible dialogs, visible labels/focus, responsive cards and reduced-motion-compatible transitions. No new UI dependency or copied reference assets.
 
-Principal modules: admin shell/layout/guards, Settings navigation and locations route, location query/filter/editor services, locality APIs/mutations, FAQ manager, About, public property cover/detail rendering, tests and image provenance. Deployment verification remains pending in this entry until completed below.
+Principal modules: admin shell/layout/guards, Settings navigation and locations route, location query/filter/editor services, locality APIs/mutations, FAQ manager, About, public property cover/detail rendering, tests and image provenance.
+
+### Release checkpoint
+
+- Source commit `a8dcb41dd7a47824a036f73e93c5b79199b05445` pushed to `origin/codex/insforge-redesign-plan`. Staged credential-value/path checks and whitespace checks pass. Private QA helpers and authenticated screenshots stay in ignored `.vercel/`, which is explicitly excluded from deployment uploads.
+- Protected preview `dpl_44cPCBKskT2NvQpMdJdiij8R4dZL`, Ready: https://royalestatejaipur-73r0x1i85-unfiltered-iit-ians.vercel.app . Authorized CLI verified About HTTP 200, expected hero/image content and no raw database error; preview protection remains enabled. CLI update-check worker warnings did not prevent either deployment or verification.
+- Promotion rebuilt with production environment: `dpl_4EjJzfg7gsG8vJM1L7tNZkxaDRa9`, Ready: https://royalestatejaipur-ecptyl5y6-unfiltered-iit-ians.vercel.app ; canonical alias https://royalestatejaipur.vercel.app . No environment, provider or schema changes.
+- Production browser automation: 4/4 pass for public About/photo checks in both themes plus API origin/body defenses. Browser plugin visually verified the released About light/dark hero and authenticated Settings table, actual uploaded profile picture, public logo, footer placement and top collapse icon. Opening the existing Jagatpura II delete dialog showed the linked-property refusal and disabled confirmation; Cancel closed it without modifying business data.
+- Authenticated local evidence: `.vercel/admin-workspace-production-light.png`, `.vercel/about-production-light.png`, `.vercel/about-production-dark.png`. These files are intentionally not published to GitHub. Local catalogue photos and non-overlapping reference/illustration badges were visually inspected as well.
+- [GitHub Actions run 37184327668](https://github.com/RAJ-IITROORKEE/mls-RoyalEstateJaipur/actions/runs/37184327668) has zero executed steps; its annotation says the account is locked due to a billing issue. Hosted CI did not pass; local checks and Vercel production build did pass.
+- Rollback: previous verified production `dpl_8C3cuJFBYKLwFDuc6WRhBX5KaRh6`. Keep audited location changes; no migrations need reversal. No disposable test locations remain.
+
+Remaining work: the wider Phase 3/4 compositions and owner flows, then isolated InsForge authentication/migration/cutover gates. Authenticated public-header inspection also exposed an existing avatar trigger without a useful accessible name and incomplete popup menu semantics; this is recorded in Phase 3's remaining header QA. No full-site accessibility completion or native screen-reader testing is claimed by this scoped release.
 
 This is the running record for `docs/PLAN.md`. Update it whenever a phase or material change is completed. A phase is complete only after its implementation and applicable checks pass.
 

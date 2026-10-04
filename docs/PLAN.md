@@ -277,7 +277,7 @@ Gate: clear hierarchy, measured contrast, consistent controls, no hydration warn
 2. [x] Move locations to Settings with server search/sort/pagination, table actions, add/edit dialog and confirmed deletion with related-record protection.
 3. [x] Simplify submission status navigation and improve the About hero with original content inspired by the reference introduction pattern.
 4. [x] Add downloaded, licensed stock photos only to five known preview listings with no actual media, visibly labelled as illustrative; document sources.
-5. [ ] Run unit/permission, browser, responsive and theme checks; commit, deploy and record verified evidence. This subset does not complete all Phase 3/4 gates.
+5. [x] Run unit/permission, browser, responsive and theme checks; commit, deploy and record verified evidence. This subset does not complete all Phase 3/4 gates.
 
 - [ ] Implement the home sequence from Section 3, compact desktop search and mobile layout.
 - [ ] Rebuild one shared property card with prominent price, top-right intent, real photo or honest “Photo coming soon”, human units and clear animated action.
@@ -285,6 +285,7 @@ Gate: clear hierarchy, measured contrast, consistent controls, no hydration warn
 - [ ] Polish property detail: responsive gallery, facts, enquiry/contact actions, availability history, safe public context.
 - [ ] Give journal a concise heading and stronger featured/list hierarchy, useful metadata and clearly visible article CTA; retain at least two original demo articles for preview only.
 - [ ] Use original editorial About content and direct Contact methods/form; improve footer hierarchy and verified business contact actions.
+- [ ] During remaining public-header QA, replace the existing signed-in account popup's incomplete menu semantics and give its avatar trigger an accessible name; verify full keyboard behavior.
 - [ ] Reconcile locality defaults (including reference changes such as Goner) through admin-managed data without breaking related records.
 - [ ] Show actual loading, empty, unavailable and error recovery; preserve public/private media separation.
 - [ ] Metadata/canonical/noindex, sitemap and JSON-LD reflect actual visible records.
