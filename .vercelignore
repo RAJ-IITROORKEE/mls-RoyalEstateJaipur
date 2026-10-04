@@ -3,6 +3,7 @@
 .insforge/
 .agents/
 .git/
+.vercel/
 .next/
 node_modules/
 playwright-report/

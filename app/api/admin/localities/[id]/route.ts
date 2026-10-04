@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import {
-  deactivateLocality,
+  deleteLocality,
+  ReferencedLocalityError,
   updateLocality,
 } from "@/features/site-content/mutations";
 import { localityInputSchema } from "@/features/site-content/schemas";
@@ -50,7 +51,13 @@ async function handlePATCH(request: Request, context: RouteContext) {
     );
   try {
     const locality = await updateLocality(auth.actorId, id, parsed.data);
-    for (const path of ["/", "/properties", "/localities", "/admin/content"])
+    for (const path of [
+      "/",
+      "/properties",
+      "/localities",
+      "/admin/settings/locations",
+      "/about",
+    ])
       revalidatePath(path);
     return NextResponse.json({ locality });
   } catch {
@@ -68,11 +75,19 @@ async function handleDELETE(_request: Request, context: RouteContext) {
   if (!z.string().uuid().safeParse(id).success)
     return NextResponse.json({ error: "Locality not found." }, { status: 404 });
   try {
-    await deactivateLocality(auth.actorId, id);
-    for (const path of ["/", "/properties", "/localities", "/admin/content"])
+    await deleteLocality(auth.actorId, id);
+    for (const path of [
+      "/",
+      "/properties",
+      "/localities",
+      "/admin/settings/locations",
+      "/about",
+    ])
       revalidatePath(path);
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (error) {
+    if (error instanceof ReferencedLocalityError)
+      return NextResponse.json({ error: error.message }, { status: 409 });
     return NextResponse.json(
       { error: "The locality could not be removed." },
       { status: 400 },

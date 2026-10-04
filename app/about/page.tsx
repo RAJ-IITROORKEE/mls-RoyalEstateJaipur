@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
@@ -33,21 +35,56 @@ export default async function AboutPage() {
 
   return (
     <PublicPage>
-      <section className="border-b border-border bg-card">
-        <div className="mx-auto grid max-w-[1360px] gap-8 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-16">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
+      <section className="overflow-hidden border-b border-border bg-card">
+        <div className="mx-auto max-w-[1360px] px-5 pb-12 pt-12 sm:px-8 sm:pb-16 sm:pt-16">
+          <nav
+            aria-label="Breadcrumb"
+            className="mb-10 flex items-center gap-2 text-sm text-muted-foreground"
+          >
+            <Link href="/" className="hover:text-primary">
+              Home
+            </Link>
+            <span aria-hidden="true">/</span>
+            <span>About us</span>
+          </nav>
+          <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 text-center">
+            <p className="text-sm font-semibold text-primary">
               About Royal Estates Jaipur
             </p>
-            <h1 className="mt-4 max-w-4xl text-balance font-serif text-5xl leading-[0.98] sm:text-6xl lg:text-7xl">
-              A clearer place to begin your property search.
+            <h1 className="text-balance text-4xl font-semibold leading-[1.15] tracking-tight sm:text-5xl lg:text-6xl">
+              Your next place.
+              <br />A clearer way to find it.
             </h1>
+            <p className="max-w-2xl text-pretty text-base leading-8 text-muted-foreground sm:text-lg">
+              From a plot for your plans to a home for your next chapter.
+              Explore property across Jaipur, compare the details, and start a
+              conversation with the team.
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Button asChild>
+                <Link href="/properties">
+                  Explore properties
+                  <ArrowUpRight aria-hidden="true" data-icon="inline-end" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/contact">Talk to the team</Link>
+              </Button>
+            </div>
           </div>
-          <p className="max-w-xl text-base leading-8 text-muted-foreground sm:text-lg">
-            Explore published homes, plots, and commercial spaces by property
-            type or locality. Each listing brings its available details
-            together, so you can decide what to ask before contacting the team.
-          </p>
+          <div className="relative mt-12 aspect-[16/9] overflow-hidden rounded-3xl sm:aspect-[21/8]">
+            <Image
+              alt=""
+              fill
+              loading="eager"
+              sizes="(min-width: 1360px) 1280px, 100vw"
+              src="/images/illustrations/villa.webp"
+              className="object-cover object-center"
+            />
+            <span className="absolute bottom-4 left-4 rounded-lg bg-card px-3 py-2 text-xs text-card-foreground">
+              Architecture inspiration · Stock photograph
+            </span>
+          </div>
         </div>
       </section>
 

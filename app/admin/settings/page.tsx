@@ -2,6 +2,7 @@ import { fontFamilyVariables } from "@/features/site-appearance/fonts";
 import Link from "next/link";
 
 import { SettingControl } from "@/components/admin/setting-control";
+import { SettingsNavigation } from "@/components/admin/settings-navigation";
 import { Button } from "@/components/ui/button";
 import { getAdminSettings } from "@/features/admin/settings";
 import { hasDatabaseConfiguration } from "@/lib/env";
@@ -16,6 +17,7 @@ export default async function AdminSettingsPage() {
 
   return (
     <section className="mx-auto w-full max-w-3xl space-y-8">
+      <SettingsNavigation active="appearance" />
       <header>
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
           Appearance

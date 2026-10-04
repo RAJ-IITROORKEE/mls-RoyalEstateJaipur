@@ -217,9 +217,9 @@ Each phase must update HANDOFF with outcomes, files, commands/pass/fail, credent
 | --- | --- | --- | --- |
 | 0 | Complete for research/setup | Engineering + design audit | Plan, audit, linked backend, skills |
 | 1 | Complete locally/live; hosted CI blocked externally | Engineering/security | Dependency repair, API boundaries, repeatable checks |
-| 2 | In progress | Design system | Tokens, type, accessible primitives, visual preview |
-| 3 | Planned | Public experience | Home, catalogue, detail, journal, about, contact/footer |
-| 4 | Planned | Owner/admin experience | Coherent forms, CRUD and operational workflows |
+| 2 | Complete locally/live | Design system | Tokens, type, accessible primitives, visual preview |
+| 3 | In progress | Public experience | About and preview photography follow-up; remaining public compositions pending |
+| 4 | In progress | Owner/admin experience | Shell, Settings location CRUD and moderation filters; remaining workflows pending |
 | 5 | Planned | Backend/auth | InsForge session/auth vertical slice in isolation |
 | 6 | Planned | Data/storage | Migration rehearsal and reconciliation |
 | 7 | Planned | Release engineering | Production cutover and rollback verification |
@@ -270,6 +270,14 @@ Gate: production dependency audit clean; unresolved development findings explici
 Gate: clear hierarchy, measured contrast, consistent controls, no hydration warnings, visible animation without content obstruction.
 
 ### Phase 3 — Public site redesign
+
+#### Approved follow-up — 2026-10-04
+
+1. [x] Admin shell: public logo, top collapse icon, active navigation, Settings and verified profile at the bottom; remove preview badge; accessible mobile drawer.
+2. [x] Move locations to Settings with server search/sort/pagination, table actions, add/edit dialog and confirmed deletion with related-record protection.
+3. [x] Simplify submission status navigation and improve the About hero with original content inspired by the reference introduction pattern.
+4. [x] Add downloaded, licensed stock photos only to five known preview listings with no actual media, visibly labelled as illustrative; document sources.
+5. [ ] Run unit/permission, browser, responsive and theme checks; commit, deploy and record verified evidence. This subset does not complete all Phase 3/4 gates.
 
 - [ ] Implement the home sequence from Section 3, compact desktop search and mobile layout.
 - [ ] Rebuild one shared property card with prominent price, top-right intent, real photo or honest “Photo coming soon”, human units and clear animated action.

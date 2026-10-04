@@ -8,6 +8,7 @@ import {
 import { prisma } from "@/lib/db/prisma";
 import { hasDatabaseConfiguration } from "@/lib/env";
 import { getPublicPropertyMediaUrl } from "@/lib/supabase/public-url";
+import { getPreviewIllustration } from "@/features/properties/preview-illustrations";
 
 export type PublicPropertyCard = {
   slug: string;
@@ -22,7 +23,11 @@ export type PublicPropertyCard = {
   priceOnRequest: boolean;
   areaValue: string | null;
   areaUnit: string | null;
-  coverImage: { altText: string; publicUrl: string | null } | null;
+  coverImage: {
+    altText: string;
+    publicUrl: string | null;
+    isIllustrative?: boolean;
+  } | null;
 };
 
 export type PublicPropertySort = "newest" | "price_asc" | "price_desc";
@@ -168,7 +173,7 @@ export async function getPublishedProperties(
               altText: media[0].altText,
               publicUrl: getPublicPropertyMediaUrl(media[0].storagePath),
             }
-          : null,
+          : getPreviewIllustration(property.slug),
       })),
       hasMore: properties.length > limit,
       totalCount,

@@ -1,5 +1,30 @@
 # Implementation Handoff Log
 
+## 2026-10-04 — Public and admin follow-up (verified locally; release pending)
+
+Requested: improve About's introduction; fill five preview listing image gaps with licensed illustrative photographs; remove admin preview chrome; move collapse to the top and Settings/profile to the bottom; simplify moderation filters; move locations into a searchable Settings table with add/edit/delete.
+
+Design: forest/slate tokens and Plus Jakarta Sans with existing shadcn controls. Locations retain active administrator checks and audited transactions. Illustration mapping is limited to exact preview slugs and never overrides uploaded media. Full Phase 3/4 and InsForge cutover remain pending.
+
+### Outcome and decisions
+
+- Replaced the admin RS placeholder with the public logo, removed Foundation preview, moved collapse to the header and Settings/profile to the sidebar footer. The profile DTO comes from verified server access; uploaded avatars have an initial fallback. Mobile navigation uses the existing accessible Sheet with focus restoration.
+- `/admin/content` now manages only FAQs. `/admin/settings/locations` provides server search, allowlisted sort, 15-row pagination, desktop table/mobile cards, loading/error/empty states and add/edit dialogs with validation, pending feedback and unsaved-exit confirmation.
+- Delete verifies an active administrator again inside the transaction, locks the locality row, refuses property references, writes an audit event and deletes atomically. Inactive remains the reversible choice for linked locations. The remote pooled operation has a bounded 15-second transaction timeout. No schema/provider/environment changes were needed.
+- Simplified submission status links into an accessible wrapping segmented navigation. About has an original centered introduction, clear actions and a wide architecture photograph inspired by the reference's introductory pattern.
+- Downloaded five licensed Pexels photographs, optimized and hosted locally. Exact preview mapping, visible card/detail labels and source records prevent presenting stock photos as actual listings. Uploaded media wins; other empty listings retain Photo coming soon. Sources: IMAGE-SOURCES.md.
+- Fixed public content reads so an intentionally empty saved FAQ/location list remains empty; bundled defaults are used only when the database is unavailable.
+
+### Verification record
+
+- Full unit/component suite: 127 tests in 26 files pass. After the final delete timeout/API permission additions, the focused 13-test suite passes again.
+- Formatter, lint, typecheck and Prisma schema validation pass. Production build passes with 57 generated routes plus Proxy. No migration changes; production migration application was unnecessary.
+- New public browser checks: 2/2 pass, including About WCAG scans in both themes, all six widths, five downloaded image loads and the detail illustration notice.
+- Initial admin browser runs exposed missing JSON request headers and a remote transaction timeout; corrected both and audited exact inactive test-record cleanup. Readiness assertions wait for streamed routes, and the empty title now has heading semantics. Final admin run: 2/2 pass, including real inactive create/edit/delete cleanup, search/sort, no matches, both-theme WCAG scans, desktop collapse, all six widths, unsaved-exit confirmation, mobile drawer Escape/focus restoration and submission filter selection. The 18 existing public/API/design-system regressions also pass: 22 passing browser tests in total. A read-only check confirmed no disposable location records remain.
+- Review follows Vercel React and web-interface guidance: server-only bounded location reads, minimal serializable profile DTO, no personalized public cache, shared theme tokens, real accessible dialogs, visible labels/focus, responsive cards and reduced-motion-compatible transitions. No new UI dependency or copied reference assets.
+
+Principal modules: admin shell/layout/guards, Settings navigation and locations route, location query/filter/editor services, locality APIs/mutations, FAQ manager, About, public property cover/detail rendering, tests and image provenance. Deployment verification remains pending in this entry until completed below.
+
 This is the running record for `docs/PLAN.md`. Update it whenever a phase or material change is completed. A phase is complete only after its implementation and applicable checks pass.
 
 ## 2026-10-03 — Phase 2 shared UI and hero animation

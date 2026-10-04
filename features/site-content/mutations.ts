@@ -221,28 +221,38 @@ export async function updateLocality(
   });
 }
 
-export async function deactivateLocality(actorId: string, localityId: string) {
-  return prisma.$transaction(async (transaction) => {
-    await requireContentManager(transaction, actorId);
-    const previous = await transaction.locality.findUnique({
-      where: { id: localityId },
-      select: { id: true, name: true, isActive: true },
-    });
-    if (!previous) throw new Error("Locality not found.");
-    const locality = await transaction.locality.update({
-      where: { id: localityId },
-      data: { isActive: false },
-      select: { id: true, name: true },
-    });
-    await transaction.auditLog.create({
-      data: {
-        actorId,
-        action: "LOCALITY_DEACTIVATED",
-        entityType: "Locality",
-        entityId: locality.id,
-        summary: `Removed locality from public options: ${locality.name}`,
-        metadata: { previousActive: previous.isActive, nextActive: false },
-      },
-    });
-  });
+export class ReferencedLocalityError extends Error {
+  constructor() {
+    super("This location is linked to properties. Make it inactive instead.");
+  }
+}
+
+export async function deleteLocality(actorId: string, localityId: string) {
+  return prisma.$transaction(
+    async (transaction) => {
+      await requireContentManager(transaction, actorId);
+      // The row lock also blocks new FK references until this deletion commits.
+      await transaction.$queryRaw`SELECT id FROM "Locality" WHERE id = ${localityId}::uuid FOR UPDATE`;
+      const previous = await transaction.locality.findUnique({
+        where: { id: localityId },
+        select: { id: true, name: true, isActive: true },
+      });
+      if (!previous) throw new Error("Locality not found.");
+      if (await transaction.property.count({ where: { localityId } }))
+        throw new ReferencedLocalityError();
+      await transaction.auditLog.create({
+        data: {
+          actorId,
+          action: "LOCALITY_DELETED",
+          entityType: "Locality",
+          entityId: previous.id,
+          summary: `Deleted locality: ${previous.name}`,
+          metadata: { previousActive: previous.isActive },
+        },
+      });
+      await transaction.locality.delete({ where: { id: localityId } });
+    },
+    // Remote pooled reads plus the FK lock can exceed Prisma's five-second default.
+    { timeout: 15_000 },
+  );
 }

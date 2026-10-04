@@ -29,7 +29,13 @@ async function handlePOST(request: Request) {
     );
   try {
     const locality = await createLocality(access.profile.id, parsed.data);
-    for (const path of ["/", "/properties", "/localities", "/admin/content"])
+    for (const path of [
+      "/",
+      "/properties",
+      "/localities",
+      "/admin/settings/locations",
+      "/about",
+    ])
       revalidatePath(path);
     return NextResponse.json({ locality }, { status: 201 });
   } catch {

@@ -1,10 +1,11 @@
-import { MapPin } from "lucide-react";
+import { ImageOff, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { PropertyCardAction } from "@/components/properties/property-card-action";
 import type { PublicPropertyCard } from "@/features/properties/queries";
 import { formatInrMinorUnits } from "@/lib/utils";
+import { getPreviewIllustration } from "@/features/properties/preview-illustrations";
 
 function propertyLabel(value: string) {
   if (value === "SELL") return "Buy";
@@ -37,16 +38,24 @@ export function PropertyCard({
               src={property.coverImage.publicUrl}
             />
           ) : (
-            <div
-              aria-hidden="true"
-              className="architectural-art h-full opacity-80"
-            />
+            <div className="flex h-full flex-col items-center justify-center gap-3 text-muted-foreground">
+              <ImageOff aria-hidden="true" className="size-8" />
+              <span className="text-sm">Photo coming soon</span>
+            </div>
           )}
           <span className="absolute right-4 top-4 inline-flex min-h-9 items-center rounded-full border border-primary-foreground/30 bg-primary px-4 text-xs font-extrabold uppercase tracking-[0.14em] text-primary-foreground shadow-lg ring-2 ring-background">
             {propertyLabel(property.intent)}
           </span>
+          {getPreviewIllustration(property.slug) && (
+            <span className="absolute bottom-3 left-3 right-3 w-fit rounded-lg bg-card px-3 py-2 text-xs font-semibold text-card-foreground">
+              Preview listing
+              {property.coverImage?.isIllustrative
+                ? " · Illustrative photo"
+                : ""}
+            </span>
+          )}
           {showReference ? (
-            <span className="absolute bottom-4 left-4 rounded-full border border-border bg-background/95 px-3 py-1 text-[11px] font-semibold tabular-nums text-foreground shadow-sm">
+            <span className="absolute top-4 left-4 max-w-[60%] rounded-full border border-border bg-background/95 px-3 py-1 text-xs font-semibold tabular-nums text-foreground shadow-sm">
               {property.referenceNumber}
             </span>
           ) : null}

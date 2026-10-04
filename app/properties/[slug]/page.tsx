@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getPreviewIllustration } from "@/features/properties/preview-illustrations";
 import Image from "next/image";
 import {
   ArrowLeft,
@@ -62,6 +63,9 @@ export default async function PropertyDetailPage({
     NEXT_PUBLIC_BUSINESS_WHATSAPP: whatsapp,
   } = getEnvironment();
   const property = result.property;
+  const previewIllustration = property
+    ? getPreviewIllustration(property.slug)
+    : null;
   const whatsappHref = property
     ? createOptionalWhatsAppUrl(
         whatsapp,
@@ -169,6 +173,25 @@ export default async function PropertyDetailPage({
                   type="application/ld+json"
                 />
               )}
+              {!property.media.some((media) => media.publicUrl) &&
+                previewIllustration && (
+                  <figure className="mt-10">
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted sm:aspect-[16/9]">
+                      <Image
+                        alt={previewIllustration.altText}
+                        src={previewIllustration.publicUrl}
+                        className="object-cover"
+                        fill
+                        sizes="(min-width: 1024px) 66vw, 100vw"
+                      />
+                    </div>
+                    <figcaption className="mt-3 text-sm text-muted-foreground">
+                      Preview listing · Illustrative stock photo, not the listed
+                      property. Availability and listing details have not been
+                      verified.
+                    </figcaption>
+                  </figure>
+                )}
               {property.media.some((media) => media.publicUrl) && (
                 <div className="mt-10 grid gap-4 lg:grid-cols-[1.45fr_0.75fr]">
                   {property.media.slice(0, 1).map((media) =>

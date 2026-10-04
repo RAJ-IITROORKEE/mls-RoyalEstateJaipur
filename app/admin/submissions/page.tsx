@@ -1,6 +1,7 @@
 import { ArrowUpRight, ClipboardList, Database } from "lucide-react";
 import Link from "next/link";
 
+import { cn } from "@/lib/utils";
 import { SubmissionArchiveAction } from "@/components/admin/submission-archive-action";
 import { getModerationQueue } from "@/features/admin/submission-queries";
 
@@ -30,27 +31,43 @@ export default async function AdminSubmissionsPage({
             an explicit decision.
           </p>
         </div>
-        <div className="flex gap-2 text-xs font-semibold">
-          <Link
-            className={`rounded-full border px-3 py-2 ${!status ? "border-primary bg-primary/5 text-primary" : "border-border"}`}
-            href="/admin/submissions"
-          >
-            Needs review
-          </Link>
-          <Link
-            className={`rounded-full border px-3 py-2 ${status === "NEEDS_CHANGES" ? "border-primary bg-primary/5 text-primary" : "border-border"}`}
-            href="/admin/submissions?status=NEEDS_CHANGES"
-          >
-            Changes requested
-          </Link>
-          <Link
-            className={`rounded-full border px-3 py-2 ${status === "APPROVED" ? "border-primary bg-primary/5 text-primary" : "border-border"}`}
-            href="/admin/submissions?status=APPROVED"
-          >
-            Approved
-          </Link>
-        </div>
       </header>
+      <nav
+        aria-label="Submission status"
+        className="flex flex-wrap gap-1 rounded-2xl border border-border bg-muted/50 p-1.5 sm:w-fit"
+      >
+        {[
+          {
+            label: "Needs review",
+            value: undefined,
+            href: "/admin/submissions",
+          },
+          {
+            label: "Changes requested",
+            value: "NEEDS_CHANGES",
+            href: "/admin/submissions?status=NEEDS_CHANGES",
+          },
+          {
+            label: "Approved",
+            value: "APPROVED",
+            href: "/admin/submissions?status=APPROVED",
+          },
+        ].map((filter) => (
+          <Link
+            key={filter.label}
+            href={filter.href}
+            aria-current={status === filter.value ? "page" : undefined}
+            className={cn(
+              "inline-flex min-h-11 flex-1 items-center justify-center whitespace-nowrap rounded-xl px-4 text-sm font-semibold text-muted-foreground transition-colors hover:bg-card hover:text-foreground sm:flex-none",
+              status === filter.value &&
+                "bg-card text-foreground shadow-sm ring-1 ring-border",
+            )}
+          >
+            {filter.label}
+          </Link>
+        ))}
+      </nav>
+
       {!result.connected ? (
         <section className="rounded-2xl border border-border bg-card p-8 sm:p-12">
           <div className="mx-auto max-w-lg text-center">

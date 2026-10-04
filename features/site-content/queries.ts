@@ -37,7 +37,7 @@ export async function getPublicLocalities() {
     });
     return {
       connected: true as const,
-      localities: localities.length ? localities : fallbackLocalities,
+      localities,
     };
   } catch {
     return { connected: false as const, localities: fallbackLocalities };
@@ -56,7 +56,7 @@ export async function getPublicFaqItems() {
     });
     return {
       connected: true as const,
-      faqs: faqs.length ? faqs : defaultFaqItems,
+      faqs,
     };
   } catch {
     return { connected: false as const, faqs: defaultFaqItems };
@@ -65,37 +65,22 @@ export async function getPublicFaqItems() {
 
 export async function getAdminSiteContent() {
   if (!hasDatabaseConfiguration())
-    return { connected: false as const, localities: [], faqs: [] };
+    return { connected: false as const, faqs: [] };
 
   try {
-    const [localities, faqs] = await Promise.all([
-      prisma.locality.findMany({
-        orderBy: [{ isActive: "desc" }, { sortOrder: "asc" }, { name: "asc" }],
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-          city: true,
-          state: true,
-          isFeatured: true,
-          isActive: true,
-          sortOrder: true,
-        },
-      }),
-      prisma.faqItem.findMany({
-        orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
-        select: {
-          id: true,
-          key: true,
-          question: true,
-          answer: true,
-          sortOrder: true,
-          isPublished: true,
-        },
-      }),
-    ]);
-    return { connected: true as const, localities, faqs };
+    const faqs = await prisma.faqItem.findMany({
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
+      select: {
+        id: true,
+        key: true,
+        question: true,
+        answer: true,
+        sortOrder: true,
+        isPublished: true,
+      },
+    });
+    return { connected: true as const, faqs };
   } catch {
-    return { connected: false as const, localities: [], faqs: [] };
+    return { connected: false as const, faqs: [] };
   }
 }

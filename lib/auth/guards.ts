@@ -16,7 +16,13 @@ export async function getAdminAccess() {
   try {
     profile = await prisma.profile.findUnique({
       where: { id: user.id },
-      select: { displayName: true, email: true, role: true, status: true },
+      select: {
+        displayName: true,
+        email: true,
+        avatarPath: true,
+        role: true,
+        status: true,
+      },
     });
   } catch {
     return { mode: "forbidden" as const, profile: null };

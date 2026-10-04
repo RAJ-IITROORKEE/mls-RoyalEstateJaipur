@@ -85,6 +85,10 @@ Shared appearance uses Plus Jakarta Sans, forest action tokens and Slate 950 dar
 
 Staff can open **Settings → Review shared design controls**, or `/admin/design-system`, to review accessible shadcn/Radix primitives in both themes. The preview is protected and never changes application data. Component provenance, token contrast and acceptance checks are documented in `docs/PHASE2-DESIGN.md`. Google OAuth and the approved InsForge migration remain separate gates in `docs/PLAN.md`.
 
+Administrators manage locations under **Settings → Locations** (`/admin/settings/locations`), with server search, sorting and 15-row pagination. Add/edit controls preserve failed input and confirm unsaved exits. Delete is audited and refuses locations linked to properties; make those inactive in Edit instead. FAQs remain under **FAQs**. The sidebar shows the verified profile's uploaded avatar, with an initial fallback when absent.
+
+About and five known preview listings use locally hosted, licensed stock photographs. These are visibly labelled illustrative and never replace uploaded listing media. Provenance and retirement instructions are in `docs/IMAGE-SOURCES.md`; they do not represent verified Jaipur inventory.
+
 The public catalogue, content management, Supabase authentication, owner intake, moderation, and administrator operations are implemented. Provider status and connectivity can change independently of this checkout; verify the database and Storage buckets before each release. Hosted email templates, Google OAuth credentials, and allowed callback URLs are managed in the Supabase Dashboard.
 
 ## Release checklist

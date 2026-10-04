@@ -37,10 +37,9 @@ export default async function AdminContentPage() {
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
           Site content
         </p>
-        <h1 className="mt-2 font-serif text-4xl">FAQs and locations</h1>
+        <h1 className="mt-2 font-serif text-4xl">Frequently asked questions</h1>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">
-          Manage homepage answers and the locations available in property
-          search. Changes are audited.
+          Manage the answers shown on the homepage. Changes are audited.
         </p>
       </header>
       {!result.connected ? (
@@ -58,7 +57,7 @@ export default async function AdminContentPage() {
           </Link>
         </div>
       ) : (
-        <SiteContentManager faqs={result.faqs} localities={result.localities} />
+        <SiteContentManager faqs={result.faqs} />
       )}
     </section>
   );
