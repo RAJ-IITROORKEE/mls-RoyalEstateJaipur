@@ -17,10 +17,10 @@ test.describe("public experience", () => {
   }) => {
     await page.goto("/");
     const search = page.getByRole("search");
-    const rent = search.getByRole("radio", { name: "Rent" });
-    await rent.focus();
-    await rent.press("Space");
-    await expect(rent).toBeChecked();
+    const sale = search.getByRole("radio", { name: "Sale" });
+    await sale.focus();
+    await sale.press("Space");
+    await expect(sale).toBeChecked();
     await search
       .getByRole("searchbox", { name: "Search by title, area, locality" })
       .fill("Jaipur");
@@ -30,7 +30,7 @@ test.describe("public experience", () => {
     await search.getByRole("button", { name: "Search", exact: true }).click();
     await expect(page).toHaveURL(/\/properties\?/);
     const query = new URL(page.url()).searchParams;
-    expect(query.get("intent")).toBe("RENT");
+    expect(query.get("intent")).toBe("SELL");
     expect(query.get("q")).toBe("Jaipur");
     expect(query.get("category")).toBe("RESIDENTIAL");
   });
@@ -122,7 +122,7 @@ test.describe("public experience", () => {
       "true",
     );
     await expect(page.getByRole("radio", { name: "Buy" })).toBeVisible();
-    await expect(page.getByRole("radio", { name: "Rent" })).toBeVisible();
+    await expect(page.getByRole("radio", { name: "Sale" })).toBeVisible();
 
     const firstCard = page.locator("article.group a").first();
     const action = page.locator(".property-card-cta").first();

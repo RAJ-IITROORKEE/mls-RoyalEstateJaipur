@@ -18,7 +18,7 @@ type HomePropertySearchProps = {
 
 function optionLabel(value: string) {
   if (value === "SELL") return "Buy";
-  if (value === "RENT") return "Rent";
+  if (value === "RENT") return "Sale";
   if (value === "PLOT") return "Plot & land";
   return value[0] + value.slice(1).toLowerCase();
 }
@@ -53,7 +53,7 @@ export function HomePropertySearch({
                 defaultChecked={initialIntent === intent}
                 name="intent"
                 type="radio"
-                value={intent}
+                value={intent === "RENT" ? "SELL" : intent}
               />
               <span className="inline-flex min-h-11 items-center rounded-lg border border-input px-4 text-sm font-semibold text-muted-foreground transition-colors peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring">
                 {optionLabel(intent)}
